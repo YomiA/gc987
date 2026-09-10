@@ -1,0 +1,390 @@
+
+======================================================================
+## gameBlock1_header
+======================================================================
+div.headerBgImage.pt-1.flex.items-center.pr-[1rem].h-12.pl-[.5625rem]  @0.0,387.0 390.0x48.0
+  display: flex; width: 390px; height: 48px; marginBottom: 14px; marginLeft: -9px; paddingTop: 4px; paddingRight: 16px; paddingLeft: 9px; boxSizing: border-box; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); backgroundImage: url("https://gc987.com/images/headerTextBg.png"); backgroundSize: 70% 100%; backgroundRepeat: no-repeat
+  div.flex.items-center  @9.0,398.0 151.5x30.0
+    display: flex; width: 151.547px; height: 30px; minWidth: auto; minHeight: auto; boxSizing: border-box; alignItems: center
+    div.sort.logo-container  @9.0,398.0 30.0x30.0
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 30px; height: 30px; minWidth: auto; minHeight: auto; marginRight: 7px; boxSizing: border-box; color: rgb(56, 168, 250)
+      ion-icon.icon-light.text-[1.375rem].md  @13.0,406.0 22.0x22.0
+        position: absolute; top: 8px; right: -7px; bottom: 0px; left: 15px; width: 22px; height: 22px; fontSize: 22px; lineHeight: 33px; transform: matrix(1, 0, 0, 1, -11, 0)
+        div.icon-inner  @13.0,406.0 22.0x22.0
+          width: 22px; height: 22px
+          svg.s-ion-icon  @13.0,406.0 22.0x22.0  viewBox="0 0 50 50"
+            width: 22px; height: 22px; overflow: hidden; overflowX: hidden; overflowY: hidden
+      div.wall.logo  @9.0,398.0 30.0x30.9
+        width: 30px; height: 30.9375px; boxSizing: border-box; fontSize: 30px; lineHeight: 45px
+        div.svg-container  @9.0,398.0 30.0x30.9
+          width: 30px; height: 30.9375px; boxSizing: border-box
+          svg  @9.0,398.0 30.0x30.9  viewBox="0 0 32 33"
+            width: 30px; height: 30.9375px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+        svg.svg-wall  @9.0,428.9 0.0x0.0
+          width: 0px; height: 0px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-label.font-black.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @46.0,401.0 56.3x24.0
+      TEXT: "Popular"
+      width: 56.3125px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontWeight: 900
+    div.blueLine.bg-[#1680DC].w-[0.0625rem].h-[1.75rem].ml-[0.625rem].mr-[0.5rem]  @105.4,400.6 14.9x24.7
+      width: 1px; height: 28px; minWidth: auto; minHeight: auto; marginRight: 8px; marginLeft: 10px; boxSizing: border-box; backgroundColor: rgb(22, 128, 220); transform: matrix(0.866025, 0.5, -0.5, 0.866025, 0, 0)
+    ion-label.tab.leading-3.px-[0.1875rem].py-[.1875rem].rounded-[.1875rem].text-right.text-[0.75rem].sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @121.3,398.0 39.2x30.0
+      width: 39.2344px; height: 30px; minWidth: auto; minHeight: auto; paddingTop: 3px; paddingRight: 3px; paddingBottom: 3px; paddingLeft: 3px; boxSizing: border-box; fontSize: 12px; lineHeight: 12px; textAlign: right; borderTopLeftRadius: 3px; borderTopRightRadius: 3px; borderBottomLeftRadius: 3px; borderBottomRightRadius: 3px
+      span.font-black.sc-ion-label-ios  @136.7,399.5 20.9x14.5
+        TEXT: "100"
+        display: inline; width: auto; height: auto; boxSizing: border-box; fontWeight: 900
+      br.sc-ion-label-ios  @157.5,399.5 0.0x14.5
+        display: inline; width: auto; height: auto; boxSizing: border-box
+      span.opacity-40.sc-ion-label-ios  @124.3,411.5 33.2x14.5
+        TEXT: "Todos"
+        display: inline; width: auto; height: auto; boxSizing: border-box; opacity: 0.4
+  div.arrow-container  @312.0,396.8 62.0x32.5
+    width: 62px; height: 32.5px; minWidth: auto; minHeight: auto; marginLeft: 151.453px; boxSizing: border-box
+    ion-icon.tab.bg-[#354165].text-[#1680DC].text-sm.px-1.5.py-1.5.rounded-full.mx-[.3125rem].none.md  @317.0,396.8 26.0x26.0
+      display: inline-block; width: 14px; height: 14px; marginRight: 5px; marginLeft: 5px; paddingTop: 6px; paddingRight: 6px; paddingBottom: 6px; paddingLeft: 6px; fontSize: 14px; lineHeight: 20px; color: rgb(90, 104, 146); backgroundColor: rgb(53, 65, 101); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+      div.icon-inner  @323.0,402.8 14.0x14.0
+        width: 14px; height: 14px
+        svg.ionicon  @323.0,402.8 14.0x14.0  viewBox="0 0 512 512"
+          width: 14px; height: 14px; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-icon.tab.bg-[#354165].text-[#1680DC].text-sm.px-1.5.py-1.5.rounded-full.md  @348.0,396.8 26.0x26.0
+      display: inline-block; width: 14px; height: 14px; paddingTop: 6px; paddingRight: 6px; paddingBottom: 6px; paddingLeft: 6px; fontSize: 14px; lineHeight: 20px; color: rgb(22, 128, 220); backgroundColor: rgb(53, 65, 101); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+      div.icon-inner  @354.0,402.8 14.0x14.0
+        width: 14px; height: 14px
+        svg.ionicon  @354.0,402.8 14.0x14.0  viewBox="0 0 512 512"
+          width: 14px; height: 14px; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## gameBlock1_content
+======================================================================
+div.game-content  @9.0,449.0 372.0x677.0
+  width: 372px; height: 677px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.swiper.swiper-initialized.swiper-horizontal.swiper-autoheight.swiper-ios  @9.0,449.0 372.0x677.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 372px; height: 677px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+    div.swiper-wrapper  @9.0,449.0 372.0x677.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 372px; height: 677px; alignItems: flex-start; transition: transform, height
+      div.swiper-slide.swiper-slide-active.onMore  @9.0,449.0 372.0x677.3
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 677.344px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        div.card-container  @9.0,449.0 372.0x677.3
+          display: flex; width: 372px; height: 677.344px; paddingBottom: 15px; boxSizing: border-box; flexWrap: wrap; gap: 12px
+          div.style2.game-card  @9.0,449.0 116.0x156.6
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 115.992px; height: 156.586px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          div.style2.game-card  @137.0,449.0 116.0x156.6  [2nd of repeated]
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 115.992px; height: 156.586px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          …  (12x DIV|style2 game-card)
+      div.swiper-slide.swiper-slide-next.onMore  @382.0,449.0 372.0x677.3
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 677.344px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        div.card-container  @382.0,449.0 372.0x677.3
+          display: flex; width: 372px; height: 677.344px; paddingBottom: 15px; boxSizing: border-box; flexWrap: wrap; gap: 12px
+          div.style2.game-card  @382.0,449.0 116.0x156.6
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 115.992px; height: 156.586px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          div.style2.game-card  @510.0,449.0 116.0x156.6  [2nd of repeated]
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 115.992px; height: 156.586px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          …  (12x DIV|style2 game-card)
+      div.swiper-slide.onMore  @755.0,449.0 372.0x0.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 0px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+      div.swiper-slide.onMore  @1128.0,449.0 372.0x0.0  [2nd of repeated]
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 0px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+      …  (7x DIV|swiper-slide onMore)
+
+======================================================================
+## gameBlock1_more
+======================================================================
+div.more  @9.0,1126.0 372.0x62.0
+  display: flex; width: 372px; height: 62px; paddingBottom: 26px; boxSizing: border-box; flexDirection: column; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 12px; fontWeight: 400; lineHeight: 18px; textTransform: capitalize; color: rgb(255, 255, 255)
+  ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @119.4,1126.0 151.1x18.0
+    TEXT: "Mostrando 12 de 100 jogos"
+    width: 151.148px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box
+  div.btn  @151.3,1144.0 87.4x18.0
+    width: 87.4375px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; color: rgb(17, 111, 205)
+    ion-label.btn-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @151.3,1145.5 72.4x14.5
+      TEXT: "Mostrar tudo"
+      display: inline; width: auto; height: auto; boxSizing: border-box; fontWeight: 600
+    ion-icon.btn-icon.md  @226.7,1147.8 12.0x12.0
+      display: inline-block; width: 12px; height: 12px; marginLeft: 3px; transition: transform 0.3s
+      div.icon-inner  @226.7,1147.8 12.0x12.0
+        width: 12px; height: 12px
+        svg.s-ion-icon  @226.7,1147.8 12.0x12.0  viewBox="0 0 12 13"
+          width: 12px; height: 12px; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## gameBlock2_header
+======================================================================
+div.headerBgImage.pt-1.flex.items-center.pr-[1rem].h-12.pl-[.5625rem]  @0.0,1198.0 390.0x48.0
+  display: flex; width: 390px; height: 48px; marginBottom: 14px; marginLeft: -9px; paddingTop: 4px; paddingRight: 16px; paddingLeft: 9px; boxSizing: border-box; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); backgroundImage: url("https://gc987.com/images/headerTextBg.png"); backgroundSize: 70% 100%; backgroundRepeat: no-repeat
+  div.flex.items-center  @9.0,1209.0 124.1x30.0
+    display: flex; width: 124.141px; height: 30px; minWidth: auto; minHeight: auto; boxSizing: border-box; alignItems: center
+    div.sort.logo-container  @9.0,1209.0 30.0x30.0
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 30px; height: 30px; minWidth: auto; minHeight: auto; marginRight: 7px; boxSizing: border-box; color: rgb(56, 168, 250)
+      ion-icon.icon-light.text-[1.375rem].md  @13.0,1217.0 22.0x22.0
+        position: absolute; top: 8px; right: -7px; bottom: 0px; left: 15px; width: 22px; height: 22px; fontSize: 22px; lineHeight: 33px; transform: matrix(1, 0, 0, 1, -11, 0)
+        div.icon-inner  @13.0,1217.0 22.0x22.0
+          width: 22px; height: 22px
+          svg.s-ion-icon  @13.0,1217.0 22.0x22.0  viewBox="0 0 50 50"
+            width: 22px; height: 22px; overflow: hidden; overflowX: hidden; overflowY: hidden
+      div.wall.logo  @9.0,1209.0 30.0x30.0
+        width: 30px; height: 30px; boxSizing: border-box; fontSize: 30px; lineHeight: 45px
+        div.svg-container  @9.0,1209.0 30.0x30.0
+          width: 30px; height: 30px; boxSizing: border-box
+          svg  @9.0,1209.0 30.0x30.0  viewBox="0 0 33 33"
+            width: 30px; height: 30px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+        svg.svg-wall  @9.0,1239.0 0.0x0.0
+          width: 0px; height: 0px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-label.font-black.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @46.0,1212.0 28.9x24.0
+      TEXT: "Slot"
+      width: 28.9062px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontWeight: 900
+    div.blueLine.bg-[#1680DC].w-[0.0625rem].h-[1.75rem].ml-[0.625rem].mr-[0.5rem]  @78.0,1211.6 14.9x24.7
+      width: 1px; height: 28px; minWidth: auto; minHeight: auto; marginRight: 8px; marginLeft: 10px; boxSizing: border-box; backgroundColor: rgb(22, 128, 220); transform: matrix(0.866025, 0.5, -0.5, 0.866025, 0, 0)
+    ion-label.tab.leading-3.px-[0.1875rem].py-[.1875rem].rounded-[.1875rem].text-right.text-[0.75rem].sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @93.9,1209.0 39.2x30.0
+      width: 39.2344px; height: 30px; minWidth: auto; minHeight: auto; paddingTop: 3px; paddingRight: 3px; paddingBottom: 3px; paddingLeft: 3px; boxSizing: border-box; fontSize: 12px; lineHeight: 12px; textAlign: right; borderTopLeftRadius: 3px; borderTopRightRadius: 3px; borderBottomLeftRadius: 3px; borderBottomRightRadius: 3px
+      span.font-black.sc-ion-label-ios  @109.3,1210.5 20.9x14.5
+        TEXT: "157"
+        display: inline; width: auto; height: auto; boxSizing: border-box; fontWeight: 900
+      br.sc-ion-label-ios  @130.1,1210.5 0.0x14.5
+        display: inline; width: auto; height: auto; boxSizing: border-box
+      span.opacity-40.sc-ion-label-ios  @96.9,1222.5 33.2x14.5
+        TEXT: "Todos"
+        display: inline; width: auto; height: auto; boxSizing: border-box; opacity: 0.4
+  div.arrow-container  @312.0,1207.8 62.0x32.5
+    width: 62px; height: 32.5px; minWidth: auto; minHeight: auto; marginLeft: 178.859px; boxSizing: border-box
+    ion-icon.tab.bg-[#354165].text-[#1680DC].text-sm.px-1.5.py-1.5.rounded-full.mx-[.3125rem].none.md  @317.0,1207.8 26.0x26.0
+      display: inline-block; width: 14px; height: 14px; marginRight: 5px; marginLeft: 5px; paddingTop: 6px; paddingRight: 6px; paddingBottom: 6px; paddingLeft: 6px; fontSize: 14px; lineHeight: 20px; color: rgb(90, 104, 146); backgroundColor: rgb(53, 65, 101); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+      div.icon-inner  @323.0,1213.8 14.0x14.0
+        width: 14px; height: 14px
+        svg.ionicon  @323.0,1213.8 14.0x14.0  viewBox="0 0 512 512"
+          width: 14px; height: 14px; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-icon.tab.bg-[#354165].text-[#1680DC].text-sm.px-1.5.py-1.5.rounded-full.md  @348.0,1207.8 26.0x26.0
+      display: inline-block; width: 14px; height: 14px; paddingTop: 6px; paddingRight: 6px; paddingBottom: 6px; paddingLeft: 6px; fontSize: 14px; lineHeight: 20px; color: rgb(22, 128, 220); backgroundColor: rgb(53, 65, 101); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+      div.icon-inner  @354.0,1213.8 14.0x14.0
+        width: 14px; height: 14px
+        svg.ionicon  @354.0,1213.8 14.0x14.0  viewBox="0 0 512 512"
+          width: 14px; height: 14px; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## gameBlock2_content
+======================================================================
+div.game-content  @9.0,1260.0 372.0x379.0
+  width: 372px; height: 379px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.swiper.swiper-initialized.swiper-horizontal.swiper-autoheight.swiper-ios  @9.0,1260.0 372.0x379.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 372px; height: 379px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+    div.swiper-wrapper  @9.0,1260.0 372.0x379.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 372px; height: 379px; alignItems: flex-start; transition: transform, height
+      div.swiper-slide.swiper-slide-active.onMore  @9.0,1260.0 372.0x379.2
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 379.195px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        div.card-container  @9.0,1260.0 372.0x379.2
+          display: flex; width: 372px; height: 379.195px; paddingBottom: 15px; boxSizing: border-box; flexWrap: wrap; gap: 12px
+          div.style2.game-card  @9.0,1260.0 84.0x113.4
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 84px; height: 113.398px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          div.style2.game-card  @105.0,1260.0 84.0x113.4  [2nd of repeated]
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 84px; height: 113.398px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          …  (12x DIV|style2 game-card)
+      div.swiper-slide.swiper-slide-next.onMore  @382.0,1260.0 372.0x379.2
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 379.195px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        div.card-container  @382.0,1260.0 372.0x379.2
+          display: flex; width: 372px; height: 379.195px; paddingBottom: 15px; boxSizing: border-box; flexWrap: wrap; gap: 12px
+          div.style2.game-card  @382.0,1260.0 84.0x113.4
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 84px; height: 113.398px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          div.style2.game-card  @478.0,1260.0 84.0x113.4  [2nd of repeated]
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 84px; height: 113.398px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 12.5% 9.25%; borderTopRightRadius: 12.5% 9.25%; borderBottomLeftRadius: 12.5% 9.25%; borderBottomRightRadius: 12.5% 9.25%
+          …  (12x DIV|style2 game-card)
+      div.swiper-slide.onMore  @755.0,1260.0 372.0x0.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 0px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+      div.swiper-slide.onMore  @1128.0,1260.0 372.0x0.0  [2nd of repeated]
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 372px; height: 0px; minWidth: auto; minHeight: auto; marginRight: 1px; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+      …  (12x DIV|swiper-slide onMore)
+
+======================================================================
+## installBar
+======================================================================
+div#app-install-bar.install-container.pl-[1rem].pr-[0.375rem].pt-[5.5744rem].my-2.5.text-[.625rem].h-[21.8231rem].app-install-c  @0.0,3701.0 390.0x349.2
+  width: 390px; height: 349.164px; marginTop: 10px; marginBottom: 10px; paddingTop: 89.1904px; paddingRight: 6px; paddingLeft: 16px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 10px; fontWeight: 400; lineHeight: 15px; color: rgb(255, 255, 255); backgroundImage: url("https://gc987.com/images/appInstallBg.png"); backgroundSize: cover; backgroundPosition: 50% 50%; backgroundRepeat: no-repeat
+  div.topLine.font-extrabold.text-[1.625rem].mb-[1rem]  @16.0,3790.2 368.0x39.0
+    TEXT: "Baixar o aplicativo"
+    width: 368px; height: 39px; marginBottom: 16px; boxSizing: border-box; fontSize: 26px; fontWeight: 800; lineHeight: 39px; color: rgba(0, 0, 0, 0); backgroundImage: linear-gradient(0deg, rgb(191, 241, 255), rgb(191, 241, 255)), linear-gradient(rgb(255, 255, 255), rgba(255, 255, 255, 0)); backgroundSize: auto, auto; backgroundPosition: 0% 0%, 0% 0%; backgroundRepeat: repeat, repeat; backgroundClip: text, text; boxShadow: rgba(0, 0, 0, 0.14) 0px 2.08px 4.16px 0px
+  div.middleLine.font-semibold.text-[0.875rem].text-[#899FBE]  @16.0,3845.2 368.0x42.0
+    TEXT: "Baixe e instale o aplicativo no seu desktop para uma experiência de jogo mais fluida"
+    width: 368px; height: 42px; boxSizing: border-box; fontSize: 14px; fontWeight: 600; lineHeight: 21px; color: rgb(137, 159, 190)
+  ion-row.h-[2.625rem].mt-[1.875rem].ios  @16.0,3917.2 368.0x42.0
+    display: flex; width: 368px; height: 42px; marginTop: 30px; boxSizing: border-box; flexWrap: wrap
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    ion-col.ios  @16.0,3917.2 184.0x42.0
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 184px; height: 42px; minWidth: auto; minHeight: 1px; maxWidth: 50%; paddingRight: 6px; paddingLeft: 6px; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      div.border.border-[#31343D].h-full.rounded-[.625rem].flex.items-center.pl-10.bg-white  @22.0,3917.2 172.0x42.0
+        display: flex; width: 172px; height: 42px; paddingLeft: 40px; boxSizing: border-box; alignItems: center; backgroundColor: rgb(255, 255, 255); borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px; borderTopWidth: 1px; borderRightWidth: 1px; borderBottomWidth: 1px; borderLeftWidth: 1px; borderStyle: solid; borderColor: rgb(49, 52, 61)
+        ion-icon.text-3xl.mr-[.3125rem].text-black.md  @63.0,3923.2 30.0x30.0
+          width: 30px; height: 30px; minWidth: auto; minHeight: auto; marginRight: 5px; fontSize: 30px; lineHeight: 36px; color: rgb(0, 0, 0)
+          div.icon-inner  @63.0,3923.2 30.0x30.0
+            width: 30px; height: 30px
+            svg.s-ion-icon  @63.0,3923.2 30.0x30.0  viewBox="0 0 30 30"
+              width: 30px; height: 30px; overflow: hidden; overflowX: hidden; overflowY: hidden
+        div  @98.0,3924.7 46.7x27.0
+          width: 46.6719px; height: 27px; minWidth: auto; minHeight: auto; boxSizing: border-box
+          p.text-sub.text-[.5rem].text-[#070D1F]  @98.0,3924.7 46.7x12.0
+            TEXT: "Aplicativo"
+            width: 46.6719px; height: 12px; boxSizing: border-box; fontSize: 8px; lineHeight: 12px; color: rgb(7, 13, 31)
+          p.text  @98.0,3936.7 46.7x15.0
+            TEXT: "Baixar iOS"
+            width: 46.6719px; height: 15px; boxSizing: border-box; fontWeight: 700; color: rgb(64, 117, 211)
+    ion-col.ios  @200.0,3917.2 184.0x42.0  [2nd of repeated]
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 184px; height: 42px; minWidth: auto; minHeight: 1px; maxWidth: 50%; paddingRight: 6px; paddingLeft: 6px; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      div.border.border-[#31343D].h-full.rounded-[.625rem].flex.items-center.pl-10.bg-white  @206.0,3917.2 172.0x42.0
+        display: flex; width: 172px; height: 42px; paddingLeft: 40px; boxSizing: border-box; alignItems: center; backgroundColor: rgb(255, 255, 255); borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px; borderTopWidth: 1px; borderRightWidth: 1px; borderBottomWidth: 1px; borderLeftWidth: 1px; borderStyle: solid; borderColor: rgb(49, 52, 61)
+        ion-icon.text-3xl.mr-[.3125rem].md  @247.0,3923.2 30.0x30.0
+          width: 30px; height: 30px; minWidth: auto; minHeight: auto; marginRight: 5px; fontSize: 30px; lineHeight: 36px
+          div.icon-inner  @247.0,3923.2 30.0x30.0
+            width: 30px; height: 30px
+            svg.s-ion-icon  @247.0,3923.2 30.0x30.0  viewBox="0 0 30 30"
+              width: 30px; height: 30px; overflow: hidden; overflowX: hidden; overflowY: hidden
+        div  @282.0,3924.7 66.2x27.0
+          width: 66.1953px; height: 27px; minWidth: auto; minHeight: auto; boxSizing: border-box
+          p.text-sub.text-[.5rem].text-[#070D1F]  @282.0,3924.7 66.2x12.0
+            TEXT: "Aplicativo"
+            width: 66.1953px; height: 12px; boxSizing: border-box; fontSize: 8px; lineHeight: 12px; color: rgb(7, 13, 31)
+          p.text  @282.0,3936.7 66.2x15.0
+            TEXT: "Baixar Android"
+            width: 66.1953px; height: 15px; boxSizing: border-box; fontWeight: 700; color: rgb(64, 117, 211)
+
+======================================================================
+## classification
+======================================================================
+div.game-classification.game-class-c  @15.0,4095.2 360.0x332.0
+  width: 360px; height: 332px; marginTop: 45px; marginRight: 15px; marginBottom: 45px; marginLeft: 15px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.head  @15.0,4095.2 360.0x51.0
+    display: flex; width: 360px; height: 51px; boxSizing: border-box; flexDirection: column; alignItems: center
+    ion-img.logo.ios  @139.5,4095.2 111.0x26.0
+      width: 111px; height: 26px; minWidth: auto; minHeight: auto; boxSizing: border-box; objectFit: contain
+      img  @139.5,4095.2 111.0x26.0  src=LOGO.png
+        width: 111px; height: 26px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: contain
+    ion-label.title.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @130.4,4128.2 129.2x18.0
+      TEXT: "Bem-vindo à gc987.com"
+      width: 129.195px; height: 18px; minWidth: auto; minHeight: auto; marginTop: 7px; boxSizing: border-box; fontSize: 12px; lineHeight: 18px; color: rgba(255, 255, 255, 0.4)
+  div.intro  @15.0,4146.2 360.0x21.0
+    width: 360px; height: 21px; marginBottom: 45px; boxSizing: border-box; fontSize: 11px; lineHeight: 16.5px; textAlign: center; color: rgb(97, 109, 147)
+    p  @15.0,4146.2 360.0x21.0
+      TEXT: "©2026 gc987.com Todos os direitos reservados"
+      width: 360px; height: 21px; boxSizing: border-box
+      span.text  @302.0,4148.2 23.7x17.0
+        TEXT: "21+"
+        display: inline; width: auto; height: auto; boxSizing: border-box; fontSize: 14px; fontWeight: 800; lineHeight: 21px
+  section.row.first-row  @15.0,4212.2 360.0x195.0
+    display: flex; width: 360px; height: 195px; marginTop: 20px; paddingRight: 25px; paddingLeft: 50px; boxSizing: border-box
+    div.col  @65.0,4212.2 142.5x195.0
+      width: 142.5px; height: 195px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      ion-label.col-title.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @65.0,4216.2 95.2x17.0
+        TEXT: "Gênero de jogo"
+        display: inline; width: auto; height: auto; boxSizing: border-box; fontSize: 14px; fontWeight: 700; lineHeight: 21px
+      ul.list  @65.0,4252.2 142.5x100.8
+        width: 142.5px; height: 100.781px; marginTop: 16px; boxSizing: border-box
+        li.active.list-item  @65.0,4252.2 142.5x25.2
+          display: list-item; width: 142.5px; height: 25.1953px; boxSizing: border-box; fontSize: 14px; lineHeight: 25.2px
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @65.0,4256.2 24.3x17.0
+            TEXT: "Slot"
+            display: inline; width: auto; height: auto; boxSizing: border-box
+        li.list-item  @65.0,4277.4 142.5x25.2
+          display: list-item; width: 142.5px; height: 25.1953px; boxSizing: border-box; fontSize: 14px; lineHeight: 25.2px; color: rgb(137, 159, 190)
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @65.0,4281.4 38.3x17.0
+            TEXT: "Pesca"
+            display: inline; width: auto; height: auto; boxSizing: border-box
+        li.list-item  @65.0,4302.6 142.5x25.2  [2nd of repeated]
+          display: list-item; width: 142.5px; height: 25.1953px; boxSizing: border-box; fontSize: 14px; lineHeight: 25.2px; color: rgb(137, 159, 190)
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @65.0,4306.6 50.3x17.0
+            TEXT: "Cassino"
+            display: inline; width: auto; height: auto; boxSizing: border-box
+        …  (3x LI|list-item)
+    div.col  @207.5,4212.2 142.5x195.0  [2nd of repeated]
+      width: 142.5px; height: 195px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      ion-label.col-title.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @207.5,4216.2 104.3x17.0
+        TEXT: "Marca de games"
+        display: inline; width: auto; height: auto; boxSizing: border-box; fontSize: 14px; fontWeight: 700; lineHeight: 21px
+      ul.list.platform-list  @207.5,4252.2 142.5x155.0
+        width: 142.5px; height: 155px; maxHeight: 155px; marginTop: 16px; boxSizing: border-box; overflow: auto; overflowX: auto; overflowY: auto
+        li.list-item  @207.5,4252.2 142.5x25.2
+          display: list-item; width: 142.5px; height: 25.1953px; boxSizing: border-box; fontSize: 14px; lineHeight: 25.2px; color: rgb(137, 159, 190)
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @207.5,4256.2 18.4x17.0
+            TEXT: "PG"
+            display: inline; width: auto; height: auto; boxSizing: border-box
+        li.list-item  @207.5,4277.4 142.5x25.2  [2nd of repeated]
+          display: list-item; width: 142.5px; height: 25.1953px; boxSizing: border-box; fontSize: 14px; lineHeight: 25.2px; color: rgb(137, 159, 190)
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label  @207.5,4281.4 30.7x17.0
+            TEXT: "Tada"
+            display: inline; width: auto; height: auto; boxSizing: border-box
+        …  (19x LI|list-item)
+  section.row  @15.0,4427.2 360.0x0.0
+    display: flex; width: 360px; height: 0px; marginTop: 20px; paddingRight: 25px; paddingLeft: 50px; boxSizing: border-box
+
+======================================================================
+## footer
+======================================================================
+div.footer-content-c  @0.0,4472.2 390.0x188.0
+  width: 390px; height: 188px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.divider.h-[0.0625rem].w-[22.5rem].ml-[.9375rem].bg-[#303C59].mt-[0.9375rem]  @15.0,4472.2 360.0x1.0
+    width: 360px; height: 1px; marginTop: 15px; marginLeft: 15px; boxSizing: border-box; backgroundColor: rgb(26, 35, 62)
+  div.footer-container.px-[.9375rem].pt-[1.0625rem]  @0.0,4473.2 390.0x187.0
+    width: 390px; height: 187px; paddingTop: 17px; paddingRight: 15px; paddingLeft: 15px; boxSizing: border-box
+    div.mb-[.875rem].mt-[.625rem].keep-space  @15.0,4500.2 360.0x160.0
+      width: 360px; height: 160px; marginTop: 10px; marginBottom: 14px; boxSizing: border-box; whiteSpace: pre-wrap
+      p.text-sub.text-[.6875rem].min-h-[1.25rem].leading-[1.25rem].text-[#899FBE]  @15.0,4500.2 360.0x160.0
+        TEXT: "1. Este produto é para uso de usuários maiores de 18 anos e é destinado apenas para fins de entretenimento.
+
+2. este jogo contém compras noapp.
+
+3. O fato de um jogador jogar ou ganhar em um jogo de apostas sociais não significa que ele ganhará em apostas com dinheiro real e jogos relacionados no futuro."
+        width: 360px; height: 160px; minHeight: 20px; boxSizing: border-box; fontSize: 11px; lineHeight: 20px; color: rgb(137, 159, 190)
+
+======================================================================
+## tabbarOuter
+======================================================================
+div.outer-wrap  @0.0,689.0 390.0x56.0
+  position: absolute; top: 789px; right: 0px; bottom: -1px; left: 0px; zIndex: 10; width: 390px; height: 56px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  ion-tab-bar.tab-bar.ios  @0.0,689.0 390.0x56.0
+    display: flex; zIndex: 10; width: 390px; height: 56px; justifyContent: center; alignItems: center; textAlign: center; color: rgb(153, 153, 153); backgroundImage: linear-gradient(rgba(0, 0, 0, 0) 50px, rgb(24, 35, 68) 50px)
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    div.inner-wrap  @0.0,689.0 390.0x56.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 390px; height: 56px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexDirection: column
+      div.tab-bg  @0.0,689.0 390.0x56.0
+        display: flex; width: 390px; height: 56px; minWidth: auto; minHeight: auto; boxSizing: border-box; backgroundImage: url("https://gc987.com/first/svg/tabbar/bg-blue-dark.svg"); backgroundSize: cover; backgroundPosition: 50% 50%; backgroundRepeat: no-repeat
+        div.tab-btn  @0.0,689.0 78.0x56.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 78px; height: 56px; minWidth: auto; minHeight: auto; paddingTop: 4px; boxSizing: border-box; flexDirection: column; alignItems: center; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%
+          i.on.tab-img  @24.0,693.0 30.0x30.0
+            width: 30px; height: 30px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontStyle: italic; backgroundImage: url("https://gc987.com/icons/tabbar/inicio-fx.png"); backgroundSize: cover
+          ion-label.active.label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @27.0,723.0 24.0x10.0
+            TEXT: "Inicio"
+            width: 24.0469px; height: 10px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 10px; lineHeight: 10px; color: rgb(255, 255, 255)
+          p.red-point.absolute.bg-[#FF0000].text-center.rounded-full.a.point-0  @0.0,-100.0 0.0x0.0
+            display: none; position: absolute; zIndex: 100; width: 7px; height: 7px; boxSizing: border-box; fontSize: 10px; lineHeight: 7px; backgroundColor: rgb(255, 0, 0); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+        div.tab-btn  @78.0,689.0 78.0x56.0  [2nd of repeated]
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 78px; height: 56px; minWidth: auto; minHeight: auto; paddingTop: 4px; boxSizing: border-box; flexDirection: column; alignItems: center; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%
+          i.tab-img  @102.0,693.0 30.0x30.0
+            width: 30px; height: 30px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontStyle: italic; backgroundImage: url("https://gc987.com/icons/tabbar/promo-fx.png"); backgroundSize: cover
+          ion-label.label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @93.9,723.0 46.2x10.0
+            TEXT: "Promoção"
+            width: 46.1562px; height: 10px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 10px; lineHeight: 10px; color: rgb(86, 100, 136)
+          p.red-point.absolute.bg-[#FF0000].text-center.rounded-full.a.point-1  @0.0,-100.0 0.0x0.0
+            display: none; position: absolute; top: 5px; right: 25px; zIndex: 100; width: 7px; height: 7px; boxSizing: border-box; fontSize: 10px; lineHeight: 7px; backgroundColor: rgb(255, 0, 0); borderTopLeftRadius: 9999px; borderTopRightRadius: 9999px; borderBottomLeftRadius: 9999px; borderBottomRightRadius: 9999px
+        div.underline  @35.0,738.0 8.0x2.0
+          position: absolute; top: 49px; right: 343px; bottom: 5px; left: 39px; width: 8px; height: 2px; boxSizing: border-box; textDecorationLine: underline; backgroundColor: rgb(148, 255, 127); borderTopLeftRadius: 2px; borderTopRightRadius: 2px; borderBottomLeftRadius: 2px; borderBottomRightRadius: 2px; transform: matrix(1, 0, 0, 1, -4, 0); transition: left 0.3s
+        …  (5x DIV|tab-btn)
+
+======================================================================
+## depositBtn
+======================================================================
+div.deposit  @105.0,675.0 180.0x48.0
+  display: flex; position: absolute; top: 775px; right: 15px; bottom: 21px; left: 195px; zIndex: 1; width: 180px; height: 48px; boxSizing: border-box; flexDirection: column; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); backgroundImage: url("https://gc987.com/first/svg/tabbar/deposit-blue-dark.svg"); backgroundSize: cover; backgroundPosition: 50% 0%; backgroundRepeat: no-repeat; transform: matrix(1, 0, 0, 1, -90, 0)
+  i.tab-img  @171.0,678.0 48.0x45.0
+    width: 48px; height: 45px; minWidth: auto; minHeight: auto; marginTop: 3px; boxSizing: border-box; fontStyle: italic; backgroundImage: url("https://gc987.com/first/svg/tabbar/deposit-blue-dark-on.png"); backgroundSize: cover
+
+======================================================================
+## support
+======================================================================
+div.support  @16.0,636.0 40.0x40.0
+  display: flex; position: fixed; top: 736px; right: 334px; bottom: 68px; left: 16px; zIndex: 50; width: 40px; height: 40px; boxSizing: border-box; justifyContent: center; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 32px; fontWeight: 400; lineHeight: 48px; color: rgb(255, 255, 255); backgroundImage: linear-gradient(0deg, rgb(1, 103, 202), rgb(56, 168, 250)); borderTopLeftRadius: 50%; borderTopRightRadius: 50%; borderBottomLeftRadius: 50%; borderBottomRightRadius: 50%
+  ion-icon.md  @20.0,640.0 32.0x32.0
+    width: 32px; height: 32px; minWidth: auto; minHeight: auto
+    div.icon-inner  @20.0,640.0 32.0x32.0
+      width: 32px; height: 32px
+      svg.s-ion-icon  @20.0,640.0 32.0x32.0  viewBox="0 0 30 28"
+        width: 32px; height: 32px; overflow: hidden; overflowX: hidden; overflowY: hidden

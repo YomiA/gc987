@@ -1,0 +1,19 @@
+div#app [0,0 390x0]
+  ion-app.ios.ion-page [0,0 390x844]
+    ion-content#app-content.ios.overscroll.content-ltr [0,0 390x844]
+      #shadow-root
+        div#background-content [0,0 390x844]
+        div.inner-scroll [0,0 390x844]
+      ion-router-outlet.mx-auto.overflow-hidden.fade-in-loading-main-tree [0,0 390x844]
+        #shadow-root
+        div.ion-page [0,0 390x844]
+          ion-content#main-content.menu-content.menu-content-overlay.ios.overscroll.content-ltr [0,0 390x844]
+            #shadow-root
+              div#background-content [0,0 390x844]
+              div.inner-scroll.scroll-y.overscroll [0,0 390x844]
+            ion-tabs.relative [0,0 390x844]
+              #shadow-root
+              ion-router-outlet [0,0 390x844]
+                #shadow-root
+              div.outer-wrap [0,789 390x56]
+              div.deposit [105,775 180x48]

@@ -1,0 +1,43 @@
+/* ---------------------------------------------------------------------------
+   Shared app-column shell.
+
+   These are the shell rules already measured for /main/inicio, lifted here so
+   additional routes can reuse them instead of restating them. InicioPage.vue
+   keeps its own scoped copy verbatim — its `.ion-page[data-v-*]` selector wins
+   on specificity and every declaration below is byte-identical to it, so that
+   page renders exactly as before.
+--------------------------------------------------------------------------- */
+
+/* `contain: layout` reproduces the live page's ion-tabs, which makes this the
+   containing block for the absolutely positioned tab bar so it hugs the column
+   edge rather than the window edge once the viewport is wider than the column. */
+.ion-page {
+  display: flex;
+  position: relative;
+  width: 100%;
+  max-width: var(--app-max-width);
+  height: 100vh;
+  margin: 0 auto;
+  flex-direction: column;
+  overflow: hidden;
+  contain: layout;
+  background-color: var(--color-bar-bg);
+}
+
+/* The scroller behaviour shared by every route's ion-content:
+   live page has ion-content::part(scroll) { scrollbar-width: none } plus
+   ::-webkit-scrollbar { display: none }, and scrolling stays enabled. */
+.page-scroller {
+  position: relative;
+  flex: 1 1 0%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-width: none;
+  overflow-anchor: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.page-scroller::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,271 @@
+@import './fonts.css';
+
+/* ---------------------------------------------------------------------------
+   Design tokens read off https://gc987.com/main/inicio at 390x844x3.
+   Values are the resolved custom properties from getComputedStyle(html),
+   theme class `blue-default`, body class `home-type-Platform default v01`.
+   Only the properties this page actually consumes are kept.
+--------------------------------------------------------------------------- */
+
+:root {
+  /* Ionic palette */
+  --ion-color-primary: #0054e9;
+  --ion-color-primary-rgb: 0, 84, 233;
+  --ion-color-primary-contrast: #fff;
+  --ion-color-primary-shade: #004acd;
+  --ion-color-primary-tint: #1a65eb;
+  --ion-color-secondary: #0163aa;
+  --ion-color-secondary-rgb: 1, 99, 170;
+  --ion-color-secondary-contrast: #fff;
+  --ion-color-secondary-shade: #015796;
+  --ion-color-secondary-tint: #1a73b3;
+  --ion-color-tertiary: #6030ff;
+  --ion-color-tertiary-rgb: 96, 48, 255;
+  --ion-color-tertiary-contrast: #fff;
+  --ion-color-tertiary-shade: #542ae0;
+  --ion-color-tertiary-tint: #7045ff;
+  --ion-color-success: #2dd55b;
+  --ion-color-success-rgb: 45, 213, 91;
+  --ion-color-success-contrast: #000;
+  --ion-color-success-shade: #28bb50;
+  --ion-color-success-tint: #42d96b;
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
+  --ion-color-danger: #c5000f;
+  --ion-color-danger-rgb: 197, 0, 15;
+  --ion-color-danger-contrast: #fff;
+  --ion-color-danger-shade: #ad000d;
+  --ion-color-danger-tint: #cb1a27;
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-contrast: #000;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
+  --ion-color-medium: #636469;
+  --ion-color-medium-rgb: 99, 100, 105;
+  --ion-color-medium-contrast: #fff;
+  --ion-color-medium-shade: #57585c;
+  --ion-color-medium-tint: #737478;
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 36, 40;
+  --ion-color-dark-contrast: #fff;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  /* Ionic stepped greys */
+  --ion-color-step-50: #0d0d0d;
+  --ion-color-step-100: #1a1a1a;
+  --ion-color-step-150: #262626;
+  --ion-color-step-200: #333333;
+  --ion-color-step-250: #404040;
+  --ion-color-step-300: #4d4d4d;
+  --ion-color-step-350: #595959;
+  --ion-color-step-400: #666666;
+  --ion-color-step-450: #737373;
+  --ion-color-step-500: #808080;
+  --ion-color-step-550: #8c8c8c;
+  --ion-color-step-600: #999999;
+  --ion-color-step-650: #a6a6a6;
+  --ion-color-step-700: #b3b3b3;
+  --ion-color-step-750: #bfbfbf;
+  --ion-color-step-800: #cccccc;
+  --ion-color-step-850: #d9d9d9;
+  --ion-color-step-900: #e6e6e6;
+  --ion-color-step-950: #f2f2f2;
+
+  /* Ionic shell */
+  --ion-background-color: #090f1f;
+  --ion-background-color-rgb: 0, 0, 0;
+  --ion-text-color: #fff;
+  --ion-text-color-rgb: 255, 255, 255;
+  --ion-item-background: #090f1f;
+  --ion-card-background: #1c1c1d;
+  --ion-toolbar-background: #262626;
+  --ion-toolbar-border-color: #404040;
+  --ion-tab-bar-background: #101629;
+  --ion-safe-area-top: 0px;
+  --ion-safe-area-right: 0px;
+  --ion-safe-area-bottom: 0px;
+  --ion-safe-area-left: 0px;
+  --ion-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
+  --ion-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
+  --ion-dynamic-font: -apple-system-body;
+
+  /* Site theme (blue-default) */
+  --color-bg-200: #1a223a;
+  --color-bg-400: #101629;
+  --color-bar-bg: #090f1f;
+  --color-card-bg-200: #182434;
+  --color-card-bg-300: #090f1f;
+  --color-bg-toast: #222428;
+  --color-bg-mask-black: rgba(0, 0, 0, 0.8);
+  --color-primary-800: #1680dc;
+  --color-text-100: #fff;
+  --color-currency: #fba531;
+  --color-border: #292d36;
+  --color-focus: #0167ca;
+  --color-button-bg-update: #fba531;
+  --color-segment-md: #566488;
+  --color-segment-md-indicator: #38a8fa;
+  --line-color: #1a223a;
+  --color-bg-tab-on: linear-gradient(0deg, #0167ca -13.77%, #38a8fa 102.34%);
+  --color-bg-segment-ios: linear-gradient(0deg, #1c2334, #141b2a);
+  --color-bg-segment-ios-indicator: linear-gradient(0deg, #0167ca -13.77%, #38a8fa 102.34%);
+  --color-checkbox-bg: linear-gradient(0deg, #0167ca 0%, #38a8fa 100%);
+
+  /* Radii / type scale */
+  --rounded-small: 0.3125rem;
+  --rounded-segment: 0.75rem;
+  --rounded-button-tab: 0.5rem;
+  --rounded-card-game: 0.75rem;
+      /* Width of the app column. This is the one length that must stay in px:
+         the root font size is derived from it, so every other rem length in
+         the clone is measured against it. The live page sets the same value
+         inline on ion-router-outlet (`max-width: 486px`, plus `mx-auto`). */
+      --app-max-width: 486px;
+
+      --font-size-8: 0.5rem;
+  --font-size-10: 0.625rem;
+  --font-size-12: 0.75rem;
+  --font-size-14: 0.875rem;
+  --font-size-16: 1rem;
+  --font-size-18: 1.125rem;
+  --font-size-20: 1.25rem;
+  --font-size-24: 1.5rem;
+
+  /* --------------------------------------------------------------------
+     Values below are not custom properties on the live site; they are the
+     resolved getComputedStyle results this clone reuses in several places.
+  -------------------------------------------------------------------- */
+
+  /* segment / provider filter */
+  --segment-track-bg: rgb(19, 24, 38);
+  --segment-indicator-line: rgb(148, 255, 127);
+
+  /* game blocks */
+  --game-card-bg: rgb(16, 22, 41);
+  --arrow-btn-bg: rgb(53, 65, 101);
+  --arrow-btn-fg: rgb(22, 128, 220);
+  --arrow-btn-fg-disabled: rgb(90, 104, 146);
+  --more-link: rgb(17, 111, 205);
+
+  /* text */
+  --text-muted: rgb(137, 159, 190);
+  --text-dim: rgb(97, 109, 147);
+  --tab-label-off: rgb(86, 100, 136);
+  --divider: rgb(26, 35, 62);
+
+  /* header */
+  --pwa-bar-bg: linear-gradient(90deg, rgb(32, 41, 64) 0%, rgb(19, 26, 44) 100%);
+  --btn-blue: linear-gradient(0deg, rgb(1, 103, 202) -13.77%, rgb(56, 168, 250) 102.34%);
+  --btn-green: linear-gradient(rgb(19, 201, 106), rgb(29, 149, 84));
+  --btn-md-shadow: rgba(0, 0, 0, 0.2) 0 3px 1px -2px, rgba(0, 0, 0, 0.14) 0 2px 2px 0,
+    rgba(0, 0, 0, 0.12) 0 1px 5px 0;
+  --search-blue: rgb(56, 168, 250);
+}
+
+/* ---------------------------------------------------------------------------
+   Root typography and reset. Mirrors the live values:
+   html  font: 400 16px/24px <stack>; color rgb(0,0,0)
+   body  color rgb(255,255,255); background rgb(9,15,31);
+         -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+         margin/padding 0; overflow hidden
+--------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+}
+
+/* The live page sizes the whole UI off the root font size, which its bootstrap
+   script writes inline as `columnWidth / 24.375` (16px at a 390px column,
+   15.3846px at 375px, 19.9385px once the column hits its 486px cap). Every
+   other length in this clone is a rem measured against that, so the layout
+   tracks the viewport the way the original does instead of staying pinned to
+   the 390px reference width. */
+html {
+  font-family: var(--ion-font-family);
+  /* Live page writes this on <html> as columnWidth / 24.375.
+     375 / 24.375 = 15.3846px (iPhone SE), 390 / 24.375 = 16px,
+     486 / 24.375 = 19.9385px (desktop cap). */
+  font-size: calc(min(100vw, var(--app-max-width)) / 24.375);
+  font-weight: 400;
+  line-height: 1.5rem;
+  color: rgb(0, 0, 0);
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--ion-font-family);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.5rem;
+  color: rgb(255, 255, 255);
+  background-color: rgb(9, 15, 31);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+/* ion-app is full-viewport; the 486px column is a child. Keep #app full
+   width so .ion-page { max-width: 486px; margin: 0 auto } can center. */
+#app {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+button {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+img,
+svg {
+  display: block;
+  vertical-align: middle;
+}

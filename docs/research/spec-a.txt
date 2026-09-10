@@ -1,0 +1,443 @@
+
+======================================================================
+## pwaHeaderBar
+======================================================================
+ion-toolbar#pwa-header-bar.text-xs.default.blue-default.ios.in-toolbar  @0.0,-100.0 390.0x50.0
+  position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 12px; fontWeight: 400; lineHeight: 16px; color: rgb(255, 255, 255)
+  div.toolbar-background  @0.0,-100.0 390.0x50.0
+    position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: -1; width: 390px; height: 50px; backgroundImage: linear-gradient(90deg, rgb(32, 41, 64) 0%, rgb(19, 26, 44) 100%)
+  div.toolbar-container  @0.0,-100.0 390.0x50.0
+    display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; minHeight: 50px; paddingRight: 4px; paddingLeft: 4px; boxSizing: border-box; justifyContent: space-between; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+      display: contents; width: auto; height: auto
+    div.toolbar-content  @60.0,-91.0 220.0x32.0
+      width: 220px; height: 32px; minHeight: auto; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%; order: 4
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+    …  (4x SLOT|)
+  ion-img.cover.w-9.h-9.ml-3.mr-2.ios  @16.0,-93.0 36.0x36.0
+    width: 36px; height: 36px; minWidth: auto; minHeight: auto; marginRight: 8px; marginLeft: 12px; boxSizing: border-box; objectFit: contain; order: 2
+    img  @16.0,-93.0 36.0x36.0  src=ICON.png
+      width: 36px; height: 36px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover
+  div.flex.items-center.h-full  @60.0,-91.0 220.0x32.0
+    display: flex; width: 220px; height: 32px; boxSizing: border-box; alignItems: center
+    p  @60.0,-91.0 152.0x32.0
+      TEXT: "Baixe Nosso APP, Ganhe Super Prêmios!"
+      width: 152.031px; height: 32px; minWidth: auto; minHeight: auto; boxSizing: border-box
+    ion-img.w-24.h-8.ios  @212.0,-91.0 68.0x32.0
+      width: 67.9688px; height: 32px; minWidth: auto; minHeight: auto; boxSizing: border-box; objectFit: contain
+      img  @212.0,-91.0 68.0x32.0  src=pwa-prize.png
+        width: 67.9688px; height: 32px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: contain
+  div.install.rounded-[6px].ml-1.p-[5px].min-w-16.text-center  @284.0,-88.0 64.0x26.0
+    width: 64px; height: 26px; minWidth: 64px; minHeight: auto; marginLeft: 4px; paddingTop: 5px; paddingRight: 5px; paddingBottom: 5px; paddingLeft: 5px; boxSizing: border-box; textAlign: center; backgroundImage: linear-gradient(0deg, rgb(1, 103, 202) -13.77%, rgb(56, 168, 250) 102.34%); borderTopLeftRadius: 6px; borderTopRightRadius: 6px; borderBottomLeftRadius: 6px; borderBottomRightRadius: 6px; order: 5
+    button.w-full.h-full  @289.0,-81.0 54.0x12.0
+      TEXT: "Instalar"
+      display: inline-block; width: 54px; height: 12px; boxSizing: border-box; lineHeight: 12px
+  ion-buttons.close-btn.mx-2.5.buttons-last-slot.sc-ion-buttons-ios-h.sc-ion-buttons-ios-s.ios  @358.0,-94.0 18.0x38.0
+    display: flex; zIndex: 99; width: 18px; height: 38px; minWidth: auto; minHeight: 38px; marginRight: 10px; marginLeft: 10px; boxSizing: border-box; alignItems: center; textAlign: end; order: 6
+    ion-icon.text-lg.close.sc-ion-buttons-ios.md  @358.0,-84.0 18.0x18.0
+      width: 18px; height: 18px; minWidth: auto; minHeight: auto; fontSize: 18px; lineHeight: 28px
+      div.icon-inner  @358.0,-84.0 18.0x18.0
+        width: 18px; height: 18px
+        svg.ionicon  @358.0,-84.0 18.0x18.0  viewBox="0 0 512 512"
+          width: 18px; height: 18px; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## header
+======================================================================
+ion-header.ios.header-ios.header-collapse-none.ion-no-border  @0.0,-100.0 390.0x100.0
+  position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 100px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); order: -1
+  ion-toolbar#pwa-header-bar.text-xs.default.blue-default.ios.in-toolbar  @0.0,-100.0 390.0x50.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; boxSizing: border-box; fontSize: 12px; lineHeight: 16px
+    div.toolbar-background  @0.0,-100.0 390.0x50.0
+      position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: -1; width: 390px; height: 50px; backgroundImage: linear-gradient(90deg, rgb(32, 41, 64) 0%, rgb(19, 26, 44) 100%)
+    div.toolbar-container  @0.0,-100.0 390.0x50.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; minHeight: 50px; paddingRight: 4px; paddingLeft: 4px; boxSizing: border-box; justifyContent: space-between; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+        display: contents; width: auto; height: auto
+      div.toolbar-content  @60.0,-91.0 220.0x32.0
+        width: 220px; height: 32px; minHeight: auto; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%; order: 4
+      …  (4x SLOT|)
+    ion-img.cover.w-9.h-9.ml-3.mr-2.ios  @16.0,-93.0 36.0x36.0
+      width: 36px; height: 36px; minWidth: auto; minHeight: auto; marginRight: 8px; marginLeft: 12px; boxSizing: border-box; objectFit: contain; order: 2
+      img  @16.0,-93.0 36.0x36.0  src=ICON.png
+        width: 36px; height: 36px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover
+    div.flex.items-center.h-full  @60.0,-91.0 220.0x32.0
+      display: flex; width: 220px; height: 32px; boxSizing: border-box; alignItems: center
+      p  @60.0,-91.0 152.0x32.0
+        TEXT: "Baixe Nosso APP, Ganhe Super Prêmios!"
+        width: 152.031px; height: 32px; minWidth: auto; minHeight: auto; boxSizing: border-box
+      ion-img.w-24.h-8.ios  @212.0,-91.0 68.0x32.0
+        width: 67.9688px; height: 32px; minWidth: auto; minHeight: auto; boxSizing: border-box; objectFit: contain
+    div.install.rounded-[6px].ml-1.p-[5px].min-w-16.text-center  @284.0,-88.0 64.0x26.0
+      width: 64px; height: 26px; minWidth: 64px; minHeight: auto; marginLeft: 4px; paddingTop: 5px; paddingRight: 5px; paddingBottom: 5px; paddingLeft: 5px; boxSizing: border-box; textAlign: center; backgroundImage: linear-gradient(0deg, rgb(1, 103, 202) -13.77%, rgb(56, 168, 250) 102.34%); borderTopLeftRadius: 6px; borderTopRightRadius: 6px; borderBottomLeftRadius: 6px; borderBottomRightRadius: 6px; order: 5
+      button.w-full.h-full  @289.0,-81.0 54.0x12.0
+        TEXT: "Instalar"
+        display: inline-block; width: 54px; height: 12px; boxSizing: border-box; lineHeight: 12px
+    ion-buttons.close-btn.mx-2.5.buttons-last-slot.sc-ion-buttons-ios-h.sc-ion-buttons-ios-s.ios  @358.0,-94.0 18.0x38.0
+      display: flex; zIndex: 99; width: 18px; height: 38px; minWidth: auto; minHeight: 38px; marginRight: 10px; marginLeft: 10px; boxSizing: border-box; alignItems: center; textAlign: end; order: 6
+      ion-icon.text-lg.close.sc-ion-buttons-ios.md  @358.0,-84.0 18.0x18.0
+        width: 18px; height: 18px; minWidth: auto; minHeight: auto; fontSize: 18px; lineHeight: 28px
+  ion-toolbar.ios.in-toolbar.header  @0.0,-50.0 390.0x50.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; boxSizing: border-box
+    div.toolbar-background  @0.0,-50.0 390.0x50.0
+      position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: -1; width: 390px; height: 50px; backgroundColor: rgb(9, 15, 31)
+    div.toolbar-container  @0.0,-50.0 390.0x50.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; minHeight: 50px; paddingRight: 15px; paddingLeft: 4px; boxSizing: border-box; justifyContent: space-between; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+        display: contents; width: auto; height: auto
+      div.toolbar-content  @214.2,-25.0 0.0x0.0
+        width: 0px; height: 0px; minHeight: auto; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%; order: 4
+      …  (4x SLOT|)
+    ion-buttons.menu-btn.buttons-first-slot.sc-ion-buttons-ios-h.sc-ion-buttons-ios-s.ios  @4.0,-44.0 44.0x38.0
+      display: flex; zIndex: 99; width: 44px; height: 38px; minWidth: auto; minHeight: 38px; paddingRight: 12px; paddingLeft: 12px; boxSizing: border-box; alignItems: center; order: 2
+      ion-icon.text-xl.menu-bar.sc-ion-buttons-ios.md  @16.0,-35.0 20.0x20.0
+        width: 20px; height: 20px; minWidth: auto; minHeight: auto; fontSize: 20px; lineHeight: 28px; transition: 0.3s
+    ion-img.h-[2.25rem].pr-4.ios  @48.0,-43.0 166.2x36.0
+      width: 166.164px; height: 36px; minWidth: auto; minHeight: auto; paddingRight: 16px; boxSizing: border-box; objectFit: contain; order: 3
+      img  @48.0,-43.0 150.2x36.0  src=LOGO.png
+        width: 150.164px; height: 36px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: contain
+    div.primaryBtn  @214.2,-37.0 128.8x24.0
+      display: flex; width: 128.836px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; alignItems: center; textAlign: end; order: 5
+      ion-button.md.button.button-solid.in-toolbar.ion-activatable.ion-focusable.login.init-btn.btn-margin  @214.2,-37.0 53.9x24.0
+        TEXT: "Entrar"
+        width: 53.9219px; height: 24px; minWidth: fit-content; minHeight: min-content; boxSizing: border-box; fontSize: 12px; fontWeight: 700; lineHeight: 12px; textAlign: center; textTransform: uppercase
+      div.register-btn-warpper.btn-margin  @278.1,-37.0 64.9x24.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 64.9141px; height: 24px; minWidth: auto; minHeight: auto; marginLeft: 10px; boxSizing: border-box; alignItems: center
+    ion-button.ios.button.button-clear.in-toolbar.button-has-icon-only.ion-activatable.ion-focusable.unset-btn.search  @343.0,-37.0 32.0x24.0
+      width: 32px; height: 24px; minWidth: min-content; minHeight: min-content; paddingLeft: 8px; boxSizing: border-box; fontSize: 22px; lineHeight: 33px; textAlign: end; color: rgb(56, 168, 250); order: 6
+      button.button-native  @351.0,-37.0 24.0x24.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 24px; height: 24px; minHeight: min-content; boxSizing: border-box; alignItems: center; lineHeight: 22px; overflow: hidden; overflowX: hidden; overflowY: hidden; color: rgb(255, 255, 255); borderTopLeftRadius: 14px; borderTopRightRadius: 14px; borderBottomLeftRadius: 14px; borderBottomRightRadius: 14px; transition: background-color, opacity 0.1s linear
+      span.svg-icon.search-icon.icon-btn  @351.0,-37.0 24.0x24.0
+        display: flex; width: 24px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: center; alignItems: center; flexShrink: 0; fontSize: 24px; lineHeight: 0px; color: rgb(255, 255, 255); flex: 0 0 auto
+
+======================================================================
+## headerToolbar
+======================================================================
+ion-toolbar.ios.in-toolbar.header  @0.0,-50.0 390.0x50.0
+  position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.toolbar-background  @0.0,-50.0 390.0x50.0
+    position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: -1; width: 390px; height: 50px; backgroundColor: rgb(9, 15, 31)
+  div.toolbar-container  @0.0,-50.0 390.0x50.0
+    display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 10; width: 390px; height: 50px; minHeight: 50px; paddingRight: 15px; paddingLeft: 4px; boxSizing: border-box; justifyContent: space-between; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+      display: contents; width: auto; height: auto
+    div.toolbar-content  @214.2,-25.0 0.0x0.0
+      width: 0px; height: 0px; minHeight: auto; flexGrow: 1; flexBasis: 0%; flex: 1 1 0%; order: 4
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+    …  (4x SLOT|)
+  ion-buttons.menu-btn.buttons-first-slot.sc-ion-buttons-ios-h.sc-ion-buttons-ios-s.ios  @4.0,-44.0 44.0x38.0
+    display: flex; zIndex: 99; width: 44px; height: 38px; minWidth: auto; minHeight: 38px; paddingRight: 12px; paddingLeft: 12px; boxSizing: border-box; alignItems: center; order: 2
+    ion-icon.text-xl.menu-bar.sc-ion-buttons-ios.md  @16.0,-35.0 20.0x20.0
+      width: 20px; height: 20px; minWidth: auto; minHeight: auto; fontSize: 20px; lineHeight: 28px; transition: 0.3s
+      div.icon-inner  @16.0,-35.0 20.0x20.0
+        width: 20px; height: 20px
+        svg.s-ion-icon  @16.0,-35.0 20.0x20.0  viewBox="0 0 20 19"
+          width: 20px; height: 20px; overflow: hidden; overflowX: hidden; overflowY: hidden
+  ion-img.h-[2.25rem].pr-4.ios  @48.0,-43.0 166.2x36.0
+    width: 166.164px; height: 36px; minWidth: auto; minHeight: auto; paddingRight: 16px; boxSizing: border-box; objectFit: contain; order: 3
+    img  @48.0,-43.0 150.2x36.0  src=LOGO.png
+      width: 150.164px; height: 36px; overflow: clip; overflowX: clip; overflowY: clip; objectFit: contain
+  div.primaryBtn  @214.2,-37.0 128.8x24.0
+    display: flex; width: 128.836px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; alignItems: center; textAlign: end; order: 5
+    ion-button.md.button.button-solid.in-toolbar.ion-activatable.ion-focusable.login.init-btn.btn-margin  @214.2,-37.0 53.9x24.0
+      TEXT: "Entrar"
+      width: 53.9219px; height: 24px; minWidth: fit-content; minHeight: min-content; boxSizing: border-box; fontSize: 12px; fontWeight: 700; lineHeight: 12px; textAlign: center; textTransform: uppercase
+      button.button-native  @214.2,-37.0 53.9x24.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 53.9219px; height: 24px; minHeight: min-content; paddingTop: 6px; paddingRight: 4px; paddingBottom: 6px; paddingLeft: 4px; boxSizing: border-box; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundImage: linear-gradient(0deg, rgb(1, 103, 202) -13.77%, rgb(56, 168, 250) 102.34%); borderTopLeftRadius: 6px; borderTopRightRadius: 6px; borderBottomLeftRadius: 6px; borderBottomRightRadius: 6px; boxShadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px; transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.015s linear, color 0.015s linear
+        span.button-inner  @218.2,-31.0 45.9x12.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 45.9219px; height: 12px; minWidth: auto; minHeight: auto; justifyContent: center; alignItems: center; flexShrink: 0; flex: 0 0 auto
+          slot  @0.0,-100.0 0.0x0.0
+            display: contents; width: auto; height: auto
+          slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+            display: contents; width: auto; height: auto
+          …  (4x SLOT|)
+        ion-ripple-effect.ios  @214.2,-37.0 53.9x24.0
+          position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 53.9219px; height: 24px
+    div.register-btn-warpper.btn-margin  @278.1,-37.0 64.9x24.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 64.9141px; height: 24px; minWidth: auto; minHeight: auto; marginLeft: 10px; boxSizing: border-box; alignItems: center
+      ion-button.md.button.button-solid.in-toolbar.ion-activatable.ion-focusable.register.init-btn.btn-margin  @278.1,-37.0 64.9x24.0
+        TEXT: "Registro"
+        width: 64.9141px; height: 24px; minWidth: fit-content; minHeight: min-content; boxSizing: border-box; fontSize: 12px; fontWeight: 700; lineHeight: 12px; textAlign: center; textTransform: uppercase
+        button.button-native  @278.1,-37.0 64.9x24.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 64.9141px; height: 24px; minHeight: min-content; paddingTop: 6px; paddingRight: 4px; paddingBottom: 6px; paddingLeft: 4px; boxSizing: border-box; alignItems: center; overflow: hidden; overflowX: hidden; overflowY: hidden; backgroundImage: linear-gradient(rgb(19, 201, 106), rgb(29, 149, 84)); borderTopLeftRadius: 6px; borderTopRightRadius: 6px; borderBottomLeftRadius: 6px; borderBottomRightRadius: 6px; boxShadow: rgba(0, 0, 0, 0.2) 0px 3px 1px -2px, rgba(0, 0, 0, 0.14) 0px 2px 2px 0px, rgba(0, 0, 0, 0.12) 0px 1px 5px 0px; transition: box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.015s linear, color 0.015s linear
+          span.button-inner  @282.1,-31.0 56.9x12.0
+            display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 56.9141px; height: 12px; minWidth: auto; minHeight: auto; justifyContent: center; alignItems: center; flexShrink: 0; flex: 0 0 auto
+            slot  @0.0,-100.0 0.0x0.0
+              display: contents; width: auto; height: auto
+            slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+              display: contents; width: auto; height: auto
+            …  (4x SLOT|)
+          ion-ripple-effect.ios  @278.1,-37.0 64.9x24.0
+            position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 64.9141px; height: 24px
+  ion-button.ios.button.button-clear.in-toolbar.button-has-icon-only.ion-activatable.ion-focusable.unset-btn.search  @343.0,-37.0 32.0x24.0
+    width: 32px; height: 24px; minWidth: min-content; minHeight: min-content; paddingLeft: 8px; boxSizing: border-box; fontSize: 22px; lineHeight: 33px; textAlign: end; color: rgb(56, 168, 250); order: 6
+    button.button-native  @351.0,-37.0 24.0x24.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 24px; height: 24px; minHeight: min-content; boxSizing: border-box; alignItems: center; lineHeight: 22px; overflow: hidden; overflowX: hidden; overflowY: hidden; color: rgb(255, 255, 255); borderTopLeftRadius: 14px; borderTopRightRadius: 14px; borderBottomLeftRadius: 14px; borderBottomRightRadius: 14px; transition: background-color, opacity 0.1s linear
+      span.button-inner  @351.0,-37.0 24.0x24.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 24px; height: 24px; minWidth: auto; minHeight: auto; justifyContent: center; alignItems: center; flexShrink: 0; flex: 0 0 auto
+        slot  @0.0,-100.0 0.0x0.0
+          display: contents; width: auto; height: auto
+        slot  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+          display: contents; width: auto; height: auto
+        …  (4x SLOT|)
+    span.svg-icon.search-icon.icon-btn  @351.0,-37.0 24.0x24.0
+      display: flex; width: 24px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: center; alignItems: center; flexShrink: 0; fontSize: 24px; lineHeight: 0px; color: rgb(255, 255, 255); flex: 0 0 auto
+      svg  @351.0,-37.0 24.0x24.0  viewBox="0 0 20 20"
+        width: 24px; height: 24px; minWidth: auto; minHeight: auto; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## mainContent
+======================================================================
+ion-content.ios.overscroll.content-ltr.relative.rounded-t.main-content  @0.0,0.0 390.0x744.0
+  position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 20; width: 390px; height: 744px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexGrow: 1; flexBasis: 0%; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); borderTopLeftRadius: 4px; borderTopRightRadius: 4px; flex: 1 1 0%
+  div#background-content  @0.0,0.0 390.0x744.0
+    position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 390px; height: 744px
+  div.inner-scroll.scroll-y.overscroll  @0.0,0.0 390.0x744.0
+    position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 390px; height: 744px; boxSizing: border-box; overflow: hidden auto; overflowX: hidden; overflowY: auto
+  div.transition-effect  @0.0,-100.0 0.0x0.0
+    display: none; position: absolute; left: -100%; width: 100%; height: 844px; opacity: 0
+  slot  @0.0,-100.0 0.0x0.0
+    display: contents; width: auto; height: auto
+  div.order-container  @0.0,15.0 390.0x4645.2
+    width: 390px; height: 4645.16px; boxSizing: border-box
+  div  @0.0,4674.2 390.0x112.0  [2nd of repeated]
+    width: 390px; height: 112px; boxSizing: border-box
+  div.support  @16.0,636.0 40.0x40.0
+    display: flex; position: fixed; top: 736px; right: 334px; bottom: 68px; left: 16px; zIndex: 50; width: 40px; height: 40px; boxSizing: border-box; justifyContent: center; alignItems: center; fontSize: 32px; lineHeight: 48px; backgroundImage: linear-gradient(0deg, rgb(1, 103, 202), rgb(56, 168, 250)); borderTopLeftRadius: 50%; borderTopRightRadius: 50%; borderBottomLeftRadius: 50%; borderBottomRightRadius: 50%
+  div.to-top-box.defaultTwo  @0.0,-100.0 0.0x0.0
+    display: none; position: fixed; right: 20px; bottom: 72px; zIndex: 50; width: 40px; height: 40px; boxSizing: border-box; flexDirection: column; justifyContent: flex-end; alignItems: center; fontSize: 10px; lineHeight: 15px; backgroundColor: rgb(77, 163, 65); borderTopLeftRadius: 50%; borderTopRightRadius: 50%; borderBottomLeftRadius: 50%; borderBottomRightRadius: 50%
+  …  (3x DIV|)
+
+======================================================================
+## orderContainer
+======================================================================
+div.order-container  @0.0,15.0 390.0x4645.2
+  width: 390px; height: 4645.16px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255)
+  div.swiper-poster.swiper-c  @15.0,15.0 360.0x120.0
+    width: 360px; height: 120px; marginTop: 15px; marginRight: 15px; marginLeft: 15px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden; borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px
+  div.px-[.5625rem].mt-2.5.text-xs.activity-c  @0.0,145.0 390.0x108.0
+    width: 390px; height: 108px; marginTop: 10px; paddingRight: 9px; paddingLeft: 9px; boxSizing: border-box; fontSize: 12px; lineHeight: 16px
+  div.tabbar-tabs-inicio-components-MarqueeView-default-index.marquee-c  @15.0,265.0 360.0x24.0
+    display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 24px; marginTop: 12px; marginRight: 15px; marginBottom: 12px; marginLeft: 15px; boxSizing: border-box; alignItems: center; backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 4px; borderTopRightRadius: 4px; borderBottomLeftRadius: 4px; borderBottomRightRadius: 4px
+  div#game-buoy  @0.0,301.0 390.0x0.0
+    width: 390px; height: 0px; boxSizing: border-box
+  div#stickyElement.wrapper.layout2.segment-c  @0.0,301.0 390.0x66.0
+    display: flex; position: sticky; top: 0px; zIndex: 10; width: 390px; height: 66px; marginTop: 12px; marginBottom: 20px; paddingRight: 14px; paddingLeft: 14px; boxSizing: border-box; backgroundColor: rgb(9, 15, 31)
+  div.game-c  @0.0,387.0 390.0x3304.0
+    width: 390px; height: 3304px; boxSizing: border-box
+  div#app-install-bar.install-container.pl-[1rem].pr-[0.375rem].pt-[5.5744rem].my-2.5.text-[.625rem].h-[21.8231rem].app-install-c  @0.0,3701.0 390.0x349.2
+    width: 390px; height: 349.164px; marginTop: 10px; marginBottom: 10px; paddingTop: 89.1904px; paddingRight: 6px; paddingLeft: 16px; boxSizing: border-box; fontSize: 10px; lineHeight: 15px; backgroundImage: url("https://gc987.com/images/appInstallBg.png"); backgroundSize: cover; backgroundPosition: 50% 50%; backgroundRepeat: no-repeat
+  div.game-classification.game-class-c  @15.0,4095.2 360.0x332.0
+    width: 360px; height: 332px; marginTop: 45px; marginRight: 15px; marginBottom: 45px; marginLeft: 15px; boxSizing: border-box
+  div.footer-content-c  @0.0,4472.2 390.0x188.0
+    width: 390px; height: 188px; boxSizing: border-box
+
+======================================================================
+## swiper
+======================================================================
+div.swiper-poster.swiper-c  @15.0,15.0 360.0x120.0
+  width: 360px; height: 120px; marginTop: 15px; marginRight: 15px; marginLeft: 15px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; overflow: hidden; overflowX: hidden; overflowY: hidden; color: rgb(255, 255, 255); borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px
+  div.swiper.swiper-initialized.swiper-horizontal.swiper-ios  @15.0,15.0 360.0x120.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 360px; height: 120px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+    div.swiper-wrapper  @-1425.0,15.0 360.0x120.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 360px; height: 120px; transform: matrix(1, 0, 0, 1, -1440, 0); transition: transform
+      div.swiper-slide.swiper-slide-next  @-1425.0,15.0 360.0x120.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 120px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        img.poster-img  @-1425.0,15.0 360.0x120.0  src=bannar3.png
+          width: 360px; height: 120px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover; objectPosition: 0% 0%
+      div.swiper-slide  @-1065.0,15.0 360.0x120.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 120px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        img.poster-img  @-1065.0,15.0 360.0x120.0  src=bannar5.png
+          width: 360px; height: 120px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover; objectPosition: 0% 0%
+      div.swiper-slide  @-705.0,15.0 360.0x120.0  [2nd of repeated]
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 120px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        img.poster-img  @-705.0,15.0 360.0x120.0  src=bannar4.png
+          width: 360px; height: 120px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover; objectPosition: 0% 0%
+      div.swiper-slide.swiper-slide-prev  @-345.0,15.0 360.0x120.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 120px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        img.poster-img  @-345.0,15.0 360.0x120.0  src=bannar1.png
+          width: 360px; height: 120px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover; objectPosition: 0% 0%
+      div.swiper-slide.swiper-slide-active  @15.0,15.0 360.0x120.0
+        position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 120px; minWidth: auto; minHeight: auto; boxSizing: border-box; flexShrink: 0; transition: transform; flex: 0 0 auto
+        img.poster-img  @15.0,15.0 360.0x120.0  src=bannar2.png
+          width: 360px; height: 120px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; objectFit: cover; objectPosition: 0% 0%
+    div.swiper-pagination.swiper-pagination-bullets.swiper-pagination-horizontal  @0.0,-100.0 0.0x0.0
+      display: none; position: relative; bottom: 0px; left: 0px; zIndex: 10; width: 100%; height: auto; boxSizing: border-box; textAlign: center; transition: opacity 0.3s
+      span.swiper-pagination-bullet  @0.0,-100.0 0.0x0.0
+        display: inline-block; width: 8px; height: 4px; marginRight: 4px; marginLeft: 4px; boxSizing: border-box; borderTopLeftRadius: 2px; borderTopRightRadius: 2px; borderBottomLeftRadius: 2px; borderBottomRightRadius: 2px; opacity: 0.2
+      span.swiper-pagination-bullet.swiper-pagination-bullet-active  @0.0,-100.0 0.0x0.0
+        display: inline-block; width: 20px; height: 4px; marginRight: 4px; marginLeft: 4px; boxSizing: border-box; backgroundColor: rgb(17, 111, 205); borderTopLeftRadius: 2px; borderTopRightRadius: 2px; borderBottomLeftRadius: 2px; borderBottomRightRadius: 2px
+      span.swiper-pagination-bullet  @0.0,-100.0 0.0x0.0  [2nd of repeated]
+        display: inline-block; width: 8px; height: 4px; marginRight: 4px; marginLeft: 4px; boxSizing: border-box; borderTopLeftRadius: 2px; borderTopRightRadius: 2px; borderBottomLeftRadius: 2px; borderBottomRightRadius: 2px; opacity: 0.2
+      …  (4x SPAN|swiper-pagination-bullet)
+
+======================================================================
+## activity
+======================================================================
+div.px-[.5625rem].mt-2.5.text-xs.activity-c  @0.0,145.0 390.0x108.0
+  width: 390px; height: 108px; marginTop: 10px; paddingRight: 9px; paddingLeft: 9px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 12px; fontWeight: 400; lineHeight: 16px; color: rgb(255, 255, 255)
+  ion-row.ios  @9.0,145.0 372.0x108.0
+    display: flex; width: 372px; height: 108px; boxSizing: border-box; flexWrap: wrap
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    ion-col.ios  @9.0,145.0 186.0x108.0
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 186px; height: 108px; minWidth: auto; minHeight: 1px; maxWidth: 50%; paddingRight: 3px; paddingLeft: 3px; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      ion-row.h-[3.125rem].ios  @12.0,145.0 180.0x50.0
+        display: flex; width: 180px; height: 50px; boxSizing: border-box; flexWrap: wrap
+        slot  @0.0,-100.0 0.0x0.0
+          display: contents; width: auto; height: auto
+        img.w-full.h-full.rounded-[.625rem]  @12.0,145.0 180.0x50.0  src=bonus50.png
+          width: 180px; height: 50px; minWidth: auto; minHeight: auto; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px
+      ion-row.h-[3.125rem].mt-[0.4375rem].ios  @12.0,202.0 180.0x50.0
+        display: flex; width: 180px; height: 50px; marginTop: 7px; boxSizing: border-box; flexWrap: wrap
+        slot  @0.0,-100.0 0.0x0.0
+          display: contents; width: auto; height: auto
+        img.w-full.h-full.rounded-[.625rem]  @12.0,202.0 180.0x50.0  src=bonus100.png
+          width: 180px; height: 50px; minWidth: auto; minHeight: auto; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px
+    ion-col.h-[6.75rem].ios  @195.0,145.0 186.0x108.0
+      position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 186px; height: 108px; minWidth: auto; minHeight: 1px; maxWidth: 50%; paddingRight: 3px; paddingLeft: 3px; boxSizing: border-box; flexShrink: 0; flexBasis: 50%; flex: 0 0 50%
+      slot  @0.0,-100.0 0.0x0.0
+        display: contents; width: auto; height: auto
+      img.w-full.h-full.rounded-[.625rem]  @198.0,145.0 180.0x108.0  src=vip1.png
+        width: 180px; height: 108px; maxWidth: 100%; boxSizing: border-box; overflow: clip; overflowX: clip; overflowY: clip; borderTopLeftRadius: 10px; borderTopRightRadius: 10px; borderBottomLeftRadius: 10px; borderBottomRightRadius: 10px
+
+======================================================================
+## marquee
+======================================================================
+div.tabbar-tabs-inicio-components-MarqueeView-default-index.marquee-c  @15.0,265.0 360.0x24.0
+  display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 360px; height: 24px; marginTop: 12px; marginRight: 15px; marginBottom: 12px; marginLeft: 15px; boxSizing: border-box; alignItems: center; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); backgroundColor: rgb(16, 22, 41); borderTopLeftRadius: 4px; borderTopRightRadius: 4px; borderBottomLeftRadius: 4px; borderBottomRightRadius: 4px
+  ion-icon.megaphone.md  @15.0,267.0 29.8x20.0
+    zIndex: 4; width: 17.0078px; height: 20px; minWidth: auto; minHeight: auto; paddingRight: 4.8px; paddingLeft: 8px; fontSize: 20px; lineHeight: 30px; color: rgb(190, 190, 190)
+    div.icon-inner  @23.0,267.0 17.0x20.0
+      width: 17.0078px; height: 20px
+      svg.s-ion-icon  @23.0,267.0 17.0x20.0  viewBox="0 0 17 14"
+        width: 17.0078px; height: 20px; overflow: hidden; overflowX: hidden; overflowY: hidden
+  div.marquee.label.text-xs.my-1  @44.8,269.8 306.2x14.5
+    zIndex: 0; width: 306.195px; height: 14.5px; minWidth: auto; minHeight: auto; marginTop: 4px; marginBottom: 4px; boxSizing: border-box; fontSize: 12px; lineHeight: 16px; overflow: hidden; overflowX: hidden; overflowY: hidden; color: rgb(137, 159, 190)
+    div.marquee__content  @232.7,269.8 1694.7x14.5
+      display: flex; width: 1694.69px; height: 14.5px; boxSizing: border-box; transform: matrix(1, 0, 0, 1, 187.874, 0)
+      label.marquee__item  @232.7,269.8 1304.7x14.5
+        TEXT: "Torne-se um agente GC987 e ganhe reembolsos generosos com facilidade!
+Não perca! Visite GC987.com para mais BÔNUS incríveis! Cadastre-se agora e ganhe seu prêmio!
+Convide seus amigos e tenha a chance de ganhar até 1 milhão por mês!"
+        width: 1304.69px; height: 14.5px; minWidth: auto; minHeight: auto; marginRight: 390px; boxSizing: border-box; lineHeight: normal; whiteSpace: nowrap
+  div.badge  @351.0,265.0 24.0x24.0
+    position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 4; width: 24px; height: 24px; minWidth: auto; minHeight: auto; paddingRight: 4px; boxSizing: border-box
+    ion-icon.md  @351.0,266.2 20.0x20.0
+      display: inline-block; width: 20px; height: 20px; fontSize: 20px; lineHeight: 30px; color: rgb(56, 168, 250)
+      div.icon-inner  @351.0,266.2 20.0x20.0
+        width: 20px; height: 20px
+        svg.s-ion-icon  @351.0,266.2 20.0x20.0  viewBox="0 0 20 20"
+          width: 20px; height: 20px; overflow: hidden; overflowX: hidden; overflowY: hidden
+
+======================================================================
+## segment
+======================================================================
+div#stickyElement.wrapper.layout2.segment-c  @0.0,301.0 390.0x66.0
+  display: flex; position: sticky; top: 0px; zIndex: 10; width: 390px; height: 66px; marginTop: 12px; marginBottom: 20px; paddingRight: 14px; paddingLeft: 14px; boxSizing: border-box; fontFamily: -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, sans-serif; fontSize: 16px; fontWeight: 400; lineHeight: 24px; color: rgb(255, 255, 255); backgroundColor: rgb(9, 15, 31)
+  ion-segment.ios.segment-scrollable  @14.0,301.0 362.0x66.0
+    display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 0; width: 362px; height: 66px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: start; alignItems: stretch; gap: 10px; textAlign: center; overflow: auto hidden; overflowX: auto; overflowY: hidden; backgroundColor: rgb(19, 24, 38); borderTopLeftRadius: 8px; borderTopRightRadius: 8px; borderBottomLeftRadius: 8px; borderBottomRightRadius: 8px
+    slot  @0.0,-100.0 0.0x0.0
+      display: contents; width: auto; height: auto
+    ion-segment-button.ios.in-segment.segment-button-has-label.segment-button-has-icon.segment-button-checked.segment-button-layout-icon-top.ion-activatable.ion-activatable-instant.ion-focusable.init-segment.active.POPULAR  @14.0,301.0 60.0x66.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: -1; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexShrink: 0; fontSize: 13px; lineHeight: 37px; whiteSpace: nowrap; textOverflow: ellipsis; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; flex: 0 0 auto
+      button.button-native  @14.0,301.0 60.0x66.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 2; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexDirection: column; justifyContent: center; alignItems: center; flexGrow: 1; lineHeight: normal; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden; transition: 0.1s linear; flex: 1 1 auto
+        span.button-inner  @14.0,301.0 60.0x66.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 60px; height: 66px; minWidth: auto; minHeight: auto; flexDirection: column; justifyContent: center; alignItems: center
+          slot  @0.0,-100.0 0.0x0.0
+            display: contents; width: auto; height: auto
+      div.segment-button-indicator.segment-button-indicator-animated  @14.0,301.0 60.0x66.0
+        position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 60px; height: 66px; paddingRight: 2px; paddingLeft: 2px; boxSizing: border-box; transition: none
+        div.segment-button-indicator-background  @16.0,301.0 56.0x66.0
+          width: 56px; height: 66px; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; transition: none
+      div.btn-wall.layout2  @14.0,301.0 60.0x66.0
+        display: flex; width: 60px; height: 66px; minWidth: auto; minHeight: auto; paddingRight: 3px; paddingBottom: 8px; paddingLeft: 3px; boxSizing: border-box; flexDirection: column; alignItems: center; gap: 2px; lineHeight: normal
+        div.bug  @44.0,301.0 0.0x0.0
+          width: 0px; height: 0px; minWidth: auto; minHeight: auto; boxSizing: border-box
+        div.wall.type-icon  @26.0,303.0 36.0x36.0
+          width: 36px; height: 36px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 36px
+          div.svg-container  @26.0,303.0 36.0x36.0
+            width: 36px; height: 36px; boxSizing: border-box
+            svg  @26.0,303.0 36.0x36.0  viewBox="0 0 32 33"
+              width: 36px; height: 36px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+          svg.svg-wall  @26.0,339.0 300.0x150.0
+            width: 300px; height: 150px; boxSizing: border-box; overflow: hidden; overflowX: hidden; overflowY: hidden
+        div.label-wall  @17.0,341.0 54.0x18.0
+          display: flex; width: 54px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: center; alignItems: center
+          ion-icon.label-icon.md  @0.0,-100.0 0.0x0.0
+            display: none; width: 13px; height: 13px
+            div.icon-inner  @0.0,-100.0 0.0x0.0
+              width: 100%; height: 100%
+          ion-label.sc-ion-label-ios-h.sc-ion-label-ios-s.ios.label.ellipsis  @23.0,341.0 41.9x18.0
+            TEXT: "Popular"
+            width: 41.8984px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 12px; fontWeight: 600; lineHeight: 18px; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-segment-button.init-segment.ios.in-segment.segment-button-has-label.segment-button-has-icon.segment-button-layout-icon-top.ion-activatable.ion-activatable-instant.ion-focusable  @84.0,301.0 60.0x66.0
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexShrink: 0; fontSize: 13px; lineHeight: 37px; whiteSpace: nowrap; textOverflow: ellipsis; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; flex: 0 0 auto
+      button.button-native  @84.0,301.0 60.0x66.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 2; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexDirection: column; justifyContent: center; alignItems: center; flexGrow: 1; lineHeight: normal; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden; transition: 0.1s linear; flex: 1 1 auto
+        span.button-inner  @84.0,301.0 60.0x66.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 60px; height: 66px; minWidth: auto; minHeight: auto; flexDirection: column; justifyContent: center; alignItems: center
+          slot  @0.0,-100.0 0.0x0.0
+            display: contents; width: auto; height: auto
+      div.segment-button-indicator.segment-button-indicator-animated  @84.0,301.0 60.0x66.0
+        position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 60px; height: 66px; paddingRight: 2px; paddingLeft: 2px; boxSizing: border-box; opacity: 0; transition: none
+        div.segment-button-indicator-background  @86.0,301.0 56.0x66.0
+          width: 56px; height: 66px; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; transition: none
+      div.btn-wall.layout2  @84.0,301.0 60.0x66.0
+        display: flex; width: 60px; height: 66px; minWidth: auto; minHeight: auto; paddingRight: 3px; paddingBottom: 8px; paddingLeft: 3px; boxSizing: border-box; flexDirection: column; alignItems: center; gap: 2px; lineHeight: normal
+        div.bug  @114.0,301.0 0.0x0.0
+          width: 0px; height: 0px; minWidth: auto; minHeight: auto; boxSizing: border-box
+        i.type-img  @96.0,303.0 36.0x36.0
+          width: 36px; height: 36px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 36px; fontStyle: italic; backgroundImage: url("https://gc987.com/assets/platform1-r2-4bf-MObW.png"); backgroundSize: 800% 500%; backgroundPosition: -700% -100%; opacity: 0.6
+        div.label-wall  @87.0,341.0 54.0x18.0
+          display: flex; width: 54px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: center; alignItems: center
+          ion-icon.label-icon.md  @0.0,-100.0 0.0x0.0
+            display: none; width: 13px; height: 13px
+            div.icon-inner  @0.0,-100.0 0.0x0.0
+              width: 100%; height: 100%
+          ion-label.label.ellipsis.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @106.3,341.0 15.4x18.0
+            TEXT: "CP"
+            width: 15.3828px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 12px; lineHeight: 18px; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden
+    ion-segment-button.init-segment.ios.in-segment.segment-button-has-label.segment-button-has-icon.segment-button-layout-icon-top.ion-activatable.ion-activatable-instant.ion-focusable  @154.0,301.0 60.0x66.0  [2nd of repeated]
+      display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexShrink: 0; fontSize: 13px; lineHeight: 37px; whiteSpace: nowrap; textOverflow: ellipsis; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; flex: 0 0 auto
+      button.button-native  @154.0,301.0 60.0x66.0
+        display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 2; width: 60px; height: 66px; minWidth: min-content; minHeight: 28px; boxSizing: border-box; flexDirection: column; justifyContent: center; alignItems: center; flexGrow: 1; lineHeight: normal; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden; transition: 0.1s linear; flex: 1 1 auto
+        span.button-inner  @154.0,301.0 60.0x66.0
+          display: flex; position: relative; top: 0px; right: 0px; bottom: 0px; left: 0px; zIndex: 1; width: 60px; height: 66px; minWidth: auto; minHeight: auto; flexDirection: column; justifyContent: center; alignItems: center
+          slot  @0.0,-100.0 0.0x0.0
+            display: contents; width: auto; height: auto
+      div.segment-button-indicator.segment-button-indicator-animated  @154.0,301.0 60.0x66.0
+        position: absolute; top: 0px; right: 0px; bottom: 0px; left: 0px; width: 60px; height: 66px; paddingRight: 2px; paddingLeft: 2px; boxSizing: border-box; opacity: 0; transition: none
+        div.segment-button-indicator-background  @156.0,301.0 56.0x66.0
+          width: 56px; height: 66px; borderTopLeftRadius: 7px; borderTopRightRadius: 7px; borderBottomLeftRadius: 7px; borderBottomRightRadius: 7px; transition: none
+      div.btn-wall.layout2  @154.0,301.0 60.0x66.0
+        display: flex; width: 60px; height: 66px; minWidth: auto; minHeight: auto; paddingRight: 3px; paddingBottom: 8px; paddingLeft: 3px; boxSizing: border-box; flexDirection: column; alignItems: center; gap: 2px; lineHeight: normal
+        div.bug  @184.0,301.0 0.0x0.0
+          width: 0px; height: 0px; minWidth: auto; minHeight: auto; boxSizing: border-box
+        i.type-img  @166.0,303.0 36.0x36.0
+          width: 36px; height: 36px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 36px; fontStyle: italic; backgroundImage: url("https://gc987.com/assets/platform1-r2-4bf-MObW.png"); backgroundSize: 800% 500%; backgroundPosition: -100% 0px; opacity: 0.6
+        div.label-wall  @157.0,341.0 54.0x18.0
+          display: flex; width: 54px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; justifyContent: center; alignItems: center
+          ion-icon.label-icon.md  @0.0,-100.0 0.0x0.0
+            display: none; width: 13px; height: 13px
+            div.icon-inner  @0.0,-100.0 0.0x0.0
+              width: 100%; height: 100%
+          ion-label.label.ellipsis.sc-ion-label-ios-h.sc-ion-label-ios-s.ios  @170.8,341.0 26.3x18.0
+            TEXT: "Tada"
+            width: 26.3203px; height: 18px; minWidth: auto; minHeight: auto; boxSizing: border-box; fontSize: 12px; lineHeight: 18px; textOverflow: ellipsis; overflow: hidden; overflowX: hidden; overflowY: hidden
+    div.line.layout1  @40.0,363.5 8.0x2.0
+      position: absolute; top: 62.5px; right: 354px; bottom: 1.5008px; left: 0px; zIndex: 10; width: 8px; height: 2px; boxSizing: border-box; backgroundColor: rgb(148, 255, 127); borderTopLeftRadius: 2px; borderTopRightRadius: 2px; borderBottomLeftRadius: 2px; borderBottomRightRadius: 2px; boxShadow: rgb(148, 255, 127) 0px 0px 4px 0px; transform: matrix(1, 0, 0, 1, 26, 0); transition: transform 0.3s ease-in-out
+    …  (20x ION-SEGMENT-BUTTON|init-segment ios in-segment segment-button-has-label segment-button-has-icon segment-button-layout-icon-top ion-activatable ion-activatable-instant ion-focusable)
