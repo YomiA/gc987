@@ -1,0 +1,17 @@
+---
+description: 点名站点目录后，只改该目录，不改 gc987
+alwaysApply: true
+---
+
+# 站点目录
+
+用户点名一个站点目录后（例如「打开 brjornal.com」「在 brjornal.com 里改」），该目录就是当前工作范围，直到用户改用 987 口令。
+
+- 目录在仓库根下，名字用用户说的文件夹名，例如 `brjornal.com/`。没有就先建这个目录。
+- 之后用户说的内容，新建、修改、删除都只发生在这个目录里面。
+- 不要改 gc987：`src/`、`public/`、`package.json`、`vite.config.ts`、路由、store、样式、`docs/research/gc987-com`、`docs/design-references/gc987-com`。
+- 不要把站点目录 import 进 gc987，也不要把它写进 `src/router`。
+- 不要跑 gc987 开机，不要动 `localhost:5987`。
+- 换到另一个站点目录时，工作范围跟着换，仍然不要碰 gc987。
+
+要改 gc987，用户必须改用 `.cursor/rules/gc987-clone.mdc` 里的那套口令。用了那套口令之后，就不要再改当前站点目录。
