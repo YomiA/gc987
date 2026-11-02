@@ -12,6 +12,8 @@
  * sends it, and `formatAmount` does the pt-BR grouping the live page does.
  */
 
+import { activityEventMeta } from './activity'
+
 export interface PromoTab {
   key: string
   label: string
@@ -24,6 +26,11 @@ export interface PromoEvent {
   badge: boolean
   /** Same two cards run the infinite white sweep. */
   shiny: boolean
+  /** Live `activity.type` used in `/activity/:type/:id`. */
+  type: string
+  /** Live path id, including optional `@style_N`. */
+  routeId: string
+  title: string
 }
 
 /**
@@ -101,12 +108,18 @@ const promoEvents: PromoEvent[] = [
   'whatsapp-channel',
   'mystery-bonus',
   'telegram-channel',
-].map((name, i) => ({
-  id: i + 1,
-  image: `${BASE}/${name}.png`,
-  badge: i === 5 || i === 6,
-  shiny: i === 5 || i === 6,
-}))
+].map((name, i) => {
+  const meta = activityEventMeta[i] ?? activityEventMeta[0]
+  return {
+    id: i + 1,
+    image: `${BASE}/${name}.png`,
+    badge: i === 5 || i === 6,
+    shiny: i === 5 || i === 6,
+    type: meta.type,
+    routeId: meta.routeId,
+    title: meta.title,
+  }
+})
 
 const rebateCategories: RebateCategory[] = [
   { key: 'CHESS', label: 'Cartas', icon: '', enabled: false },

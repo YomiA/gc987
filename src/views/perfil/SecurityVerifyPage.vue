@@ -1,27 +1,39 @@
 <script setup lang="ts">
 /**
- * /security/verify/password and /security/verify/asset — first page only.
+ * /security/verify/password, /asset, and /email — first Validação page.
  *
- * Both live routes share the Validação chrome (md elevation-4 header,
- * ion-padding 16px). Login-password verify adds the two intro lines;
- * asset-password verify leaves that slot empty. Confirmar does not push
- * the next live step. See
+ * Shared chrome (md elevation-4 header, ion-padding 16px). Login-password
+ * and email show the two intro lines (email uses the vincular tip); asset
+ * leaves that slot empty. Email Confirmar is mock and pushes
+ * /security/bind/email. Password Confirmar is mock and pushes
+ * /security/confirm/password. Asset Confirmar is mock and pushes
+ * /security/confirm/asset. See
  * docs/research/gc987-com/security/SECURITY_VERIFY.spec.md.
  */
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import SvgIcon from '../../components/base/SvgIcon.vue'
 import VerifyLoginForm from '../../components/perfil/security/VerifyLoginForm.vue'
-import { securityVerifyCopy } from '../../api/security'
+import { securityVerifyCopy, type SecurityVerifyVariant } from '../../api/security'
 
 const route = useRoute()
 const router = useRouter()
 
-const showIntro = computed(() => route.path.endsWith('/password'))
+const variant = computed<SecurityVerifyVariant>(() => {
+  if (route.path.endsWith('/asset')) return 'asset'
+  if (route.path.endsWith('/email')) return 'email'
+  return 'password'
+})
 
 function goBack() {
   if (router.options.history.state.back) router.back()
   else void router.push('/security')
+}
+
+function onConfirm() {
+  if (variant.value === 'email') void router.push('/security/bind/email')
+  if (variant.value === 'password') void router.push('/security/confirm/password')
+  if (variant.value === 'asset') void router.push('/security/confirm/asset')
 }
 </script>
 
@@ -37,7 +49,7 @@ function goBack() {
     </header>
 
     <div class="page-scroller verify-body">
-      <VerifyLoginForm :show-intro="showIntro" />
+      <VerifyLoginForm :variant="variant" @confirm="onConfirm" />
     </div>
   </div>
 </template>

@@ -58,7 +58,7 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
 .outer-wrap {
   position: absolute;
   right: 0;
-  bottom: -0.0625rem;
+  bottom: calc(-0.0625rem + var(--sab));
   left: 0;
   z-index: 10;
   height: 3.5rem;
@@ -143,7 +143,7 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
 .deposit {
   display: flex;
   position: absolute;
-  bottom: 1.3125rem;
+  bottom: calc(1.3125rem + var(--sab));
   left: 50%;
   z-index: 1;
   width: 11.25rem;

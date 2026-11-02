@@ -2,9 +2,9 @@
 /**
  * /main/entrar — signed-in Depósito (not the login form).
  *
- * TabBar Depósito lands here. Record icon on the live site pushes
- * /rechargeRecord (not cloned this round). Depositar Agora opens the PIX
- * overlay on the same route. All PIX / order values are mock.
+ * TabBar Depósito lands here. Record icon pushes /rechargeRecord.
+ * Depositar Agora opens the PIX overlay on the same route. All PIX / order
+ * values are mock.
  */
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -34,6 +34,10 @@ function onTabSelect(key: string) {
   }
   if (key === 'perfil') {
     void router.push('/main/perfil')
+    return
+  }
+  if (key === 'saque') {
+    void router.push('/main/withdraw')
     return
   }
   home.selectTab(key)
@@ -70,7 +74,7 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
         <h1 class="toolbar-title">
           <span class="title-text">{{ entrarCopy.title }}</span>
         </h1>
-        <button type="button" class="record" aria-label="Registro de Depósito">
+        <button type="button" class="record" aria-label="Registro de Depósito" @click="router.push('/rechargeRecord')">
           <SvgIcon class="record-icon" name="entrar-record" />
         </button>
       </div>
@@ -118,7 +122,7 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
   position: relative;
   height: 3.125rem;
   min-height: 3.125rem;
-  padding: 0 0.25rem;
+  padding: 0 4px;
   align-items: center;
   overflow: hidden;
   background-color: #154084;
@@ -147,7 +151,7 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
   display: flex;
   position: absolute;
   inset: 0;
-  padding: 0 5.625rem;
+  padding: 0 90px;
   align-items: center;
   justify-content: center;
   margin: 0;
@@ -171,24 +175,30 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
   display: flex;
   position: relative;
   z-index: 2;
-  width: 38px;
   height: 32px;
+  min-height: 32px;
   margin: 0 2px 0 auto;
-  padding: 0;
+  padding: 0 5px;
   align-items: center;
   justify-content: center;
   background: transparent;
 }
 
 .record-icon {
-  width: 28px;
-  height: 20px;
+  width: 1.75rem;
+  height: 1.25rem;
   color: var(--color-text-100);
 }
 
-/* ion-content.recharge-content: --background #090f1f, padding 0 15px 72px. */
+/* ion-content.recharge-content: padding 0 .9375rem calc(tab + 1rem). */
 .entrar-content {
-  padding: 0 0.9375rem 4.5rem;
+  padding: 0 0.9375rem calc(56px + 1rem);
   background-color: var(--color-bar-bg);
+}
+
+@media (min-width: 486px) {
+  .entrar-content {
+    padding-bottom: calc(70px + 1rem);
+  }
 }
 </style>

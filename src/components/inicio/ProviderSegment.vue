@@ -35,8 +35,62 @@ const lineTransform = computed(
 
 const segmentEl = ref<HTMLElement | null>(null)
 
+/** Live ion-segment.segment-scrollable is overflow-x auto; desktop also
+ *  converts mouse drag into scrollLeft (touch/trackpad already pan). */
+const DRAG_THRESHOLD = 5
+
+let startX = 0
+let startY = 0
+let startScroll = 0
+let pointerId: number | null = null
+let didDrag = false
+
 function onScroll(event: Event) {
   scrollLeft.value = (event.target as HTMLElement).scrollLeft
+}
+
+function onPointerDown(e: PointerEvent) {
+  if (e.button !== 0) return
+  const el = segmentEl.value
+  if (!el) return
+  startX = e.clientX
+  startY = e.clientY
+  startScroll = el.scrollLeft
+  didDrag = false
+  pointerId = e.pointerId
+}
+
+function onPointerMove(e: PointerEvent) {
+  if (e.pointerId !== pointerId) return
+  const el = segmentEl.value
+  if (!el) return
+  const dx = e.clientX - startX
+  const dy = e.clientY - startY
+  if (!didDrag) {
+    if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return
+    if (Math.abs(dy) > Math.abs(dx)) {
+      pointerId = null
+      return
+    }
+    didDrag = true
+    try {
+      el.setPointerCapture(e.pointerId)
+    } catch {
+      /* synthetic events cannot capture */
+    }
+  }
+  el.scrollLeft = startScroll - dx
+}
+
+function onPointerUp() {
+  pointerId = null
+}
+
+function onClickCapture(e: MouseEvent) {
+  if (!didDrag) return
+  e.preventDefault()
+  e.stopPropagation()
+  didDrag = false
 }
 
 function emitSelect(key: string) {
@@ -59,7 +113,16 @@ watch(
 
 <template>
   <div class="segment-wrapper">
-    <div ref="segmentEl" class="segment" @scroll.passive="onScroll">
+    <div
+      ref="segmentEl"
+      class="segment"
+      @scroll.passive="onScroll"
+      @pointerdown="onPointerDown"
+      @pointermove="onPointerMove"
+      @pointerup="onPointerUp"
+      @pointercancel="onPointerUp"
+      @click.capture="onClickCapture"
+    >
       <button
         v-for="tab in tabs"
         :key="tab.key"
@@ -111,6 +174,9 @@ watch(
   text-align: center;
   overflow-x: auto;
   overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  user-select: none;
+  cursor: grab;
   background-color: var(--segment-track-bg);
   border-radius: 0.5rem;
   scrollbar-width: none;
@@ -118,6 +184,10 @@ watch(
 
 .segment::-webkit-scrollbar {
   display: none;
+}
+
+.segment:active {
+  cursor: grabbing;
 }
 
 .segment-button {
@@ -131,6 +201,7 @@ watch(
   text-overflow: ellipsis;
   border-radius: 0.4375rem;
   transition: 0.1s linear;
+  -webkit-user-drag: none;
 }
 
 .btn-wall {

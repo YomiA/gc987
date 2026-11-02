@@ -105,11 +105,11 @@ const emit = defineEmits<{
 .panel {
   display: flex;
   position: absolute;
-  top: 2.75rem;
+  top: calc(2.75rem + var(--sat));
   left: 0;
   width: 13.75rem;
   max-width: 13.75rem;
-  height: calc(100% - 2.75rem);
+  height: calc(100% - 2.75rem - var(--sat));
   flex-direction: column;
   overflow: hidden;
   background-color: transparent;

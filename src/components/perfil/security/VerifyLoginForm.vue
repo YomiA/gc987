@@ -1,18 +1,26 @@
 <script setup lang="ts">
 /**
- * Shared first-step form on /security/verify/password and
- * /security/verify/asset. Both pages reuse the live login-password field
- * (key + Senha de Login placeholder + clear + 16px eye). Confirmar stays
- * on this page — the live next step is not cloned.
+ * Shared first-step form on /security/verify/password, /asset, and /email.
+ * All three reuse the live login-password field (key + Senha de Login
+ * placeholder + clear + 16px eye). Email Confirmar emits so the page can
+ * push /security/bind/email; password Confirmar emits for
+ * /security/confirm/password; asset Confirmar emits for
+ * /security/confirm/asset.
  */
 import { computed, ref } from 'vue'
 import SvgIcon from '../../base/SvgIcon.vue'
-import { securityVerifyCopy as copy } from '../../../api/security'
+import {
+  securityVerifyCopy as copy,
+  type SecurityVerifyVariant,
+} from '../../../api/security'
 
-defineProps<{ showIntro: boolean }>()
+const props = defineProps<{ variant: SecurityVerifyVariant }>()
+const emit = defineEmits<{ confirm: [] }>()
 
 const password = ref('')
 const showPassword = ref(false)
+const showIntro = computed(() => props.variant !== 'asset')
+const tip = computed(() => (props.variant === 'email' ? copy.emailTip : copy.loginTip))
 
 /** Live ion-input: empty and 6–16 hide the hint; 1–5 chars show it immediately. */
 const error = computed(() => {
@@ -22,6 +30,7 @@ const error = computed(() => {
 
 function onSubmit() {
   if (error.value || password.value.length < 6) return
+  emit('confirm')
 }
 </script>
 
@@ -29,7 +38,7 @@ function onSubmit() {
   <form class="verify-form" @submit.prevent="onSubmit">
     <div v-if="showIntro" class="intro">
       <p class="heading">{{ copy.loginHeading }}</p>
-      <p class="tip">{{ copy.loginTip }}</p>
+      <p class="tip">{{ tip }}</p>
     </div>
     <div v-else class="intro-slot" />
 

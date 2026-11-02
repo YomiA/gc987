@@ -2,98 +2,136 @@
 /**
  * The five-tab scroller under the Relatórios toolbar.
  *
- * Same shape as the /main/promo segment but a different skin: no bar
- * background, a hairline track under it, 40px-tall labels and a solid #38a8fa
- * underline instead of the gradient one. Numbers are the live
- * `ion-segment.segment-scrollable` at 390x844x3 — see
- * docs/research/gc987-com/user-report/REPORT_PAGE.spec.md.
+ * Live is `ion-segment.segment-scrollable` + per-button
+ * `.segment-button-indicator`. Switching FLIPs the new underline from the
+ * previous button's box with translate3d + scaleX (250ms, cubic-bezier
+ * .4,0,.2,1); color is 0.15s linear. Click also fires ion-ripple-effect
+ * (bounded, currentColor). See REPORT_PAGE.spec.md.
  */
-import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 import type { ReportTab } from '../../api/report'
+
+const RIPPLE_PADDING = 10
+const RIPPLE_ORIGIN = 0.5
+const RIPPLE_HOLD_MS = 325
 
 const props = defineProps<{ tabs: ReportTab[]; active: string }>()
 const emit = defineEmits<{ select: [key: string] }>()
 
 const row = ref<HTMLElement | null>(null)
-/**
- * Live buttons are sized by their text alone (14px, fractional widths such as
- * 115.344px under `Detalhes da Conta`), so the underline has to be measured.
- */
-const indicator = ref({ left: 0, width: 0 })
-/** The live indicator is already in place on first paint; only later moves slide. */
-const slides = ref(false)
-let observer: ResizeObserver | null = null
+/** Mirrors the store, but updates on pointer-up so the ink + bar start now. */
+const picked = ref(props.active)
 
-function measure() {
+watch(
+  () => props.active,
+  (next) => {
+    if (next === picked.value) return
+    const prev = picked.value
+    picked.value = next
+    if (prev) animateIndicator(prev, next)
+    scrollActiveIntoView(next, true)
+  },
+)
+
+function select(key: string) {
+  if (key === picked.value) return
+  const prev = picked.value
+  picked.value = key
+  animateIndicator(prev, key)
+  scrollActiveIntoView(key, true)
+  emit('select', key)
+}
+
+function animateIndicator(prev: string, next: string) {
   const rowEl = row.value
-  const el = rowEl?.querySelector<HTMLElement>('.seg-btn.on')
-  if (!rowEl || !el) return
-  const btn = el.getBoundingClientRect()
-  const base = rowEl.getBoundingClientRect()
-  indicator.value = { left: btn.left - base.left + rowEl.scrollLeft, width: btn.width }
-  if (!slides.value) requestAnimationFrame(() => (slides.value = true))
+  if (!rowEl || !prev || !next) return
+  const prevInd = rowEl.querySelector<HTMLElement>(`[data-key="${CSS.escape(prev)}"] .seg-indicator`)
+  const nextInd = rowEl.querySelector<HTMLElement>(`[data-key="${CSS.escape(next)}"] .seg-indicator`)
+  if (!prevInd || !nextInd) return
+  const prevRect = prevInd.getBoundingClientRect()
+  const nextRect = nextInd.getBoundingClientRect()
+  if (prevRect.width < 1 || nextRect.width < 1) return
+  for (const el of rowEl.querySelectorAll<HTMLElement>('.seg-indicator')) {
+    for (const anim of el.getAnimations()) anim.cancel()
+  }
+  const from = `translate3d(${prevRect.left - nextRect.left}px, 0, 0) scaleX(${prevRect.width / nextRect.width})`
+  nextInd.animate([{ transform: from }, { transform: 'translate3d(0, 0, 0) scaleX(1)' }], {
+    duration: 250,
+    easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
+  })
 }
 
 /**
- * ion-segment brings the checked button into view with *nearest* alignment, not
- * centred: with `Outros` checked the live scrollLeft is 145.89, exactly
- * `offsetLeft + offsetWidth - clientWidth`, which is what makes the last tab
- * reachable without a manual swipe.
+ * ion-segment centres the checked button in the track, then clamps. At 390:
+ * Detalhes → 0, Recordes → 16, Aposta Esportiva / Relatório / Outros → 146
+ * (the max). That is why 2 and 3 “run to the middle” and the last two stay put.
  */
-function scrollActiveIntoView(smooth: boolean) {
+function scrollActiveIntoView(key: string, smooth: boolean) {
   const rowEl = row.value
-  const el = rowEl?.querySelector<HTMLElement>('.seg-btn.on')
+  const el = rowEl?.querySelector<HTMLElement>(`[data-key="${CSS.escape(key)}"]`)
   if (!rowEl || !el) return
-  const start = el.offsetLeft
-  const end = start + el.offsetWidth
-  let left = rowEl.scrollLeft
-  if (start < left) left = start
-  else if (end > left + rowEl.clientWidth) left = end - rowEl.clientWidth
-  if (left === rowEl.scrollLeft) return
+  const left = el.offsetLeft - (rowEl.clientWidth / 2 - el.offsetWidth / 2)
   rowEl.scrollTo({ left, behavior: smooth ? 'smooth' : 'auto' })
 }
 
-onMounted(() => {
-  measure()
-  scrollActiveIntoView(false)
-  if (typeof ResizeObserver !== 'undefined' && row.value) {
-    observer = new ResizeObserver(measure)
-    observer.observe(row.value)
+function spawnRipple(host: HTMLElement, clientX: number, clientY: number) {
+  const rect = host.getBoundingClientRect()
+  const width = rect.width
+  const height = rect.height
+  const hypotenuse = Math.sqrt(width * width + height * height)
+  const maxDim = Math.max(width, height)
+  const initial = Math.floor(maxDim * RIPPLE_ORIGIN)
+  if (initial < 1) return
+  const scale = (hypotenuse + RIPPLE_PADDING) / initial
+  const x = clientX - rect.left
+  const y = clientY - rect.top
+  const ink = document.createElement('span')
+  ink.className = 'ripple-effect'
+  ink.style.top = `${y - initial * 0.5}px`
+  ink.style.left = `${x - initial * 0.5}px`
+  ink.style.width = `${initial}px`
+  ink.style.height = `${initial}px`
+  ink.style.backgroundColor = getComputedStyle(host).color
+  ink.style.setProperty('--final-scale', String(scale))
+  ink.style.setProperty('--translate-end', `${width * 0.5 - x}px, ${height * 0.5 - y}px`)
+  host.appendChild(ink)
+  const wait = Math.max(RIPPLE_HOLD_MS - 225, 0)
+  const fade = () => {
+    window.removeEventListener('pointerup', fade)
+    window.removeEventListener('pointercancel', fade)
+    window.setTimeout(() => {
+      ink.classList.add('fade-out')
+      ink.addEventListener('animationend', () => ink.remove(), { once: true })
+    }, wait)
   }
-})
+  window.addEventListener('pointerup', fade)
+  window.addEventListener('pointercancel', fade)
+}
 
-onBeforeUnmount(() => observer?.disconnect())
-
-watch(
-  () => [props.active, props.tabs.length],
-  () =>
-    requestAnimationFrame(() => {
-      measure()
-      scrollActiveIntoView(true)
-    }),
-)
+/** ion-ripple-effect.addRipple — one bounded layer on the 50px host. */
+function addRipple(event: PointerEvent) {
+  if (event.button !== 0) return
+  spawnRipple(event.currentTarget as HTMLElement, event.clientX, event.clientY)
+}
 </script>
 
 <template>
-  <div ref="row" class="seg-row">
+  <div ref="row" class="seg-row report-seg" role="tablist">
     <button
       v-for="tab in props.tabs"
       :key="tab.key"
       type="button"
+      role="tab"
       class="seg-btn"
-      :class="{ on: tab.key === props.active }"
-      @click="emit('select', tab.key)"
+      :class="{ on: tab.key === picked }"
+      :data-key="tab.key"
+      :aria-selected="tab.key === picked"
+      @pointerdown="addRipple"
+      @click="select(tab.key)"
     >
       <span class="seg-label">{{ tab.label }}</span>
+      <span class="seg-indicator" />
     </button>
-    <span
-      class="seg-indicator"
-      :class="{ slides }"
-      :style="{
-        width: `${indicator.width}px`,
-        transform: `translate3d(${indicator.left}px, 0, 0)`,
-      }"
-    />
   </div>
 </template>
 
@@ -121,7 +159,8 @@ watch(
   display: none;
 }
 
-/* ion-segment-button: no padding of its own, 12.8px apart, text-only width. */
+/* ion-segment-button: no padding of its own, 12.8px apart, text-only width.
+   Last button drops the gap (live computed margin-right: 0). */
 .seg-btn {
   display: flex;
   position: relative;
@@ -132,6 +171,15 @@ watch(
   align-items: center;
   overflow: hidden;
   white-space: nowrap;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.seg-btn:last-child {
+  margin-right: 0;
+}
+
+.seg-btn.on {
+  color: var(--color-segment-md-indicator);
 }
 
 /* px, not rem: the 14px/40px comes from Ionic's own `ion-segment-button:host`,
@@ -140,6 +188,8 @@ watch(
    `capitalize` is the live rule, which is why "Detalhes da Conta" paints as
    "Detalhes Da Conta". */
 .seg-label {
+  position: relative;
+  z-index: 1;
   font-size: 14px;
   font-weight: 400;
   line-height: 40px;
@@ -153,21 +203,74 @@ watch(
   color: var(--color-segment-md-indicator);
 }
 
-/* .segment-button-indicator, 2px on the track. The live one is FLIPped from the
-   previous button's box with translate + scaleX; transitioning the measured box
-   is the same picture for a 2px solid bar. */
+/* Per-button .segment-button-indicator: 2px, FLIPped from the previous box.
+   transform-origin left matches Ionic's 0px 1px origin on the 2px bar. */
 .seg-indicator {
   position: absolute;
+  right: 0;
   bottom: 0;
   left: 0;
-  height: 0.125rem;
+  z-index: 1;
+  height: 2px;
   background-color: var(--color-segment-md-indicator);
+  opacity: 0;
+  pointer-events: none;
+  transform-origin: left center;
   will-change: transform;
 }
 
-.seg-indicator.slides {
-  transition:
-    transform 0.25s cubic-bezier(0.4, 0, 0.2, 1),
-    width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+.seg-btn.on .seg-indicator {
+  opacity: 1;
+}
+</style>
+
+<style>
+/* Unscoped so JS-created ripple nodes (no data-v-*) get the keyframes.
+   Live ion-ripple-effect is a single currentColor ink at 0.16. */
+.report-seg .ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  contain: strict;
+  opacity: 0;
+  animation:
+    225ms ease 0s 1 normal forwards running report-seg-ripple,
+    75ms ease 0s 1 normal forwards running report-seg-ripple-in;
+  will-change: transform, opacity;
+  pointer-events: none;
+}
+
+.report-seg .ripple-effect.fade-out {
+  transform: translate(var(--translate-end)) scale(var(--final-scale, 1));
+  animation: 150ms ease 0s 1 normal forwards running report-seg-ripple-out;
+}
+
+@keyframes report-seg-ripple {
+  0% {
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transform: scale(1);
+  }
+  100% {
+    transform: translate(var(--translate-end)) scale(var(--final-scale, 1));
+  }
+}
+
+@keyframes report-seg-ripple-in {
+  0% {
+    animation-timing-function: linear;
+    opacity: 0;
+  }
+  100% {
+    opacity: 0.16;
+  }
+}
+
+@keyframes report-seg-ripple-out {
+  0% {
+    animation-timing-function: linear;
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 </style>

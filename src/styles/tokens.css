@@ -86,12 +86,16 @@
   --ion-toolbar-background: #262626;
   --ion-toolbar-border-color: #404040;
   --ion-tab-bar-background: #101629;
-  --ion-safe-area-top: 0px;
-  --ion-safe-area-right: 0px;
-  --ion-safe-area-bottom: 0px;
-  --ion-safe-area-left: 0px;
-  --ion-font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
-  --ion-default-font: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'Roboto', sans-serif;
+  --sat: env(safe-area-inset-top, 0px);
+  --sab: env(safe-area-inset-bottom, 0px);
+  --sal: env(safe-area-inset-left, 0px);
+  --sar: env(safe-area-inset-right, 0px);
+  --ion-safe-area-top: var(--sat);
+  --ion-safe-area-right: var(--sar);
+  --ion-safe-area-bottom: var(--sab);
+  --ion-safe-area-left: var(--sal);
+  --ion-font-family: Roboto, 'Helvetica Neue', sans-serif;
+  --ion-default-font: Roboto, 'Helvetica Neue', sans-serif;
   --ion-dynamic-font: -apple-system-body;
 
   /* Site theme (blue-default) */

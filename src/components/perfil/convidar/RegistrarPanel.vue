@@ -105,10 +105,10 @@ async function onSubmit() {
           v-model="password"
           @blur="passwordTouched = true"
         />
-        <button type="button" class="eye" @click="showPassword = !showPassword">
-          <SvgIcon :name="showPassword ? 'register-eye-off' : 'register-eye'" />
-        </button>
       </div>
+      <button type="button" class="eye" @click="showPassword = !showPassword">
+        <SvgIcon :name="showPassword ? 'register-eye-off' : 'register-eye'" />
+      </button>
       <p v-if="passwordError()" class="error">{{ passwordError() }}</p>
     </div>
 
@@ -122,13 +122,13 @@ async function onSubmit() {
           :placeholder="copy.confirmPlaceholder"
           v-model="confirm"
         />
-        <button type="button" class="eye" @click="showConfirm = !showConfirm">
-          <SvgIcon :name="showConfirm ? 'register-eye-off' : 'register-eye'" />
-        </button>
       </div>
+      <button type="button" class="eye" @click="showConfirm = !showConfirm">
+        <SvgIcon :name="showConfirm ? 'register-eye-off' : 'register-eye'" />
+      </button>
     </div>
 
-    <button type="submit" class="submit">{{ copy.submit }}</button>
+    <button type="submit" class="submit"><span class="submit-inner">{{ copy.submit }}</span></button>
   </form>
 
   <Teleport to="body">
@@ -173,42 +173,49 @@ async function onSubmit() {
   color: var(--color-text-100);
 }
 
-/* ion-item 340x48, mb 10. The dark input inside is 40; the extra 8 lives
-   under the field so the next item still starts 58 later. Grows to 60 when
-   the 15px error is shown. */
+/* ion-item 340x48, mb 10. Live ion-input is 45px centred in the 48px item
+   (1.5px down) with a 40px dark bar at the top of that host. Item/bar heights
+   stay px on desktop; rem would inflate them. Grows to 60 when the error shows. */
 .item {
   position: relative;
   width: 21.25rem;
-  height: 3rem;
+  height: 48px;
   margin: 0 auto 0.625rem;
 }
 
 .item.err {
   height: auto;
-  min-height: 3.75rem;
+  min-height: 60px;
 }
 
 .field {
   display: flex;
   position: relative;
-  height: 2.5rem;
+  height: 40px;
+  margin-top: 1.5px;
   align-items: center;
   overflow: hidden;
   background-color: #090f1f;
   border-radius: 0.625rem;
 }
 
+/* Confirm's ion-input is 40px (not 45) so it centres in the 48px item — 4px
+   from the item top, 2.5px lower than the phone/senha bars. */
+.item:last-of-type .field {
+  margin-top: 4px;
+}
+
 .prefix {
   display: flex;
-  height: 2.5rem;
+  height: 40px;
   padding: 0 1rem 0 0.625rem;
   align-items: center;
   flex: 0 0 auto;
 }
 
 .flag {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 20px;
+  height: 20px;
   margin-right: 0.5rem;
   overflow: hidden;
   border-radius: 0.75rem;
@@ -217,7 +224,7 @@ async function onSubmit() {
 .dial {
   padding-left: 0.5rem;
   border-left: 2px solid rgb(255, 255, 255);
-  font-size: 0.75rem;
+  font-size: 12px;
   line-height: normal;
   color: rgb(135, 146, 175);
 }
@@ -225,15 +232,16 @@ async function onSubmit() {
 .control {
   flex: 1 1 0%;
   min-width: 0;
-  height: 2.5rem;
+  height: auto;
   padding: 0 0 0 0.625rem;
   background: transparent;
   border: 0;
   outline: none;
   appearance: none;
-  font-family: inherit;
-  font-size: 0.75rem;
-  line-height: 0.90625rem;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
   color: var(--color-text-100);
 }
 
@@ -261,23 +269,24 @@ async function onSubmit() {
   color: rgb(135, 146, 175);
 }
 
-/* overlay: absolute, min-h 36, top 4, right 6, 20x20 icon. */
+/* Overlay is on the 48px ion-item (not the 40px bar): top 4, right 6,
+   min-height 36, flex items-center, 20x20 glyph. */
 .eye {
   display: flex;
   position: absolute;
-  top: 0.25rem;
-  right: 0.375rem;
+  top: 4px;
+  right: 6px;
   z-index: 2;
-  width: 1.25rem;
-  min-height: 2.25rem;
+  width: 20px;
+  min-height: 36px;
   justify-content: center;
   align-items: center;
   color: rgb(109, 120, 141);
 }
 
 .eye :deep(.svg-icon) {
-  width: 1.25rem;
-  height: 1.25rem;
+  width: 20px;
+  height: 20px;
 }
 
 .error {
@@ -287,19 +296,36 @@ async function onSubmit() {
   color: rgb(255, 0, 0);
 }
 
-/* ion-item.submit: 250x40, mt 32, mx auto, gradient, radius 10, blue drop-shadow. */
+/* ion-item.submit is the 40px gradient; the label is a small clear ion-button
+   (25px, padding 2px, line-height = font-size) flex-centered inside it. */
 .submit {
-  display: block;
+  display: flex;
   width: 15.625rem;
-  height: 2.5rem;
+  height: 40px;
   margin: 2rem auto 0;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
   border-radius: 0.625rem;
   background-image: linear-gradient(0deg, rgb(1, 103, 202) 0%, rgb(56, 168, 250) 100%);
   filter: drop-shadow(rgba(32, 139, 229, 0.25) 0 0.25rem 0.9375rem);
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 0.875rem;
   font-weight: 500;
-  line-height: 1.25rem;
+  line-height: 0.875rem;
   color: var(--color-text-100);
+  text-align: center;
+}
+
+.submit-inner {
+  display: flex;
+  width: 100%;
+  height: 25px;
+  min-height: 25px;
+  padding: 2px 0.6em;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.875rem;
 }
 
 .toast-root {

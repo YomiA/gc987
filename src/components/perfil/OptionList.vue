@@ -43,18 +43,20 @@ const emit = defineEmits<{ select: [key: string] }>()
   background: var(--pwa-bar-bg);
 }
 
+/* ion-item --padding-top/-bottom .75rem; --inner-padding-end stays 16px. */
 .row {
   display: flex;
   position: relative;
-  padding: 0.75rem 0.625rem 0.75rem 0;
+  padding: 0.75rem 16px 0.75rem 0;
   align-items: center;
   font-size: 0.75rem;
   cursor: pointer;
 }
 
+/* Slotted .left { margin-right: 16px } — Ionic keeps this in px. */
 .left {
   display: flex;
-  margin-right: 1rem;
+  margin-right: 16px;
   align-items: center;
 }
 
@@ -86,10 +88,12 @@ const emit = defineEmits<{ select: [key: string] }>()
   text-align: right;
 }
 
+/* item-detail-icon: 1.25em, margin 0 -6px 0 8px. Together with the 16px
+   inner-end padding this leaves 10px clear of the card edge. */
 .row-chevron {
   width: 0.9375rem;
   height: 0.9375rem;
-  margin-left: 0.5rem;
+  margin: 0 -6px 0 8px;
   color: rgb(155, 167, 190);
 }
 </style>

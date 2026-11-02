@@ -2,10 +2,11 @@
 import type { PromoEvent } from '../../api/promo'
 
 defineProps<{ event: PromoEvent }>()
+const emit = defineEmits<{ select: [] }>()
 </script>
 
 <template>
-  <div class="event-card" :style="{ backgroundImage: `url(${event.image})` }">
+  <div class="event-card" :style="{ backgroundImage: `url(${event.image})` }" @click="emit('select')">
     <!-- The live card puts an ion-item over the banner: a 7.5rem hit area that
          clips the sweep. It carries no text of its own. -->
     <div class="event-hit" :class="{ shiny: event.shiny }" />
@@ -25,6 +26,7 @@ defineProps<{ event: PromoEvent }>()
   background-repeat: no-repeat;
   background-size: 100% auto;
   border-radius: 0.625rem;
+  cursor: pointer;
 }
 
 .event-hit {

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import SvgIcon from '../base/SvgIcon.vue'
 
-defineEmits<{ menu: [] }>()
+defineEmits<{ menu: []; login: []; register: []; search: [] }>()
 </script>
 
 <template>
@@ -15,11 +15,11 @@ defineEmits<{ menu: [] }>()
     </div>
 
     <div class="actions">
-      <button class="btn btn-login" type="button">Entrar</button>
-      <button class="btn btn-register" type="button">Registro</button>
+      <button class="btn btn-login" type="button" @click="$emit('login')">Entrar</button>
+      <button class="btn btn-register" type="button" @click="$emit('register')">Registro</button>
     </div>
 
-    <button class="search" type="button" aria-label="Buscar">
+    <button class="search" type="button" aria-label="Buscar" @click="$emit('search')">
       <SvgIcon name="search" />
     </button>
   </div>

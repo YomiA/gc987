@@ -196,7 +196,8 @@ const props = defineProps<{ profile: PerfilProfile }>()
   height: 1.6rem;
 }
 
-/* ion-row.bottom { margin-top: 1.25rem } with two 50% ion-col at 5px padding. */
+/* ion-row.bottom { margin-top: 1.25rem } with two 50% ion-col. ion-col padding
+   stays 5px at 390 and 1440 (not 0.3125rem). */
 .bottom {
   display: flex;
   margin-top: 1.25rem;
@@ -205,7 +206,7 @@ const props = defineProps<{ profile: PerfilProfile }>()
 .col {
   flex: 0 0 50%;
   max-width: 50%;
-  padding: 0.3125rem;
+  padding: 5px;
 }
 
 .enter-btn {

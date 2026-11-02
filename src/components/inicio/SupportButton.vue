@@ -12,7 +12,7 @@ import SvgIcon from '../base/SvgIcon.vue'
 .support {
   display: flex;
   position: absolute;
-  bottom: 4.25rem;
+  bottom: calc(4.25rem + var(--sab));
   left: 1rem;
   z-index: 50;
   width: 2.5rem;

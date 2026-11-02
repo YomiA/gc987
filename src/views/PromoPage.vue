@@ -8,12 +8,29 @@ import RecordPanel from '../components/promo/RecordPanel.vue'
 import RedeemPanel from '../components/promo/RedeemPanel.vue'
 import VipPanel from '../components/promo/VipPanel.vue'
 import TabBar from '../components/inicio/TabBar.vue'
+import type { PromoEvent } from '../api/promo'
 import { useHomeStore } from '../stores/home'
 import { usePromoStore } from '../stores/promo'
 
 const router = useRouter()
 const home = useHomeStore()
 const promo = usePromoStore()
+
+function openEvent(event: PromoEvent) {
+  if (event.type === 'VIP') {
+    void router.push('/activity/vip')
+    return
+  }
+  if (event.type === 'Rebate') {
+    promo.selectTab('rebate')
+    return
+  }
+  void router.push(`/activity/${event.type}/${event.routeId}`)
+}
+
+function openRebateHistory() {
+  void router.push('/activity/rebate/record')
+}
 
 function onTabSelect(key: string) {
   if (key === 'inicio') {
@@ -26,6 +43,10 @@ function onTabSelect(key: string) {
   }
   if (key === 'perfil') {
     void router.push('/main/perfil')
+    return
+  }
+  if (key === 'saque') {
+    void router.push('/main/withdraw')
     return
   }
   home.selectTab(key)
@@ -45,7 +66,12 @@ onMounted(() => {
 
     <div v-if="promo.activeTab === 'eventos'" class="page-scroller promo-content">
       <div class="event-list">
-        <PromoEventCard v-for="event in promo.events" :key="event.id" :event="event" />
+        <PromoEventCard
+          v-for="event in promo.events"
+          :key="event.id"
+          :event="event"
+          @select="openEvent(event)"
+        />
       </div>
     </div>
 
@@ -56,6 +82,7 @@ onMounted(() => {
       :receivable="promo.rebateReceivable"
       :active-category="promo.rebateCategory"
       @select-category="promo.selectRebateCategory"
+      @history="openRebateHistory"
     />
 
     <VipPanel

@@ -1,5 +1,35 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
+import { computed, onBeforeUnmount, onMounted } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
+import SideFab from './components/inicio/SideFab.vue'
+
+const route = useRoute()
+const router = useRouter()
+
+function onPushNavigate(event: Event) {
+  const url = (event as CustomEvent<{ url?: string }>).detail?.url
+  if (!url) return
+  if (/^https?:\/\//.test(url)) {
+    window.location.assign(url)
+    return
+  }
+  void router.push(url)
+}
+
+onMounted(() => window.addEventListener('push:navigate', onPushNavigate))
+onBeforeUnmount(() => window.removeEventListener('push:navigate', onPushNavigate))
+const showFab = computed(() => {
+  const path = route.path
+  return (
+    !path.startsWith('/game/action') &&
+    !path.startsWith('/game/search') &&
+    !path.startsWith('/game/category') &&
+    !path.startsWith('/activity/') &&
+    !path.startsWith('/withdraw/apply') &&
+    !path.startsWith('/withdrawalAccount') &&
+    !path.startsWith('/withdrawalBindAccount')
+  )
+})
 </script>
 
 <template>
@@ -91,6 +121,7 @@ import { RouterView } from 'vue-router'
   </svg>
 
   <RouterView />
+  <SideFab v-if="showFab" />
 </template>
 
 <style scoped>

@@ -108,10 +108,10 @@ function onInput(event: Event) {
 </template>
 
 <style scoped>
+/* ion-segment-button --min-height stays 48px at 390 and 1440. */
 .seg {
   display: flex;
   position: relative;
-  height: 3.0625rem;
   margin-top: 0.625rem;
   border-bottom: 1px solid var(--divider);
 }
@@ -119,8 +119,8 @@ function onInput(event: Event) {
 .seg-btn {
   display: flex;
   position: relative;
-  height: 3rem;
-  padding: 0 1rem;
+  height: 48px;
+  padding: 0 16px;
   align-items: center;
   justify-content: center;
   flex: 0 0 auto;
@@ -131,7 +131,7 @@ function onInput(event: Event) {
 .seg-inner {
   display: flex;
   position: relative;
-  height: 3rem;
+  height: 48px;
   align-items: center;
   justify-content: center;
 }
@@ -148,10 +148,10 @@ function onInput(event: Event) {
   position: absolute;
   top: 0.25rem;
   right: 0.125rem;
-  padding: 0 2px 2px;
+  padding: 0 0.125rem 0.125rem;
   border-radius: 4px;
   background-color: #e64021;
-  font-size: 8px;
+  font-size: 0.5rem;
   line-height: normal;
   text-align: center;
   color: rgb(255, 255, 255);
@@ -198,13 +198,13 @@ function onInput(event: Event) {
   padding: 0 3px;
   border-radius: 4px;
   background-color: #e64021;
-  font-size: 8px;
+  font-size: 0.5rem;
   line-height: 0.9375rem;
   color: rgb(255, 255, 255);
 }
 
 .channel-tag i {
-  font-size: 8px;
+  font-size: 0.5rem;
   font-style: italic;
   font-weight: 400;
   color: rgb(255, 255, 255);
@@ -212,7 +212,7 @@ function onInput(event: Event) {
 
 .line {
   width: 100%;
-  height: 1px;
+  height: 0.0625rem;
   margin-top: 0.9375rem;
   background-color: var(--divider);
 }
@@ -256,21 +256,24 @@ function onInput(event: Event) {
 .native-input {
   flex: 1 1 0%;
   min-width: 0;
-  height: 17px;
   padding: 0;
   border: 0;
   background: transparent;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 0.875rem;
   font-weight: 400;
-  line-height: 17px;
+  line-height: normal;
   color: rgb(255, 255, 255);
+  caret-color: #38a8fa;
   outline: none;
   appearance: none;
 }
 
 .native-input::placeholder {
-  color: rgb(135, 146, 175);
+  color: rgb(109, 120, 141);
+  font-size: 0.75rem;
+  font-weight: 400;
+  opacity: 1;
 }
 
 .native-input::-webkit-outer-spin-button,
@@ -373,8 +376,12 @@ function onInput(event: Event) {
   filter: drop-shadow(rgba(32, 139, 229, 0.25) 0 4px 15px);
 }
 
+/* ion-item.submit.btn-disabled is opacity 0.5; the inner ion-button.button-disabled
+   is another 0.5, so the label paints at 0.25 while the gradient/shadow stay at 0.5. */
+.submit:disabled,
 .submit.disabled {
   opacity: 0.5;
   pointer-events: none;
+  color: rgba(255, 255, 255, 0.5);
 }
 </style>

@@ -1,7 +1,29 @@
 <script setup lang="ts">
 import SvgIcon from '../base/SvgIcon.vue'
+import { usePwaInstall } from '../../composables/usePwaInstall'
 
 const emit = defineEmits<{ close: [] }>()
+const { promptInstall } = usePwaInstall()
+
+async function onInstall() {
+  const accepted = await promptInstall()
+  if (accepted) emit('close')
+}
+
+/**
+ * Live CompulsoryModal: `os !== "iOSH5"` gates `.tip-box`. Apple phones
+ * (iPhone/iPad) therefore never get the Android install steps.
+ */
+const isAppleDevice =
+  /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
+  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+
+const androidSteps = [
+  'Clique no botão acima para baixar o arquivo de instalação',
+  'para Android',
+  'Permita a instalação de aplicativos de fontes desconhecidas nas configurações do seu dispositivo.',
+  'Conclua a instalação.',
+]
 </script>
 
 <template>
@@ -37,11 +59,30 @@ const emit = defineEmits<{ close: [] }>()
           </div>
 
           <div class="action-row">
-            <div class="install-btn">
+            <div class="install-btn" @click="onInstall">
+              <SvgIcon class="install-icon" name="pwa-download" />
               <span class="install-label">Instalar</span>
             </div>
             <div class="service-btn">
-              <SvgIcon class="service-icon" name="support" />
+              <SvgIcon class="service-icon" name="pwa-service" />
+            </div>
+          </div>
+
+          <div v-if="!isAppleDevice" class="tip-box">
+            <p class="tip-title">Instalação de um aplicativo Android:</p>
+            <div v-for="(step, i) in androidSteps" :key="i" class="tip-step">
+              <p class="tip-index">{{ i + 1 }}.</p>
+              <span>{{ step }}</span>
+            </div>
+            <div class="warn">
+              <div class="warn-head">
+                <SvgIcon class="warn-icon" name="pwa-tip" />
+                <p class="warn-title">Aviso Amigável:</p>
+              </div>
+              <p class="warn-body">
+                Este aplicativo passou na certificação de segurança do Google Play, portanto, fique
+                à vontade para instalá-lo.
+              </p>
             </div>
           </div>
         </div>
@@ -72,7 +113,6 @@ const emit = defineEmits<{ close: [] }>()
 .content {
   position: relative;
   width: 24.375rem;
-  height: 22.6875rem;
   background-color: rgb(255, 255, 255);
   border-radius: 1.25rem 1.25rem 0 0;
 }
@@ -110,7 +150,6 @@ const emit = defineEmits<{ close: [] }>()
 .body {
   display: flex;
   width: 24.375rem;
-  height: 14.25rem;
   padding: 0.25rem 1.5rem 1.75rem;
   flex-direction: column;
   align-items: center;
@@ -163,16 +202,16 @@ const emit = defineEmits<{ close: [] }>()
 .action-row {
   display: flex;
   width: 21.375rem;
-  height: 3.3125rem;
   align-items: center;
 }
 
 .install-btn {
   display: flex;
   height: 2.8125rem;
-  margin: 0.25rem 0.125rem;
-  padding: 0 1.625rem;
-  justify-content: center;
+  /* Live ion-button uses 4px 2px / 26px, not rem — rem would drift on desktop. */
+  margin: 4px 2px;
+  padding: 0 26px;
+  justify-content: flex-start;
   align-items: center;
   overflow: hidden;
   flex: 1 1 0%;
@@ -184,6 +223,26 @@ const emit = defineEmits<{ close: [] }>()
   background-image: linear-gradient(rgb(114, 203, 69) 0%, rgb(51, 118, 17) 100%);
   border-radius: 999px;
   box-shadow: var(--btn-md-shadow);
+}
+
+.install-icon {
+  width: 1.25rem;
+  height: 1.181rem;
+  font-size: 1.181rem;
+  /* Ionic start-slot: ±0.3em of the icon font-size (18.9px at 390). */
+  margin: 0 0.3em 0 -0.3em;
+  flex: 0 0 auto;
+  color: rgb(255, 255, 255);
+}
+
+.install-label {
+  display: flex;
+  height: 100%;
+  flex: 1 1 0%;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  line-height: 0.875rem;
 }
 
 .service-btn {
@@ -198,7 +257,59 @@ const emit = defineEmits<{ close: [] }>()
 .service-icon {
   width: 1.75rem;
   height: 1.75rem;
-  font-size: 1.75rem;
+}
+
+.tip-box {
+  width: 21.375rem;
   color: rgb(0, 0, 0);
+}
+
+.tip-title {
+  margin: 0.625rem 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+}
+
+.tip-step {
+  display: flex;
+  width: 100%;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.tip-index {
+  margin-right: 0.375rem;
+}
+
+.warn {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.3125rem 0.625rem;
+  background-color: rgb(245, 245, 245);
+  border-radius: 0.3125rem;
+}
+
+.warn-head {
+  display: flex;
+  align-items: center;
+}
+
+.warn-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+  color: rgb(0, 0, 0);
+}
+
+.warn-title {
+  margin-left: 0.375rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  line-height: 1.21875rem;
+}
+
+.warn-body {
+  font-size: 0.625rem;
+  line-height: 0.78125rem;
 }
 </style>

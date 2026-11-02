@@ -5,7 +5,8 @@
  * Each card is 370 wide at 390 with 10px side padding, radius 8, background
  * `#101629`. Rows are 48 tall `ion-item`s: icon 24×18, 12px/16px labels,
  * right value `rgb(155,167,190)`. Inset hairlines (except the last row of
- * a card) and the 15px 25%-white detail chevron on the password rows.
+ * a card) and the 15px 25%-white detail chevron on phone, email, and the
+ * password rows.
  */
 import { useRouter } from 'vue-router'
 import SvgIcon from '../../base/SvgIcon.vue'

@@ -1,14 +1,16 @@
-# Validação — first page after Senha de Login / Senha de Ativos
+# Validação — first page after Senha de Login / Senha de Ativos / E-mail
 
 Extracted from the logged-in Chrome DevTools MCP session at `390x844x3,
-mobile, touch`. Both jumps reuse one Vue SFC (`data-v-a6fc7d80`) with a
-different intro slot. Confirmar must **not** be followed onto the next
-live step.
+mobile, touch`. All three jumps reuse one Vue SFC with a different intro
+slot. Asset Confirmar must **not** be followed onto the next live step.
+Email Confirmar is mock and pushes `/security/bind/email`. Password
+Confirmar is mock and pushes `/security/confirm/password`.
 
 | jump | live URL | local route | intro |
 | --- | --- | --- | --- |
-| Senha de Login | `/security/verify/password` | same | two lines |
+| Senha de Login | `/security/verify/password` | same | two lines (set-password tip) |
 | Senha de Ativos (`não configurado`) | `/security/verify/asset` | same | empty |
+| E-mail (`Desvincular`) | `/security/verify/email` | same | two lines (vincular tip) |
 
 ## Shell (both)
 
@@ -35,6 +37,8 @@ Form 358×187 @(16,66).
 | submit native | 278×37 @(56,199) | `--background: linear-gradient(0deg, #0167CA 0%, #38A8FA 100%)`, radius 10px |
 | Confirmar `ion-button` | 278×36 | 14px/500 white, fill clear |
 
+Mock Confirmar with 6–16 characters pushes `/security/confirm/password`.
+
 Error slot: warning SVG + `6-16 caracteres`. Shown only while the
 field has **1–5** characters (Ionic `ion-invalid` + `has-value`). Empty
 and 6–16 hide it. Geometry when visible:
@@ -54,6 +58,21 @@ Same field + Confirmar. First form `div` is empty (height 0). Field wrap
 starts @(16,76). Submit host @(56,160). Placeholder is still **Senha de
 Login** (verifying login before setting the asset password).
 
+Mock Confirmar with 6–16 characters pushes `/security/confirm/asset`.
+
+## Email — `/security/verify/email`
+
+Same field + Confirmar as login-password verify. Intro heading is still
+`Verificar senha de login`. Tip is live concatenation of
+`viewsAssets.verifyPasswordBind` + `label.email` with **no space**:
+`Verificar senha de login para vincularE-mail`. Geometry matches the
+login-password first page (heading @(16,66), field @(16,115), Confirmar
+@(56,199)).
+
+Mock Confirmar with 6–16 characters pushes `/security/bind/email`.
+
 ## Not cloned
 
-Any page after a successful Confirmar on either route.
+Email continue: `SECURITY_BIND.spec.md`. Password and asset continue:
+`SECURITY_CONFIRM.spec.md`.
+

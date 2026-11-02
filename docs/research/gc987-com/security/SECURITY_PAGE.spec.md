@@ -45,17 +45,19 @@ card is `item-lines-none`.
 | row | y | lined | detail | right copy (this account) |
 | --- | --- | --- | --- | --- |
 | Conta | 60 | yes | no | mock account (same digit count as perfil) |
-| Telefone | 108 | yes | no | same mock account |
-| E-mail | 156 | no | no | `Desvincular` |
+| Telefone | 108 | yes | yes | same mock account |
+| E-mail | 156 | no | yes | `Desvincular` |
 | Senha de Login | 214 | yes | yes | `Já definido` |
 | Senha de Ativos | 262 | no | yes | `não configurado` |
 
-Detail chevron (password rows only): Ionic `chevron-forward`, 15×15
-@(357, …), `opacity: 0.25`, white, `margin: 2px -6px 0 2px`.
+Detail chevron: Ionic `chevron-forward`, 15×15 @(357, …), `opacity: 0.25`,
+white, `margin: 2px -6px 0 2px`. Telefone / E-mail / both password rows
+have it. Conta does not. Bound Telefone does not navigate. Unbound E-mail
+pushes `/security/verify/email`.
 
 ## Not cloned
 
-- Pages after Confirmar on `/security/verify/password` and
-  `/security/verify/asset`. First pages: `SECURITY_VERIFY.spec.md`.
-- **E-mail** sub-flow.
-- The site-wide 30×30 floating ball.
+- `/security/verify/phone` and `/security/bind/phone`.
+- Unbind-email after a bound address.
+- The site-wide 30×30 floating ball (now mounted globally as SideFab).
+

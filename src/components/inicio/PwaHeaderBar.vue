@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import SvgIcon from '../base/SvgIcon.vue'
+import { usePwaInstall } from '../../composables/usePwaInstall'
 
 const emit = defineEmits<{ close: [] }>()
+const { promptInstall } = usePwaInstall()
 </script>
 
 <template>
@@ -12,7 +14,7 @@ const emit = defineEmits<{ close: [] }>()
       <img class="prize" src="/images/brand/pwa-prize.png" alt="" />
     </div>
     <div class="install">
-      <button type="button">Instalar</button>
+      <button type="button" @click="promptInstall">Instalar</button>
     </div>
     <button class="close" type="button" aria-label="Fechar" @click="emit('close')">
       <SvgIcon name="close" />

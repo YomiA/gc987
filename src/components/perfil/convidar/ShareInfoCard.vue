@@ -42,7 +42,13 @@ defineProps<{ share: SpreadShareInfo }>()
       </div>
 
       <div class="social-scroll">
-        <button v-for="social in share.socials" :key="social.key" type="button" class="social">
+        <button
+          v-for="social in share.socials"
+          :key="social.key"
+          type="button"
+          class="social"
+          :class="social.key"
+        >
           <SvgIcon class="social-icon" :name="social.icon" />
         </button>
       </div>
@@ -60,10 +66,10 @@ defineProps<{ share: SpreadShareInfo }>()
 }
 
 .referral-tips {
-  height: 2.125rem;
   padding-bottom: 0.8125rem;
   font-size: 0.875rem;
   line-height: 1.25rem;
+  border-bottom: 1px solid rgb(42, 50, 78);
 }
 
 .row {
@@ -167,11 +173,17 @@ defineProps<{ share: SpreadShareInfo }>()
   display: none;
 }
 
+/* ion-segment-button.ios on this page: padding 0, min-width 2.35rem,
+   min/max-height 2.5rem, margin 0 0.375rem. ion-icon is 2.1875rem; overflow
+   stays visible so WhatsApp's tail is not clipped (contain:strict was). */
 .social {
   display: flex;
   flex: 0 0 auto;
-  padding: 0 0.08125rem;
+  padding: 0;
   margin: 0 0.375rem;
+  min-width: 2.35rem;
+  min-height: 2.5rem;
+  max-height: 2.5rem;
   justify-content: center;
   align-items: center;
   border-radius: 0.375rem;
@@ -180,5 +192,6 @@ defineProps<{ share: SpreadShareInfo }>()
 .social-icon {
   width: 2.1875rem;
   height: 2.1875rem;
+  overflow: visible;
 }
 </style>

@@ -15,6 +15,8 @@ import SideMenu from '../components/inicio/SideMenu.vue'
 import SiteFooter from '../components/inicio/SiteFooter.vue'
 import SupportButton from '../components/inicio/SupportButton.vue'
 import TabBar from '../components/inicio/TabBar.vue'
+import ToTopButton from '../components/inicio/ToTopButton.vue'
+import LoginModal from '../components/inicio/LoginModal.vue'
 import type { GameBlock } from '../api/mock'
 import { useHomeStore } from '../stores/home'
 import { usePwaStore } from '../stores/pwa'
@@ -23,8 +25,16 @@ const router = useRouter()
 const home = useHomeStore()
 const pwa = usePwaStore()
 const menuOpen = ref(false)
+const authOpen = ref(false)
+const authMode = ref<'login' | 'register'>('login')
+
+function openAuth(mode: 'login' | 'register') {
+  authMode.value = mode
+  authOpen.value = true
+}
 const scroller = ref<HTMLElement | null>(null)
 const contentTick = ref(0)
+const showToTop = ref(false)
 /** Document Y of the provider bar. Sticky `offsetTop` is unusable once stuck. */
 let dockY = 0
 let scrollRaf = 0
@@ -89,12 +99,50 @@ const visibleBlocks = computed<GameBlock[]>(() => {
 
 function onSelectProvider(key: string) {
   home.selectProvider(key)
+  showToTop.value = false
   contentTick.value += 1
   void nextTick(() => {
     requestAnimationFrame(() => {
       requestAnimationFrame(dockSegment)
+      updateToTop()
     })
   })
+}
+
+/**
+ * Live watchBuoy only flips on intersecting game sections (index > 2 show,
+ * index <= 2 hide). At the footer no `.game-block` intersects; treat that as
+ * "already past the 4th block" so TOP stays on at the bottom.
+ */
+function updateToTop() {
+  const sc = scroller.value
+  if (!sc) {
+    showToTop.value = false
+    return
+  }
+  const blocks = sc.querySelectorAll('.game-block')
+  const root = sc.getBoundingClientRect()
+  let intersecting = -1
+  blocks.forEach((el, i) => {
+    const box = el.getBoundingClientRect()
+    if (box.bottom > root.top && box.top < root.bottom) intersecting = i
+  })
+  if (intersecting > 2) {
+    showToTop.value = true
+    return
+  }
+  if (intersecting >= 0) {
+    showToTop.value = false
+    return
+  }
+  const fourth = blocks[3]
+  showToTop.value = !!fourth && fourth.getBoundingClientRect().bottom <= root.top
+}
+
+function scrollToTop() {
+  const sc = scroller.value
+  if (!sc) return
+  animateScrollTo(sc, 0, DOCK_MS)
 }
 
 function onMenuSelect(key: string) {
@@ -116,6 +164,10 @@ function onTabSelect(key: string) {
     void router.push('/main/perfil')
     return
   }
+  if (key === 'saque') {
+    void router.push('/main/withdraw')
+    return
+  }
   home.selectTab(key)
 }
 
@@ -130,6 +182,7 @@ onMounted(() => {
   void home.load().then(() => {
     void nextTick(() => {
       requestAnimationFrame(measureDockY)
+      updateToTop()
     })
   })
 })
@@ -143,11 +196,16 @@ onBeforeUnmount(() => {
   <div class="ion-page" :class="{ 'menu-open': menuOpen }">
     <div class="page-header">
       <PwaHeaderBar v-if="pwa.barVisible" @close="pwa.hideBar()" />
-      <AppHeader @menu="menuOpen = true" />
+      <AppHeader
+        @menu="menuOpen = true"
+        @login="openAuth('login')"
+        @register="openAuth('register')"
+        @search="void router.push('/game/search/POPULAR')"
+      />
     </div>
 
     <div class="router-outlet">
-      <div ref="scroller" class="main-content">
+      <div ref="scroller" class="main-content" @scroll.passive="updateToTop">
         <div class="order-container">
           <PosterSwiper :banners="home.banners" />
           <PromoGrid :promos="home.promos" />
@@ -169,8 +227,10 @@ onBeforeUnmount(() => {
     </div>
 
     <SupportButton />
+    <ToTopButton :visible="showToTop && !pwa.modalOpen && !authOpen" @top="scrollToTop" />
     <TabBar :items="home.tabBarItems" :active="home.activeTab" @select="onTabSelect" />
     <PwaModal v-if="pwa.modalOpen" @close="pwa.closeModal()" />
+    <LoginModal v-if="authOpen" v-model:mode="authMode" @close="authOpen = false" />
     <SideMenu
       :open="menuOpen"
       :tabs="home.providerTabs"
@@ -191,7 +251,10 @@ onBeforeUnmount(() => {
   width: 100%;
   max-width: var(--app-max-width);
   height: 100vh;
+  height: 100dvh;
   margin: 0 auto;
+  padding-top: var(--sat);
+  padding-bottom: var(--sab);
   flex-direction: column;
   overflow: hidden;
   contain: layout;

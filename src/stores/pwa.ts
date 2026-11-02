@@ -1,14 +1,22 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
-/**
- * The install prompts are UI-only. The live page shows a blocking modal on
- * first paint plus a dismissible strip above the header; both are reproduced
- * here without any real install flow.
- */
+function alreadyInstalled() {
+  try {
+    return (
+      window.matchMedia('(display-mode: standalone)').matches ||
+      (navigator as Navigator & { standalone?: boolean }).standalone === true
+    )
+  } catch {
+    return false
+  }
+}
+
+/** Install strip and modal. Hidden once the site is already running as an installed app. */
 export const usePwaStore = defineStore('pwa', () => {
-  const modalOpen = ref(true)
-  const barVisible = ref(true)
+  const installed = alreadyInstalled()
+  const modalOpen = ref(!installed)
+  const barVisible = ref(!installed)
 
   const closeModal = () => {
     modalOpen.value = false

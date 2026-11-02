@@ -1,5 +1,19 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
+import { categoryPlatforms } from '../../api/mock'
+
 defineProps<{ genres: string[]; brands: string[] }>()
+const router = useRouter()
+
+function openGenre(genre: string) {
+  if (genre !== 'Slot') return
+  void router.push('/game/category/ELECTRONIC/0')
+}
+
+function openBrand(brand: string) {
+  const hit = categoryPlatforms.find((item) => item.label.toLowerCase() === brand.toLowerCase())
+  void router.push(`/game/category/ELECTRONIC/${hit?.key ?? '0'}`)
+}
 </script>
 
 <template>
@@ -17,7 +31,12 @@ defineProps<{ genres: string[]; brands: string[] }>()
       <div class="col">
         <span class="col-title">Gênero de jogo</span>
         <ul class="list">
-          <li v-for="(genre, i) in genres" :key="genre" :class="{ active: i === 0 }">
+          <li
+            v-for="(genre, i) in genres"
+            :key="genre"
+            :class="{ active: i === 0, link: genre === 'Slot' }"
+            @click="openGenre(genre)"
+          >
             {{ genre }}
           </li>
         </ul>
@@ -25,7 +44,9 @@ defineProps<{ genres: string[]; brands: string[] }>()
       <div class="col">
         <span class="col-title">Marca de games</span>
         <ul class="list platform-list">
-          <li v-for="brand in brands" :key="brand">{{ brand }}</li>
+          <li v-for="brand in brands" :key="brand" class="link" @click="openBrand(brand)">
+            {{ brand }}
+          </li>
         </ul>
       </div>
     </section>
@@ -113,6 +134,10 @@ defineProps<{ genres: string[]; brands: string[] }>()
 
 .list li.active {
   color: rgb(255, 255, 255);
+}
+
+.list li.link {
+  cursor: pointer;
 }
 
 .platform-list {

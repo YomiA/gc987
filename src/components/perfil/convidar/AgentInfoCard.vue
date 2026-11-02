@@ -22,8 +22,8 @@ defineProps<{ info: SpreadAgentInfo }>()
       </div>
 
       <div class="actions">
-        <button type="button" class="btn receber">Receber</button>
-        <button type="button" class="btn historico">Histórico</button>
+        <button type="button" class="btn receber"><span class="btn-inner">Receber</span></button>
+        <button type="button" class="btn historico"><span class="btn-inner">Histórico</span></button>
       </div>
     </div>
 
@@ -84,21 +84,37 @@ defineProps<{ info: SpreadAgentInfo }>()
   justify-content: center;
 }
 
-/* ion-button (small, solid, md): 30 tall, 4px radius, md elevation-2. */
+/* ion-button.small.md host + .button-native. Live html/ion-button font stack is
+   Roboto first (not the iOS -apple-system stack). Native padding is 4px 0.9em;
+   the label sits 1px low of a default flex box, so top/bottom are 5px / 3px. */
 .btn {
+  display: flex;
   height: 1.875rem;
   min-height: 1.70625rem;
-  padding: 0.25rem 0.73125rem;
+  padding: 5px 0.9em 3px;
+  align-items: center;
+  justify-content: center;
   border-radius: 0.25rem;
   box-shadow:
     0 3px 1px -2px rgba(0, 0, 0, 0.2),
     0 2px 2px 0 rgba(0, 0, 0, 0.14),
     0 1px 5px 0 rgba(0, 0, 0, 0.12);
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
   font-size: 0.8125rem;
   font-weight: 500;
-  line-height: 1.25rem;
+  line-height: 0.8125rem;
+  font-kerning: none;
   color: var(--color-text-100);
   text-align: center;
+  text-transform: none;
+  text-rendering: optimizeLegibility;
+}
+
+.btn-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0.8125rem;
 }
 
 .receber {

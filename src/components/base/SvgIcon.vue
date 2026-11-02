@@ -53,4 +53,14 @@ const markup = computed(() => registry[props.name] ?? '')
 .svg-icon :deep(.ionicon) {
   fill: currentColor;
 }
+
+/* Outline ionicons also carry `.ionicon`; keep fill none after the rule above. */
+.svg-icon :deep(.ionicon-fill-none) {
+  fill: none;
+  stroke: currentColor;
+}
+
+.svg-icon :deep(.ionicon-stroke-width) {
+  stroke-width: 32px;
+}
 </style>

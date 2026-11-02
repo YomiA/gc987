@@ -7,6 +7,80 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
     />
+    <meta name="theme-color" content="#090f1f" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="apple-mobile-web-app-title" content="gc987" />
+    <link rel="apple-touch-icon" href="/images/brand/ICON.png" />
+    <script>
+      (function () {
+        try {
+          var mq = window.matchMedia('(display-mode: standalone)')
+          var apply = function () {
+            var on =
+              mq.matches ||
+              navigator.standalone === true ||
+              document.referrer.indexOf('android-app://') === 0
+            document.documentElement.classList.toggle('is-standalone', !!on)
+          }
+          apply()
+          if (mq.addEventListener) mq.addEventListener('change', apply)
+        } catch (e) {}
+        try {
+          var h = window.innerHeight || document.documentElement.clientHeight || 0
+          if (h) document.documentElement.style.setProperty('--vh', h + 'px')
+        } catch (e2) {}
+      })()
+    </script>
+    <script>
+      (function () {
+        try {
+          var sp = new URLSearchParams(window.location.search)
+          var save = new URLSearchParams()
+          ;['id', 'type', 'inviteCode'].forEach(function (key) {
+            var value = sp.get(key)
+            if (value) save.set(key, value)
+          })
+          var paramStr = save.toString()
+          if (paramStr) localStorage.setItem('pwa_download_params', paramStr)
+          var manifestUrl = paramStr ? '/api/manifest?' + paramStr : '/api/manifest'
+          var link = document.querySelector('link[rel="manifest"]')
+          if (!link) {
+            link = document.createElement('link')
+            link.setAttribute('rel', 'manifest')
+            document.head.appendChild(link)
+          }
+          link.setAttribute('href', manifestUrl)
+          fetch(manifestUrl, { credentials: 'same-origin', cache: 'no-store' })
+            .then(function (response) {
+              return response.ok ? response.json() : null
+            })
+            .then(function (manifest) {
+              var icons = manifest && manifest.icons
+              if (!Array.isArray(icons) || !icons.length) return
+              var icon = icons[0]
+              for (var i = 0; i < icons.length; i++) {
+                if (String(icons[i].sizes || '').indexOf('192x192') !== -1) icon = icons[i]
+              }
+              if (!icon || !icon.src) return
+              var favicon = document.querySelector("link[rel~='icon']")
+              if (!favicon) {
+                favicon = document.createElement('link')
+                favicon.setAttribute('rel', 'icon')
+                document.head.appendChild(favicon)
+              }
+              favicon.setAttribute('href', icon.src)
+              var apple = document.querySelector("link[rel='apple-touch-icon']")
+              if (apple) apple.setAttribute('href', icon.src)
+              if (manifest.name) {
+                var title = document.querySelector('meta[name="apple-mobile-web-app-title"]')
+                if (title) title.setAttribute('content', manifest.name)
+              }
+            })
+            .catch(function () {})
+        } catch (e) {}
+      })()
+    </script>
     <title>gc987</title>
   </head>
   <body>

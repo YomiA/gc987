@@ -8,7 +8,7 @@ const props = defineProps<{
   receivable: number
   activeCategory: string
 }>()
-const emit = defineEmits<{ selectCategory: [key: string] }>()
+const emit = defineEmits<{ selectCategory: [key: string]; history: [] }>()
 
 /**
  * The live rows draw their platform logo with `ion-icon`, which inlines the
@@ -60,7 +60,7 @@ const tiles = computed(() => props.categories.filter((c) => c.enabled))
           </div>
 
           <button type="button" class="side-btn claim">Receber</button>
-          <button type="button" class="side-btn history">Histórico</button>
+          <button type="button" class="side-btn history" @click="emit('history')">Histórico</button>
         </div>
 
         <div class="main-right">

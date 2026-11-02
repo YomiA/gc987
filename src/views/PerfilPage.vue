@@ -29,6 +29,10 @@ function onTabSelect(key: string) {
     void router.push('/main/entrar')
     return
   }
+  if (key === 'saque') {
+    void router.push('/main/withdraw')
+    return
+  }
   home.selectTab(key)
 }
 
@@ -94,9 +98,15 @@ onMounted(() => {
   margin-top: 0.875rem;
 }
 
-/* Live spacer: <div style="height: calc(56px + 1.5rem)">, i.e. the tab bar
-   plus 24px. The bar in this clone is 3.5rem tall so it scales with the column. */
+/* Live spacer: height calc(56px + 1.5rem) on the 390 column, calc(70px + 1.5rem)
+   once the tab bar switches to its 70px desktop min-height. */
 .bottom-spacer {
-  height: calc(3.5rem + 1.5rem);
+  height: calc(56px + 1.5rem);
+}
+
+@media (min-width: 486px) {
+  .bottom-spacer {
+    height: calc(70px + 1.5rem);
+  }
 }
 </style>

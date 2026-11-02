@@ -3,8 +3,8 @@
  *
  * Copy and row states are the values on https://gc987.com/security at
  * 390x844x3. Account / phone reuse the fake perfil identifiers so nothing
- * that identifies a signed-in live account is stored here. Email is unbound
- * (`Desvincular`); login password is set; asset password is not.
+ * that identifies a signed-in live account is stored here. Email starts
+ * unbound (`Desvincular`); login password is set; asset password is not.
  */
 
 export interface SecurityRow {
@@ -15,11 +15,13 @@ export interface SecurityRow {
   value: string
   /** `item-lines-inset` hairline under the row. Last row of a card is none. */
   lined: boolean
-  /** Ionic `detail` chevron — only the two password rows have it. */
+  /** Ionic `detail` chevron — phone, email, and both password rows have it. */
   detail: boolean
-  /** First-page verify route. Only the password rows navigate. */
+  /** First-page verify route. Bound phone has a chevron but does not navigate. */
   to?: string
 }
+
+export type SecurityVerifyVariant = 'password' | 'asset' | 'email'
 
 export const securityCopy = {
   title: 'Centro de Segurança',
@@ -29,17 +31,89 @@ export const securityVerifyCopy = {
   title: 'Validação',
   loginHeading: 'Verificar senha de login',
   loginTip: 'Você pode definir uma nova senha após verificar sua senha de login',
+  /** Live concatenates verifyPasswordBind + label.email with no space. */
+  emailTip: 'Verificar senha de login para vincularE-mail',
   placeholder: 'Senha de Login',
   error: '6-16 caracteres',
   confirm: 'Confirmar',
 }
 
-export function securityGroups(account: string): SecurityRow[][] {
+export const securityBindCopy = {
+  /** Live ion-title textContent at 390x844x3. */
+  title: 'ValidaçãoNovoE-mail',
+  heading: 'Confirmar novo endereço de email',
+  placeholder: 'E-mail',
+  error: 'E-mail inválido',
+  confirm: 'Confirmar',
+  success: 'Ligação bem-sucedida',
+  tooLong: 'Por favor, insira no máximo 64 caracteres',
+}
+
+export const securityConfirmCopy = {
+  title: 'Alterar Senha',
+  heading: 'Confirmar nova senha',
+  password: 'Senha',
+  confirmPassword: 'Confirmar senha',
+  confirm: 'Confirmar',
+  mismatch: 'As senhas inseridas duas vezes não correspondem',
+  success: 'Modificação bem-sucedida',
+}
+
+export const securityConfirmAssetCopy = {
+  /** Live `$t('label.asset')`. */
+  title: 'Saque Senha',
+  /** Live `$t('main.set') + $t('label.assetsPassword')` with no space. */
+  heading: 'ConfigurarSenha de Ativos',
+  /** Live `$t('main.enter') + $t('viewsAssets.newAssetPassword')` with no space. */
+  enter: 'EntrarNova senha de financiamento',
+  /** Live `$t('main.confirm') + $t('viewsAssets.newAssetPassword')` with no space. */
+  confirm: 'ConfirmarNova senha de financiamento',
+  mismatch: 'As senhas inseridas duas vezes não correspondem',
+  success: 'Configurado com sucesso',
+}
+
+/**
+ * Live `Qd()` on `/security/confirm/password`. The painted fields have
+ * no maxlength; submit still requires 6–16 with no whitespace.
+ */
+export function isValidConfirmPassword(value: string): boolean {
+  return value.length >= 6 && value.length <= 16 && !/\s/.test(value)
+}
+
+/**
+ * Live `Gb()` used by the security email field (`isSecurity` path).
+ * Empty is not invalid; 1+ chars that fail this show "E-mail inválido".
+ */
+export function isValidSecurityEmail(value: string): boolean {
+  const compact = value.replace(/\s/g, '')
+  if (compact.length < 6 || compact.length > 64) return false
+  const parts = compact.split('@')
+  if (parts.length !== 2) return false
+  const [local, domain] = parts
+  return (
+    /^[a-zA-Z0-9._\-+]+$/.test(local) &&
+    /^[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+$/.test(domain) &&
+    !local.startsWith('.') &&
+    !local.endsWith('.') &&
+    !local.includes('..')
+  )
+}
+
+export function securityGroups(account: string, email = '', assetSet = false): SecurityRow[][] {
+  const emailBound = Boolean(email)
   return [
     [
       { key: 'conta', icon: 'security-account', label: 'Conta', value: account, lined: true, detail: false },
-      { key: 'telefone', icon: 'security-phone', label: 'Telefone', value: account, lined: true, detail: false },
-      { key: 'email', icon: 'security-email', label: 'E-mail', value: 'Desvincular', lined: false, detail: false },
+      { key: 'telefone', icon: 'security-phone', label: 'Telefone', value: account, lined: true, detail: true },
+      {
+        key: 'email',
+        icon: 'security-email',
+        label: 'E-mail',
+        value: emailBound ? email : 'Desvincular',
+        lined: false,
+        detail: true,
+        to: emailBound ? undefined : '/security/verify/email',
+      },
     ],
     [
       {
@@ -55,7 +129,7 @@ export function securityGroups(account: string): SecurityRow[][] {
         key: 'asset',
         icon: 'security-asset',
         label: 'Senha de Ativos',
-        value: 'não configurado',
+        value: assetSet ? 'Já definido' : 'não configurado',
         lined: false,
         detail: true,
         to: '/security/verify/asset',

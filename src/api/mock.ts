@@ -24,6 +24,8 @@ export interface ProviderTab {
 }
 
 export interface Game {
+  /** Thumbnail stem; live uses a numeric gameId, clone uses this in the route. */
+  id: string
   name: string
   image: string
   /** Filename prefix; also selects the wordmark drawn at the card's bottom. */
@@ -86,6 +88,7 @@ const providerTabs: ProviderTab[] = [
 
 /** The live page derives the card wordmark from the thumbnail's filename prefix. */
 const game = (file: string, name: string): Game => ({
+  id: file.replace(/\.[^.]+$/, ''),
   name,
   image: `${GAME_IMAGE_BASE}/${file}`,
   provider: file.split('_')[0],
@@ -215,6 +218,80 @@ const marqueeNotices: string[] = [
   'Não perca! Visite GC987.com para mais BÔNUS incríveis! Cadastre-se agora e ganhe seu prêmio!',
   'Convide seus amigos e tenha a chance de ganhar até 1 milhão por mês!',
 ]
+
+/** Live `/game/category/:gameType` title = `$t('sort.' + gameType)`. */
+export const gameTypeTitles: Record<string, string> = {
+  ELECTRONIC: 'Slot',
+  FISH: 'Pesca',
+  VIDEO: 'Cassino',
+  CHESS: 'Cartas',
+  SPORT: 'Esporte',
+}
+
+/**
+ * Left rail on `/game/category/ELECTRONIC/:platformId`. Order is the live
+ * `custom-segment` (ALL + brands). `0` is Ionic's "all platforms" id.
+ */
+const CATEGORY_RAIL_KEYS = [
+  'PG',
+  'TADA',
+  'CQ9',
+  'JDB',
+  'SPRIBE',
+  'PP',
+  'CP',
+  'G759',
+  'FACHAI',
+  'POPOK',
+  'PLAYSON',
+  'RUBYPLAY',
+  'INOUT',
+  'FASTSPIN',
+  'PANDA',
+  'TOPPLAYER',
+  'PLAYNGO',
+  'YELLOWBAT',
+  'KAGAMING',
+] as const
+
+export interface CategoryPlatform {
+  key: string
+  label: string
+  spritePosition: string | null
+}
+
+export const categoryPlatforms: CategoryPlatform[] = [
+  { key: '0', label: 'TodosSlot', spritePosition: null },
+  ...CATEGORY_RAIL_KEYS.map((key) => {
+    const tab = providerTabs.find((item) => item.key === key)
+    return {
+      key,
+      label: tab?.label ?? key,
+      spritePosition: tab?.spritePosition ?? null,
+    }
+  }),
+]
+
+export function uniqueCatalog(blocks: GameBlock[]): Game[] {
+  const seen = new Set<string>()
+  const out: Game[] = []
+  for (const block of blocks) {
+    for (const game of block.games) {
+      if (seen.has(game.id)) continue
+      seen.add(game.id)
+      out.push(game)
+    }
+  }
+  return out
+}
+
+export function gameMatchesPlatform(game: Game, platformId: string): boolean {
+  const id = platformId.toUpperCase()
+  if (id === '0' || id === 'ALL') return true
+  const provider = game.provider.toUpperCase()
+  if (id === 'TADA') return provider.startsWith('TADA')
+  return provider === id
+}
 
 /** Both lists are in the order the live page renders them. */
 const genres: string[] = ['Slot', 'Pesca', 'Cassino', 'Cartas']

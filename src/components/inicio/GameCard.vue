@@ -1,12 +1,18 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import SvgIcon from '../base/SvgIcon.vue'
 import type { Game } from '../../api/mock'
 
-defineProps<{ game: Game; layout: 'popular' | 'grid' }>()
+const props = defineProps<{ game: Game; layout: 'popular' | 'grid' | 'search' }>()
+const router = useRouter()
+
+function open() {
+  void router.push(`/game/action/${props.game.id}`)
+}
 </script>
 
 <template>
-  <div class="game-card" :class="layout">
+  <div class="game-card" :class="layout" @click="open">
     <img class="game-img" :src="game.image" :alt="game.name" loading="lazy" />
     <SvgIcon class="platform-icon" :name="`wordmark-${game.provider}`" />
     <SvgIcon class="favorite" name="favorite" />
@@ -18,6 +24,9 @@ defineProps<{ game: Game; layout: 'popular' | 'grid' }>()
   display: flex;
   position: relative;
   overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-drag: none;
   background-color: var(--game-card-bg);
   /* The live cards use a percentage radius, which tracks the card size. */
   border-radius: 12.5% / 9.25%;
@@ -32,12 +41,18 @@ defineProps<{ game: Game; layout: 'popular' | 'grid' }>()
   width: calc(25% - 0.5625rem);
 }
 
+.game-card.search {
+  width: 100%;
+}
+
 .game-img {
   position: absolute;
   inset: 0;
   z-index: 1;
   width: 100%;
   height: 100%;
+  pointer-events: none;
+  -webkit-user-drag: none;
 }
 
 /* Provider wordmark, centred along the bottom edge. */
@@ -65,7 +80,8 @@ defineProps<{ game: Game; layout: 'popular' | 'grid' }>()
   box-shadow: rgba(0, 0, 0, 0.4) 0 0.125rem 0.3125rem 0;
 }
 
-.popular .favorite {
+.popular .favorite,
+.search .favorite {
   width: 1.125rem;
   height: 1.125rem;
 }
