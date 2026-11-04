@@ -12,6 +12,7 @@
  */
 import { computed, ref, watch } from 'vue'
 import SvgIcon from './SvgIcon.vue'
+import { wallClock } from '../../utils/timeZone'
 
 const props = defineProps<{
   open: boolean
@@ -48,13 +49,11 @@ function iso(y: number, m: number, d: number) {
   return `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`
 }
 
-const today = new Date()
-const maxDate = computed(() => {
-  const { y, m, d } = props.max
-    ? parse(props.max)
-    : { y: today.getFullYear(), m: today.getMonth(), d: today.getDate() }
-  return { y, m, d }
+const today = computed(() => {
+  const clock = wallClock()
+  return { y: clock.year, m: clock.month - 1, d: clock.day }
 })
+const maxDate = computed(() => (props.max ? parse(props.max) : today.value))
 const minDate = computed(() => (props.min ? parse(props.min) : null))
 
 /** Sortable YYYYMMDD-ish stamp, so day and month limits compare as numbers. */
@@ -105,7 +104,7 @@ const isPicked = (d: number) =>
 
 /** Ionic tints the current day even when `max` has made it unselectable. */
 const isToday = (d: number) =>
-  view.value.y === today.getFullYear() && view.value.m === today.getMonth() && d === today.getDate()
+  view.value.y === today.value.y && view.value.m === today.value.m && d === today.value.d
 
 const panelStyle = computed(() => {
   const rect = props.anchor

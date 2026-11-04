@@ -2,15 +2,17 @@
 /**
  * /main/entrar — signed-in Depósito (not the login form).
  *
- * TabBar Depósito lands here. Record icon pushes /rechargeRecord.
+ * TabBar Depósito lands here. Record icon opens the deposit history sheet.
  * Depositar Agora opens the PIX overlay on the same route. All PIX / order
  * values are mock.
  */
-import { onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import CopyToast from '../components/entrar/CopyToast.vue'
 import DepositForm from '../components/entrar/DepositForm.vue'
+import DepositRecordModal from '../components/entrar/DepositRecordModal.vue'
 import PixOrder from '../components/entrar/PixOrder.vue'
+import RealNameModal from '../components/entrar/RealNameModal.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import SvgIcon from '../components/base/SvgIcon.vue'
 import { entrarCopy } from '../api/entrar'
@@ -21,7 +23,23 @@ const router = useRouter()
 const home = useHomeStore()
 const entrar = useEntrarStore()
 const toast = ref('')
+const frameReady = ref(false)
+const recordOpen = ref(false)
 let toastTimer = 0
+
+watch(
+  () => entrar.payUrl,
+  () => {
+    frameReady.value = false
+  },
+)
+
+function openRecords() {
+  // Original record route clears the cashier. Opening records from the
+  // payment page closes that page, so back lands on the deposit form.
+  entrar.clearPay()
+  recordOpen.value = true
+}
 
 function onTabSelect(key: string) {
   if (key === 'inicio') {
@@ -66,35 +84,51 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
 
 <template>
   <div class="ion-page">
-    <header class="entrar-header" :class="{ qr: !!entrar.order }">
+    <header class="entrar-header" :class="{ qr: !!entrar.payUrl }">
       <div class="toolbar">
-        <button v-if="entrar.order" type="button" class="finish" @click="entrar.finish()">
+        <button v-if="entrar.payUrl" type="button" class="finish" @click="entrar.clearPay()">
           {{ entrarCopy.finish }}
         </button>
         <h1 class="toolbar-title">
           <span class="title-text">{{ entrarCopy.title }}</span>
         </h1>
-        <button type="button" class="record" aria-label="Registro de Depósito" @click="router.push('/rechargeRecord')">
+        <button type="button" class="record" aria-label="Registro de Depósito" @click.stop="openRecords">
           <SvgIcon class="record-icon" name="entrar-record" />
         </button>
       </div>
     </header>
 
-    <div class="page-scroller entrar-content">
-      <PixOrder v-if="entrar.order" :order="entrar.order" @copy="copyText" />
+    <div class="page-scroller entrar-content" :class="{ frame: !!entrar.payUrl }">
+      <div v-if="entrar.payUrl" class="pay-frame">
+        <iframe
+          :key="entrar.payUrl"
+          class="pay-iframe"
+          :src="entrar.payUrl"
+          title="Pagamento"
+          @load="frameReady = true"
+        />
+        <div v-if="!frameReady" class="pay-wait">
+          <svg class="crescent" viewBox="0 0 64 64" aria-hidden="true">
+            <circle r="26" transform="translate(32,32)" />
+          </svg>
+        </div>
+      </div>
+      <PixOrder v-else-if="entrar.order" :order="entrar.order" @copy="copyText" />
       <DepositForm
         v-else
         :tab-label="entrarCopy.tabOnline"
         :reco="entrarCopy.reco"
         :channel-label="entrar.channel.label"
+        :channel-icon="entrar.channel.icon || ''"
         :channel-reco="entrar.channel.reco"
         :promo="entrarCopy.promo"
         :currency="entrarCopy.currency"
-        :placeholder="entrarCopy.placeholder"
+        :placeholder="entrar.placeholder"
         :amount-reais="entrar.amountReais"
         :amounts="entrar.amounts"
         :selected-cents="entrar.selectedCents"
         :can-submit="entrar.canSubmit"
+        :submitting="entrar.submitting"
         :submit-label="entrarCopy.submit"
         @update:amount-reais="entrar.setAmount"
         @select-amount="entrar.selectAmount"
@@ -105,6 +139,13 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
 
     <TabBar :items="home.tabBarItems" active="deposito" @select="onTabSelect" />
     <CopyToast v-if="toast" :message="toast" />
+    <RealNameModal
+      v-if="entrar.realNameOpen"
+      :submitting="entrar.submitting"
+      @close="entrar.closeRealName()"
+      @confirm="entrar.confirmIdentity"
+    />
+    <DepositRecordModal v-if="recordOpen" @close="recordOpen = false" />
   </div>
 </template>
 
@@ -194,6 +235,60 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
 .entrar-content {
   padding: 0 0.9375rem calc(56px + 1rem);
   background-color: var(--color-bar-bg);
+}
+
+/* Payment stays on this page. The frame is taller than the visible slot so
+   the deposit scroller, not a nested locked box, moves the rest into view.
+   Bottom padding keeps the end above the tab bar. */
+.entrar-content.frame {
+  padding: 0 0 calc(3.5rem + 1rem + var(--sab));
+  background-color: #fff;
+}
+
+.pay-frame {
+  position: relative;
+  background: #fff;
+}
+
+.pay-iframe {
+  display: block;
+  width: 100%;
+  height: calc(100dvh * 2.5);
+  border: 0;
+  background: #fff;
+}
+
+.pay-wait {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  display: flex;
+  height: calc(100dvh - 3.79375rem - 3.5rem - 1rem);
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+}
+
+.crescent {
+  width: 5rem;
+  height: 5rem;
+  color: #116fcd;
+  animation: spinner-rotate 0.75s linear infinite;
+}
+
+.crescent circle {
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 4px;
+  stroke-dasharray: 128px;
+  stroke-dashoffset: 82px;
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 @media (min-width: 486px) {

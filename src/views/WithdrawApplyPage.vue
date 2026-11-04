@@ -3,11 +3,12 @@
  * `/withdraw/apply` — Saque form without TabBar.
  *
  * Same WithdrawForm as `/main/withdraw`. Live meta `hasBottomTab: false`.
- * Header is back + Saque + record. Submit is mock (no live post).
+ * Header is back + Saque + record. Retirar Agora opens the password modal.
  */
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import WithdrawForm from '../components/withdraw/WithdrawForm.vue'
+import WithdrawPasswordModal from '../components/withdraw/WithdrawPasswordModal.vue'
 import FundPasswordTips from '../components/withdraw/FundPasswordTips.vue'
 import SvgIcon from '../components/base/SvgIcon.vue'
 import { withdrawCopy } from '../api/withdraw'
@@ -24,10 +25,6 @@ function goBack() {
 function onFundTipsConfirm() {
   withdraw.closeFundTips()
   void router.push('/security/verify/asset')
-}
-
-function onManageAccount() {
-  void router.push('/withdrawalAccount')
 }
 
 onMounted(() => {
@@ -52,8 +49,16 @@ onMounted(() => {
     </header>
 
     <div class="page-scroller withdraw-content">
-      <WithdrawForm @manage-account="onManageAccount" />
+      <WithdrawForm />
     </div>
+
+    <WithdrawPasswordModal
+      v-if="withdraw.passwordOpen"
+      :amount-cents="withdraw.amountCents"
+      :submitting="withdraw.submitting"
+      @close="withdraw.closePassword()"
+      @confirm="withdraw.submitCashOut"
+    />
 
     <FundPasswordTips
       v-if="withdraw.fundTipsOpen"

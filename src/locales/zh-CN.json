@@ -1,0 +1,39 @@
+{
+  "login": {
+    "title": "登录你的账号",
+    "registerTitle": "创建游戏账号",
+    "noAccount": "还没有账号？",
+    "hasAccount": "已有账号？",
+    "register": "注册",
+    "enter": "登录",
+    "phone": "手机号",
+    "password": "密码",
+    "confirm": "确认密码",
+    "phoneInvalid": "手机号无效",
+    "passwordRule": "6-16 个字符",
+    "passwordMismatch": "两次密码不一致",
+    "remember": "记住密码",
+    "forgot": "忘记密码？",
+    "failed": "登录失败",
+    "registerFailed": "注册失败",
+    "expired": "登录已过期，请重新登录",
+    "requestFailed": "请求失败"
+  },
+  "perfil": {
+    "relatorios": "报表",
+    "convidar": "邀请",
+    "convidarNote": "来 GC987.COM 和我一起玩，看看怎么赢真钱！",
+    "resgate": "兑换码",
+    "suporte": "客服",
+    "seguranca": "安全中心",
+    "idioma": "语言",
+    "sair": "退出登录",
+    "logoutTitle": "退出登录",
+    "logoutMessage": "确定要退出登录吗？",
+    "logoutCancel": "取消",
+    "langTitle": "语言",
+    "langPt": "Português",
+    "langEn": "English",
+    "langZh": "中文"
+  }
+}

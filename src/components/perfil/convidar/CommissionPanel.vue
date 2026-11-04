@@ -12,6 +12,7 @@
  * the picker reopens with that day as its lower bound for the end.
  */
 import { computed, nextTick, ref } from 'vue'
+import { wallClock } from '../../../utils/timeZone'
 import AbSelect from '../../base/AbSelect.vue'
 import DatePickerPopover from '../../base/DatePickerPopover.vue'
 import SvgIcon from '../../base/SvgIcon.vue'
@@ -46,10 +47,10 @@ const chaining = ref(false)
 
 /** The live picker reaches exactly one year back from now. */
 const minStart = computed(() => {
-  const d = new Date()
-  d.setFullYear(d.getFullYear() - 1)
+  const clock = wallClock()
+  const past = new Date(Date.UTC(clock.year - 1, clock.month - 1, clock.day))
   const pad = (n: number) => String(n).padStart(2, '0')
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`
+  return `${past.getUTCFullYear()}-${pad(past.getUTCMonth() + 1)}-${pad(past.getUTCDate())}`
 })
 
 const pickerValue = computed(() => (step.value === 2 ? props.end : props.start))

@@ -1,10 +1,13 @@
 <script setup lang="ts">
 /**
  * Homepage auth overlay (#login-modal). Header Entrar / Registro and the
- * in-sheet switch share this sheet. Submit is mock — it never posts to
- * gc987.com. Forgot-password did not open in the live session.
+ * in-sheet switch share this sheet. Login posts /login. Register posts
+ * /register. Forgot-password did not open in the live session.
  */
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { useAuthStore } from '../../stores/auth'
+import { showToast } from '../../toast'
 import SvgIcon from '../base/SvgIcon.vue'
 
 const REMEMBER_KEY = 'gc987-remember-login'
@@ -22,37 +25,41 @@ const confirm = ref('')
 const showPassword = ref(false)
 const showConfirm = ref(false)
 const remember = ref(true)
+const submitting = ref(false)
 const sheetIn = ref(false)
 let leaveTimer = 0
+const auth = useAuthStore()
+const { t } = useI18n()
 
 const isLogin = computed(() => props.mode === 'login')
-const title = computed(() =>
-  isLogin.value ? 'Faça login na sua conta' : 'Crie uma conta de jogo',
-)
-const hint = computed(() => (isLogin.value ? 'Não tem uma conta?' : 'já tem uma conta?'))
-const switchLabel = computed(() => (isLogin.value ? 'Registro' : 'Entrar'))
-const submitLabel = computed(() => (isLogin.value ? 'Entrar' : 'Registro'))
+const title = computed(() => (isLogin.value ? t('login.title') : t('login.registerTitle')))
+const hint = computed(() => (isLogin.value ? t('login.noAccount') : t('login.hasAccount')))
+const switchLabel = computed(() => (isLogin.value ? t('login.register') : t('login.enter')))
+const submitLabel = computed(() => (isLogin.value ? t('login.enter') : t('login.register')))
 
+const phoneOk = computed(() => /^\d{11}$/.test(phone.value))
 /** Live ion-input: empty hides the hint; the first typed char starts validation. */
-const phoneError = computed(() =>
-  phone.value.length >= 1 && !/^\d{11}$/.test(phone.value) ? 'Número de telefone inválido' : '',
-)
+const phoneError = computed(() => (phone.value.length >= 1 && !phoneOk.value ? t('login.phoneInvalid') : ''))
 const passwordError = computed(() => {
   const n = password.value.length
-  return n >= 1 && (n < 6 || n > 16) ? '6-16 caracteres' : ''
+  return n >= 1 && (n < 6 || n > 16) ? t('login.passwordRule') : ''
 })
 const confirmError = computed(() => {
   const n = confirm.value.length
-  return n >= 1 && (n < 6 || n > 16) ? '6-16 caracteres' : ''
+  if (n >= 1 && (n < 6 || n > 16)) return t('login.passwordRule')
+  if (n >= 1 && confirm.value !== password.value) return t('login.passwordMismatch')
+  return ''
 })
-const phoneValid = computed(() => /^\d{11}$/.test(phone.value))
+const phoneValid = computed(() => phoneOk.value)
 const passwordValid = computed(() => password.value.length >= 6 && password.value.length <= 16)
-const confirmValid = computed(() => confirm.value.length >= 6 && confirm.value.length <= 16)
+const confirmValid = computed(
+  () => confirm.value.length >= 6 && confirm.value.length <= 16 && confirm.value === password.value,
+)
 
 const canSubmit = computed(() => {
-  if (!/^\d{11}$/.test(phone.value)) return false
+  if (!phoneOk.value) return false
   if (password.value.length < 6 || password.value.length > 16) return false
-  if (!isLogin.value && (confirm.value.length < 6 || confirm.value.length > 16)) return false
+  if (!isLogin.value && !confirmValid.value) return false
   return true
 })
 
@@ -75,10 +82,26 @@ function persistRemember() {
   }
 }
 
-function onSubmit() {
-  if (!canSubmit.value) return
-  persistRemember()
-  dismiss()
+async function onSubmit() {
+  if (!canSubmit.value || submitting.value) return
+  submitting.value = true
+  try {
+    if (isLogin.value) await auth.login(phone.value, password.value)
+    else await auth.register(phone.value, password.value)
+    persistRemember()
+    dismiss()
+  } catch (error) {
+    showToast(
+      error instanceof Error
+        ? error.message
+        : isLogin.value
+          ? t('login.failed')
+          : t('login.registerFailed'),
+      'error',
+    )
+  } finally {
+    submitting.value = false
+  }
 }
 
 function dismiss() {
@@ -160,7 +183,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   autocomplete="username"
                   maxlength="11"
                   required
-                  placeholder="Telefone"
+                  :placeholder="t('login.phone')"
                   :value="phone"
                   @input="onPhoneInput"
                 />
@@ -176,7 +199,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!phoneError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />Número de telefone inválido
+                  <SvgIcon class="warn" name="security-warning" />{{ phoneError }}
                 </p>
               </div>
             </div>
@@ -196,7 +219,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   minlength="6"
                   maxlength="16"
                   required
-                  placeholder="Senha"
+                  :placeholder="t('login.password')"
                   v-model="password"
                 />
                 <button
@@ -216,7 +239,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!passwordError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />6-16 caracteres
+                  <SvgIcon class="warn" name="security-warning" />{{ passwordError }}
                 </p>
               </div>
             </div>
@@ -236,7 +259,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   minlength="6"
                   maxlength="16"
                   required
-                  placeholder="Confirmar senha"
+                  :placeholder="t('login.confirm')"
                   v-model="confirm"
                 />
                 <button
@@ -256,7 +279,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!confirmError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />6-16 caracteres
+                  <SvgIcon class="warn" name="security-warning" />{{ confirmError }}
                 </p>
               </div>
             </div>
@@ -275,13 +298,18 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                 </svg>
               </button>
               <span class="text-warpper">
-                <span>Lembrar Senha</span>
-                <span>Esqueceu a senha?</span>
+                <span>{{ t('login.remember') }}</span>
+                <span>{{ t('login.forgot') }}</span>
               </span>
             </div>
 
             <div class="btn-login">
-              <button class="submit" type="submit" :class="{ on: canSubmit }" :disabled="!canSubmit">
+              <button
+                class="submit"
+                type="submit"
+                :class="{ on: canSubmit && !submitting }"
+                :disabled="!canSubmit || submitting"
+              >
                 {{ submitLabel }}
               </button>
             </div>

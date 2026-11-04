@@ -2,16 +2,18 @@
 /**
  * Signed-in Saque form. Geometry from https://gc987.com/main/withdraw at 390.
  */
+import { ref } from 'vue'
 import SvgIcon from '../base/SvgIcon.vue'
 import { formatAmount, withdrawCopy as copy } from '../../api/withdraw'
 import { useWithdrawStore } from '../../stores/withdraw'
 
 const withdraw = useWithdrawStore()
-const emit = defineEmits<{
-  submitted: [status: 'tips' | 'invalid' | 'ok']
-  manageAccount: []
-}>()
+const hiddenIcons = ref<string[]>([])
 
+function hideIcon(src: string) {
+  if (!src || hiddenIcons.value.includes(src)) return
+  hiddenIcons.value = [...hiddenIcons.value, src]
+}
 function onAmountInput(event: Event) {
   const el = event.target as HTMLInputElement
   withdraw.setAmount(el.value)
@@ -28,8 +30,8 @@ function onCpfInput(event: Event) {
   withdraw.setCpf(el.value)
 }
 
-async function onSubmit() {
-  emit('submitted', await withdraw.submit())
+function onSubmit() {
+  withdraw.requestCashOut()
 }
 </script>
 
@@ -46,7 +48,22 @@ async function onSubmit() {
 
     <div class="channel-wrap main-tab">
       <ul class="channel-list">
-        <li class="active" @click="emit('manageAccount')">{{ copy.channel }}</li>
+        <li
+          v-for="(item, index) in withdraw.channels"
+          :key="index"
+          :class="{ active: withdraw.selectedChannel === index }"
+          @click="withdraw.selectChannel(index)"
+        >
+          <img
+            v-if="item.icon && !hiddenIcons.includes(item.icon)"
+            class="channel-icon"
+            :src="item.icon"
+            alt=""
+            @error="hideIcon(item.icon)"
+          />
+          <span v-if="item.label">{{ item.label }}</span>
+        </li>
+        <li v-if="withdraw.channels.length === 0" class="active">{{ copy.channel }}</li>
       </ul>
     </div>
 
@@ -82,7 +99,7 @@ async function onSubmit() {
         class="amount-input"
         type="number"
         inputmode="decimal"
-        :placeholder="copy.placeholder"
+        :placeholder="withdraw.placeholder"
         :value="withdraw.amountReais"
         @input="onAmountInput"
       />
@@ -226,20 +243,36 @@ async function onSubmit() {
 }
 
 .main-tab .channel-list li {
+  display: flex;
   flex: 0 0 auto;
-  width: 7rem;
+  width: auto;
+  min-width: 7rem;
   height: 2.625rem;
   padding: 0 0.75rem;
   margin-right: 0.75rem;
+  gap: 0.375rem;
+  align-items: center;
+  justify-content: center;
   border-radius: 0.375rem;
   border: 0.0625rem solid var(--divider);
   font-size: 0.875rem;
   font-weight: 400;
-  line-height: 2.625rem;
+  line-height: 1.25rem;
   text-align: center;
   color: var(--color-text-100);
-  background-image: linear-gradient(0deg, #0167ca 0%, #38a8fa 100%);
+  background-color: rgb(26, 34, 58);
   cursor: pointer;
+}
+
+.main-tab .channel-list li.active {
+  background-color: transparent;
+  background-image: linear-gradient(0deg, #0167ca 0%, #38a8fa 100%);
+}
+
+.channel-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  object-fit: contain;
 }
 
 .line {

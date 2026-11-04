@@ -24,12 +24,12 @@ import {
   type SpreadSummaryCard,
   type SpreadTab,
 } from '../api/spread'
+import { useHomeStore } from './home'
+import { setSiteTimeZone, zoneDate } from '../utils/timeZone'
 
-/** Local YYYY-MM-DD, which is what the live date field submits. */
+/** Site-zone YYYY-MM-DD, which is what the live date field submits. */
 function todayIso() {
-  const now = new Date()
-  const pad = (n: number) => String(n).padStart(2, '0')
-  return `${now.getFullYear()}-${pad(now.getMonth() + 1)}-${pad(now.getDate())}`
+  return zoneDate(0)
 }
 
 export const useSpreadStore = defineStore('spread', () => {
@@ -59,6 +59,13 @@ export const useSpreadStore = defineStore('spread', () => {
 
   async function load() {
     if (loaded.value) return
+    const home = useHomeStore()
+    await home.load().catch(() => undefined)
+    setSiteTimeZone(home.layout?.timeZone)
+    const today = todayIso()
+    perfDate.value = today
+    commStart.value = today
+    commEnd.value = today
     const [tabList, overview, net, columns, commCols, types, rates] = await Promise.all([
       getSpreadTabs(),
       getSpreadOverview(),

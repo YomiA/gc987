@@ -13,11 +13,13 @@
  */
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import LoginModal from '../components/inicio/LoginModal.vue'
 import SearchEmpty from '../components/inicio/SearchEmpty.vue'
 import SearchGameGrid from '../components/inicio/SearchGameGrid.vue'
 import SearchHeader from '../components/inicio/SearchHeader.vue'
 import SearchSegment, { type SearchTab } from '../components/inicio/SearchSegment.vue'
 import type { Game } from '../api/mock'
+import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 
 const TABS: SearchTab[] = [
@@ -31,6 +33,7 @@ const VALID = new Set(TABS.map((tab) => tab.key))
 
 const route = useRoute()
 const router = useRouter()
+const auth = useAuthStore()
 const home = useHomeStore()
 const query = ref('')
 const submitted = ref('')
@@ -108,6 +111,12 @@ onMounted(() => {
       <SearchEmpty v-if="showEmpty" />
       <SearchGameGrid v-else :games="shown" />
     </div>
+    <LoginModal
+      v-if="auth.dialogOpen"
+      :mode="auth.dialogMode"
+      @update:mode="auth.setDialogMode"
+      @close="auth.closeDialog()"
+    />
   </div>
 </template>
 

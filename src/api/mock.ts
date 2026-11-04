@@ -21,6 +21,8 @@ export interface ProviderTab {
   /** background-position on the 800% x 500% sprite sheet, or null for the SVG icon */
   spritePosition: string | null
   icon: string | null
+  /** Backend category icon. When set, the row shows this image instead of the sprite. */
+  image?: string | null
 }
 
 export interface Game {
@@ -40,6 +42,8 @@ export interface GameBlock {
   /** 'popular' = 3 columns, 'grid' = 4 columns */
   layout: 'popular' | 'grid'
   games: Game[]
+  /** Backend category icon shown beside the section title. */
+  image?: string | null
 }
 
 export interface TabBarItem {

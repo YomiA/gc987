@@ -2,13 +2,13 @@
 /**
  * /main/withdraw — signed-in Saque.
  *
- * TabBar Saque lands here. Record icon pushes /withdrawSubView. First
- * Retirar Agora with mock `isAssetPassword === false` opens the fund-password
- * TIPS sheet; Confirmar goes to /security/verify/asset.
+ * TabBar Saque lands here. Record icon pushes /withdrawSubView. Retirar Agora
+ * opens the withdrawal-password modal on this page.
  */
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import WithdrawForm from '../components/withdraw/WithdrawForm.vue'
+import WithdrawPasswordModal from '../components/withdraw/WithdrawPasswordModal.vue'
 import FundPasswordTips from '../components/withdraw/FundPasswordTips.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import SvgIcon from '../components/base/SvgIcon.vue'
@@ -45,15 +45,6 @@ function onFundTipsConfirm() {
   void router.push('/security/verify/asset')
 }
 
-function onSubmitted(status: 'tips' | 'invalid' | 'ok') {
-  if (status === 'tips') return
-  void router.push('/withdraw/apply')
-}
-
-function onManageAccount() {
-  void router.push('/withdrawalAccount')
-}
-
 onMounted(() => {
   void home.load()
   void withdraw.load()
@@ -76,10 +67,18 @@ onMounted(() => {
     </header>
 
     <div class="page-scroller withdraw-content">
-      <WithdrawForm @submitted="onSubmitted" @manage-account="onManageAccount" />
+      <WithdrawForm />
     </div>
 
     <TabBar :items="home.tabBarItems" active="saque" @select="onTabSelect" />
+
+    <WithdrawPasswordModal
+      v-if="withdraw.passwordOpen"
+      :amount-cents="withdraw.amountCents"
+      :submitting="withdraw.submitting"
+      @close="withdraw.closePassword()"
+      @confirm="withdraw.submitCashOut"
+    />
 
     <FundPasswordTips
       v-if="withdraw.fundTipsOpen"

@@ -1,0 +1,39 @@
+{
+  "login": {
+    "title": "Log in to your account",
+    "registerTitle": "Create a game account",
+    "noAccount": "Don't have an account?",
+    "hasAccount": "Already have an account?",
+    "register": "Register",
+    "enter": "Log in",
+    "phone": "Phone",
+    "password": "Password",
+    "confirm": "Confirm password",
+    "phoneInvalid": "Invalid phone number",
+    "passwordRule": "6-16 characters",
+    "passwordMismatch": "Passwords do not match",
+    "remember": "Remember password",
+    "forgot": "Forgot password?",
+    "failed": "Login failed",
+    "registerFailed": "Registration failed",
+    "expired": "Your login expired, please log in again",
+    "requestFailed": "Request failed"
+  },
+  "perfil": {
+    "relatorios": "Reports",
+    "convidar": "Invite",
+    "convidarNote": "Come play with me on GC987.COM and see how to win real money!",
+    "resgate": "Redeem code",
+    "suporte": "Support",
+    "seguranca": "Security center",
+    "idioma": "Language",
+    "sair": "Log out",
+    "logoutTitle": "Log out",
+    "logoutMessage": "Are you sure you want to log out?",
+    "logoutCancel": "Cancel",
+    "langTitle": "Language",
+    "langPt": "Português",
+    "langEn": "English",
+    "langZh": "中文"
+  }
+}

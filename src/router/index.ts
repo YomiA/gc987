@@ -22,11 +22,12 @@ import WithdrawSubViewPage from '../views/WithdrawSubViewPage.vue'
 import RechargeRecordPage from '../views/RechargeRecordPage.vue'
 import WithdrawalAccountPage from '../views/WithdrawalAccountPage.vue'
 import WithdrawalBindPage from '../views/WithdrawalBindPage.vue'
+import { stickyInvite } from '../utils/inviteCode'
 
 // The catch-all sends unknown paths home, so every real route has to be
 // declared above it or it would be swallowed.
 const routes: RouteRecordRaw[] = [
-  { path: '/', redirect: '/main/inicio' },
+  { path: '/', redirect: (to) => ({ path: '/main/inicio', query: to.query, hash: to.hash }) },
   { path: '/main/inicio', name: 'inicio', component: InicioPage },
   { path: '/main/promo', name: 'promo', component: PromoPage },
   { path: '/main/entrar', name: 'entrar', component: EntrarPage },
@@ -66,10 +67,27 @@ const routes: RouteRecordRaw[] = [
   { path: '/withdrawSubView', name: 'withdraw-sub-view', component: WithdrawSubViewPage },
   // Depósito header record icon. Live pathname is /rechargeRecord.
   { path: '/rechargeRecord', name: 'recharge-record', component: RechargeRecordPage },
-  { path: '/:pathMatch(.*)*', redirect: '/main/inicio' },
+  {
+    path: '/:pathMatch(.*)*',
+    redirect: (to) => ({ path: '/main/inicio', query: to.query, hash: to.hash }),
+  },
 ]
 
 export const router = createRouter({
   history: createWebHistory(),
   routes,
+})
+
+router.beforeEach((to) => {
+  const code = stickyInvite()
+  if (!code) return
+  const current = Array.isArray(to.query.inviteCode) ? to.query.inviteCode[0] : to.query.inviteCode
+  if (current === code) return
+  return {
+    path: to.path,
+    params: to.params,
+    query: { ...to.query, inviteCode: code },
+    hash: to.hash,
+    replace: true,
+  }
 })

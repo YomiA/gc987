@@ -9,13 +9,94 @@
  * the pt-BR grouping the chips use (20,00 / 1.000,00).
  */
 
+import { request } from './http'
 import { formatAmount } from './promo'
+
+export interface CashOutChannel {
+  id?: number
+  icon: string
+  /** Plain string, or `{ zhCN, enUS, ptBR }`. */
+  showName?: string | Record<string, string | null | undefined> | null
+  /** Smallest amount, in currency units (reais), not cents. */
+  minCashOutAmt: number
+  /** Largest amount, in currency units (reais), not cents. */
+  maxCashOutAmt: number
+  /** Suggested amounts, in currency units (reais), not cents. */
+  cashOutAmtArr?: Array<string | number>
+}
+
+/** Withdrawal channels. Called when the withdraw page opens. No body. */
+export function cashOutChannels() {
+  return request<{ code?: number; data?: { channels?: CashOutChannel[] } }>('/cashOutChannels', {
+    method: 'POST',
+    body: {},
+  })
+}
+
+export interface CashOutOrderBody {
+  /** Bound payout account, when the page has one. */
+  bankCardId?: number
+  channelId: number
+  /** Player wallet on this API. Agent payouts use 2. */
+  walletType: number
+  /** Currency units (reais), not cents. */
+  amt: number
+  cashOutPwd: string
+  phone?: string
+  captcha?: string
+}
+
+/** Player wallet. The Saque page always pays from this wallet. */
+export const cashOutWalletPlayer = 0
+
+/** Creates a withdrawal. Phone and captcha stay off the body. */
+export function createCashOutOrder(body: CashOutOrderBody) {
+  return request<{ code?: number; data?: unknown }>('/createCashOutOrder', {
+    method: 'POST',
+    body,
+  })
+}
+
+export interface CashOutOrderRecord {
+  id: number
+  orderTime: string
+  transactionId: string
+  /** Currency units (reais), not cents. */
+  orderAmt: number
+  /** 1 pending, 2 paying, 3 success, 4 failed, 5 cancelled, 6 approved, 7 rejected, 8 refunded. */
+  status: number
+}
+
+export interface CashOutOrderPage {
+  records?: CashOutOrderRecord[]
+  total?: number
+  size?: number
+  current?: number
+  pages?: number
+}
+
+export interface CashOutOrderQuery {
+  size: number
+  current: number
+  startSearchTime?: string
+  endSearchTime?: string
+  status?: number
+}
+
+/** Withdrawal history. Status stays off the body unless a status is selected. */
+export function cashOutOrderRecord(body: CashOutOrderQuery) {
+  return request<{ code?: number; data?: CashOutOrderPage }>('/cashOutOrderRecord', {
+    method: 'POST',
+    body,
+  })
+}
 
 export const withdrawCopy = {
   title: 'Saque',
   account: 'Conta Saldo',
   currency: 'R$',
   channel: 'PIX',
+  channelMissing: 'Selecione um canal de saque',
   amountTitle: 'Valor do Saque',
   placeholder: '10,00 - 10.000,00',
   feePrefix: 'para saques',
@@ -30,6 +111,9 @@ export const withdrawCopy = {
   cpfError: 'CPF inválido, por favor insira 11 dígitos',
   amountError: 'Por favor insira um valor inteiro',
   submit: 'Retirar Agora',
+  passwordTitle: 'Digite sua senha de saque',
+  passwordAction: 'Retirar fundos',
+  passwordSuccess: 'Ordem de saque criada com sucesso',
   fundTips:
     'Para a segurança dos seus fundos, por favor, configure primeiro uma senha de fundo',
   fundTipsConfirm: 'Confirmar',

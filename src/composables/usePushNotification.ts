@@ -79,6 +79,20 @@ async function sendSubscriptionToServer(subscription: {
   }
 }
 
+/** Existing push endpoint when permission is already granted. Does not prompt or create one. */
+export async function getEndpointIfGranted(): Promise<string> {
+  try {
+    if (!isPushSupported()) return ''
+    if (!VAPID_PUBLIC_KEY) return ''
+    if (Notification.permission !== 'granted') return ''
+    const reg = await waitForSwReady()
+    const sub = await reg.pushManager.getSubscription()
+    return sub?.endpoint || ''
+  } catch {
+    return ''
+  }
+}
+
 /** Re-sync the current push subscription. No prompt; permission must already be granted. */
 export async function silentSubscribeAfterAuth() {
   lastPushError = ''

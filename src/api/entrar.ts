@@ -16,6 +16,7 @@ export interface EntrarChannel {
   key: string
   label: string
   reco: boolean
+  icon?: string
 }
 
 export interface PixOrder {

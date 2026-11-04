@@ -1,20 +1,34 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import OptionList from '../components/perfil/OptionList.vue'
 import LogoutModal from '../components/perfil/LogoutModal.vue'
+import LanguageModal from '../components/perfil/LanguageModal.vue'
 import ProfileCard from '../components/perfil/ProfileCard.vue'
 import VipProgressCard from '../components/perfil/VipProgressCard.vue'
 import TabBar from '../components/inicio/TabBar.vue'
+import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 import { usePerfilStore } from '../stores/perfil'
 import { usePromoStore } from '../stores/promo'
 
 const router = useRouter()
+const auth = useAuthStore()
 const home = useHomeStore()
 const perfil = usePerfilStore()
 const promo = usePromoStore()
 const logoutOpen = ref(false)
+const langOpen = ref(false)
+const { t } = useI18n()
+
+const optionItems = computed(() =>
+  perfil.options.map((item) => ({
+    ...item,
+    label: t(`perfil.${item.key}`),
+    note: item.key === 'convidar' ? t('perfil.convidarNote') : undefined,
+  })),
+)
 
 function onTabSelect(key: string) {
   if (key === 'inicio') {
@@ -52,11 +66,14 @@ function onOptionSelect(key: string) {
   }
   if (key === 'suporte') void router.push('/notification')
   if (key === 'seguranca') void router.push('/security')
+  if (key === 'idioma') langOpen.value = true
   if (key === 'sair') logoutOpen.value = true
 }
 
-/** Live Sair posts logout then leaves the session. Intentionally empty. */
-function logout() {}
+function logout() {
+  auth.logout()
+  logoutOpen.value = false
+}
 
 onMounted(() => {
   // The bottom bar is the app-level one shared with /main/inicio, so its items
@@ -71,12 +88,13 @@ onMounted(() => {
     <div class="page-scroller perfil-content">
       <ProfileCard v-if="perfil.profile" :profile="perfil.profile" />
       <VipProgressCard v-if="perfil.vip" :vip="perfil.vip" @click="goActivityVip" />
-      <OptionList :items="perfil.options" @select="onOptionSelect" />
+      <OptionList :items="optionItems" @select="onOptionSelect" />
       <div class="bottom-spacer" />
     </div>
 
     <TabBar :items="home.tabBarItems" active="perfil" @select="onTabSelect" />
 
+    <LanguageModal v-if="langOpen" @close="langOpen = false" />
     <LogoutModal v-if="logoutOpen" @cancel="logoutOpen = false" @sair="logout" />
   </div>
 </template>

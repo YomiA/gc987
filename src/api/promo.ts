@@ -9,10 +9,11 @@
  * The Rebate / VIP payloads below are the live tRPC responses the page loads
  * (activity.activityDetail id=3847 type=Rebate, vip.list, vip.info), trimmed to
  * the fields the six panels render. Money arrives in cents, exactly as the API
- * sends it, and `formatAmount` does the pt-BR grouping the live page does.
+ * sends it, and `formatAmount` groups it for the language the UI is showing.
  */
 
 import { activityEventMeta } from './activity'
+import { formatAmount } from '../utils/money'
 
 export interface PromoTab {
   key: string
@@ -239,18 +240,9 @@ const vipRetentionRules = [
 /** Both record tabs come back empty for this account. */
 const promoRecords: never[] = []
 
-/**
- * pt-BR money, the way the live page prints it: dot thousands, comma cents.
- * Input is cents, so 10000 -> "100,00" and 3000000000 -> "30.000.000,00".
- */
-export function formatAmount(cents: number): string {
-  const negative = cents < 0
-  const digits = Math.abs(Math.round(cents)).toString().padStart(3, '0')
-  const whole = digits.slice(0, -2).replace(/\B(?=(\d{3})+(?!\d))/g, '.')
-  return `${negative ? '-' : ''}${whole},${digits.slice(-2)}`
-}
+export { formatAmount }
 
-/** Basis points, the way the live page prints rates: 40 -> "0,40%". */
+/** Basis points, the way the live page prints rates: 40 -> "0,40%" in Portuguese. */
 export function formatRate(basisPoints: number): string {
   return `${formatAmount(basisPoints)}%`
 }

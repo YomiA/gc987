@@ -1,17 +1,36 @@
 import { computed, ref } from 'vue'
 import { defineStore } from 'pinia'
 import {
+  cashOutChannels,
+  cashOutWalletPlayer,
+  createCashOutOrder,
   withdrawApi,
   withdrawAmounts,
   withdrawBalanceCents,
+  withdrawCopy,
   withdrawFeeCents,
   withdrawMaxReais,
   withdrawMinReais,
   mockSetAssetPassword,
+  type CashOutChannel,
 } from '../api/withdraw'
+import { showToast } from '../toast'
+import { assetUrl } from '../utils/assetUrl'
+import { pickLocaleText } from '../utils/localeText'
+import { formatGrouped } from '../utils/money'
+
+function centsOf(value: string | number) {
+  const amount = Number(value)
+  if (!Number.isFinite(amount) || amount <= 0) return 0
+  return Math.round(amount * 100)
+}
 
 export const useWithdrawStore = defineStore('withdraw', () => {
+  const channels = ref<Array<CashOutChannel & { label: string }>>([])
+  const selectedChannel = ref(-1)
   const amounts = ref<number[]>(withdrawAmounts)
+  const minReais = ref(withdrawMinReais)
+  const maxReais = ref(withdrawMaxReais)
   const balanceCents = ref(withdrawBalanceCents)
   const feeCents = ref(withdrawFeeCents)
   const amountReais = ref('')
@@ -25,6 +44,10 @@ export const useWithdrawStore = defineStore('withdraw', () => {
   const loaded = ref(false)
   const isAssetPassword = ref(true)
   const fundTipsOpen = ref(false)
+  const passwordOpen = ref(false)
+  const submitting = ref(false)
+  /** Bound payout account. The page has no card list yet, so this stays empty. */
+  const bankCardId = ref<number | null>(null)
 
   const amountNumber = computed(() => {
     const n = Number(amountReais.value)
@@ -38,8 +61,12 @@ export const useWithdrawStore = defineStore('withdraw', () => {
 
   const amountOk = computed(() => {
     const n = amountNumber.value
-    return Number.isInteger(n) && n >= withdrawMinReais && n <= withdrawMaxReais
+    return Number.isInteger(n) && n >= minReais.value && n <= maxReais.value
   })
+
+  const placeholder = computed(
+    () => `${formatGrouped(minReais.value)} - ${formatGrouped(maxReais.value)}`,
+  )
 
   const nameOk = computed(() => name.value.trim().length > 0)
   const cpfOk = computed(() => /^\d{11}$/.test(cpf.value))
@@ -55,22 +82,58 @@ export const useWithdrawStore = defineStore('withdraw', () => {
     return cents > balanceCents.value
   }
 
-  async function load() {
-    if (loaded.value) return
-    const [am, bal, fee] = await Promise.all([
-      withdrawApi.getAmounts(),
-      withdrawApi.getBalance(),
-      withdrawApi.getFee(),
-    ])
-    amounts.value = am
-    balanceCents.value = bal
-    feeCents.value = fee
-    loaded.value = true
+  function applyChannel(item: CashOutChannel) {
+    const chips = (item.cashOutAmtArr || []).map(centsOf).filter((cents) => cents > 0)
+    if (chips.length) amounts.value = chips
+    if (Number.isFinite(Number(item.minCashOutAmt))) minReais.value = Number(item.minCashOutAmt)
+    if (Number.isFinite(Number(item.maxCashOutAmt))) maxReais.value = Number(item.maxCashOutAmt)
   }
 
-  async function loadAssets() {
-    const assets = await withdrawApi.getAssets()
-    isAssetPassword.value = assets.passwordSwitch === 'ON' ? assets.isAssetPassword : true
+  function selectChannel(index: number) {
+    const item = channels.value[index]
+    if (!item || index === selectedChannel.value) return
+    selectedChannel.value = index
+    applyChannel(item)
+    amountReais.value = ''
+    overBalance.value = false
+    amountError.value = false
+  }
+
+  async function refreshChannels() {
+    try {
+      const resp = await cashOutChannels()
+      const list = (resp.data?.channels || []).map((item) => ({
+        ...item,
+        icon: assetUrl(item.icon),
+        label: pickLocaleText(item.showName),
+      }))
+      channels.value = list
+      if (!list.length) {
+        selectedChannel.value = -1
+        return
+      }
+      const index = selectedChannel.value >= 0 && selectedChannel.value < list.length ? selectedChannel.value : 0
+      selectedChannel.value = index
+      applyChannel(list[index])
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : String(error), 'error')
+    }
+  }
+
+  async function load() {
+    const channelsTask = refreshChannels()
+    if (!loaded.value) {
+      const [am, bal, fee] = await Promise.all([
+        withdrawApi.getAmounts(),
+        withdrawApi.getBalance(),
+        withdrawApi.getFee(),
+      ])
+      if (!channels.value.length) amounts.value = am
+      balanceCents.value = bal
+      feeCents.value = fee
+      loaded.value = true
+    }
+    await channelsTask
   }
 
   function reaisInputFromCents(cents: number) {
@@ -131,17 +194,47 @@ export const useWithdrawStore = defineStore('withdraw', () => {
     cpfError.value = false
   }
 
-  async function submit(): Promise<'tips' | 'invalid' | 'ok'> {
-    await loadAssets()
-    if (!isAssetPassword.value) {
-      fundTipsOpen.value = true
-      return 'tips'
-    }
+  function requestCashOut() {
+    if (submitting.value) return
     amountError.value = !amountOk.value
     nameError.value = !nameOk.value
     cpfError.value = !cpfOk.value
-    if (amountError.value || nameError.value || cpfError.value) return 'invalid'
-    return 'ok'
+    if (amountError.value || nameError.value || cpfError.value) return
+    const channel = channels.value[selectedChannel.value]
+    if (channel?.id == null) {
+      showToast(withdrawCopy.channelMissing, 'error')
+      return
+    }
+    passwordOpen.value = true
+  }
+
+  function closePassword() {
+    if (submitting.value) return
+    passwordOpen.value = false
+  }
+
+  async function submitCashOut(cashOutPwd: string) {
+    if (submitting.value || cashOutPwd.length !== 6) return
+    const channel = channels.value[selectedChannel.value]
+    if (channel?.id == null || !amountOk.value) return
+    const body = {
+      channelId: Number(channel.id),
+      walletType: cashOutWalletPlayer,
+      amt: amountNumber.value,
+      cashOutPwd,
+      ...(bankCardId.value != null ? { bankCardId: bankCardId.value } : {}),
+    }
+    submitting.value = true
+    try {
+      await createCashOutOrder(body)
+      showToast(withdrawCopy.passwordSuccess, 'success')
+      passwordOpen.value = false
+      clearAmount()
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : String(error), 'error')
+    } finally {
+      submitting.value = false
+    }
   }
 
   function closeFundTips() {
@@ -161,7 +254,10 @@ export const useWithdrawStore = defineStore('withdraw', () => {
   }
 
   return {
+    channels,
+    selectedChannel,
     amounts,
+    placeholder,
     balanceCents,
     feeCents,
     amountReais,
@@ -174,11 +270,14 @@ export const useWithdrawStore = defineStore('withdraw', () => {
     loaded,
     isAssetPassword,
     fundTipsOpen,
+    passwordOpen,
+    submitting,
     amountNumber,
     amountCents,
     selectedCents,
     chipDisabled,
     load,
+    selectChannel,
     selectAmount,
     setAmount,
     clearAmount,
@@ -186,7 +285,9 @@ export const useWithdrawStore = defineStore('withdraw', () => {
     clearName,
     setCpf,
     clearCpf,
-    submit,
+    requestCashOut,
+    closePassword,
+    submitCashOut,
     closeFundTips,
     markAssetPasswordSet,
     resetErrors,

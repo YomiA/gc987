@@ -1,21 +1,20 @@
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import GameCard from './GameCard.vue'
 import SvgIcon from '../base/SvgIcon.vue'
-import type { Game, GameBlock } from '../../api/mock'
+import type { GameBlock } from '../../api/mock'
 
 const props = defineProps<{ block: GameBlock }>()
-const router = useRouter()
 
-/** Live DisplayAll expands the row. Clone uses that click to open the
- *  missing catalog pages: Popular → search, other blocks → category. */
+/** Live page shows 12 games per slide until Mostrar tudo expands the section. */
+const PAGE_SIZE = 12
+const expanded = ref(false)
+
 function showAll() {
-  if (props.block.key === 'POPULAR') {
-    void router.push('/game/search/POPULAR')
-    return
-  }
-  void router.push(`/game/category/ELECTRONIC/${props.block.key}`)
+  expanded.value = !expanded.value
+  page.value = 0
+  dragX.value = 0
+  void nextTick(() => measureSlide())
 }
 
 /** Live swiper: slidesPerView 1, speed 300, ease, spaceBetween 1,
@@ -33,10 +32,12 @@ const dragging = ref(false)
 const slideW = ref(0)
 const swiperEl = ref<HTMLElement | null>(null)
 const trackEl = ref<HTMLElement | null>(null)
-const pageSize = computed(() => Math.max(1, props.block.games.length))
-const pageCount = computed(() => Math.max(1, Math.ceil(props.block.total / pageSize.value)))
-const canPrev = computed(() => page.value > 0)
-const canNext = computed(() => page.value < pageCount.value - 1)
+const pageCount = computed(() => {
+  if (!props.block.games.length || expanded.value) return 1
+  return Math.ceil(props.block.games.length / PAGE_SIZE)
+})
+const canPrev = computed(() => !expanded.value && page.value > 0)
+const canNext = computed(() => !expanded.value && page.value < pageCount.value - 1)
 
 let startX = 0
 let startY = 0
@@ -97,7 +98,7 @@ function settleTo(target: number) {
 }
 
 function onPointerDown(e: PointerEvent) {
-  if (e.button !== 0) return
+  if (expanded.value || e.button !== 0) return
   startX = e.clientX
   startY = e.clientY
   startT = performance.now()
@@ -166,19 +167,31 @@ function onClickCapture(e: MouseEvent) {
   didDrag = false
 }
 
-const shown = computed(() => props.block.games.length)
+const shown = computed(() => {
+  const total = props.block.games.length
+  if (!total) return 0
+  if (expanded.value) return total
+  const start = page.value * PAGE_SIZE
+  return Math.min(PAGE_SIZE, total - start)
+})
 
-/** One slide per page. Extra pages cycle the downloaded thumbnails so the
- *  300ms slide still runs when later pages were never fetched. */
+/** One slide of 12 until the section is expanded, then every game on one slide. */
 const pages = computed(() => {
   const src = props.block.games
-  const size = pageSize.value
-  return Array.from({ length: pageCount.value }, (_, i) => {
-    const start = i * size
-    if (start + size <= src.length) return src.slice(start, start + size)
-    return Array.from({ length: size }, (__, j) => src[(start + j) % src.length]) as Game[]
-  })
+  if (!src.length) return []
+  if (expanded.value) return [src]
+  const count = Math.ceil(src.length / PAGE_SIZE)
+  return Array.from({ length: count }, (_, i) => src.slice(i * PAGE_SIZE, (i + 1) * PAGE_SIZE))
 })
+
+watch(
+  () => props.block.key,
+  () => {
+    expanded.value = false
+    page.value = 0
+    dragX.value = 0
+  },
+)
 
 function step(delta: number) {
   const next = page.value + delta
@@ -203,7 +216,8 @@ onBeforeUnmount(() => {
       <div class="head-left">
         <div class="logo-container">
           <SvgIcon class="glow" name="glow" />
-          <SvgIcon class="logo" :name="block.icon" />
+          <img v-if="block.image" class="logo logo-img" :src="block.image" alt="" />
+          <SvgIcon v-else class="logo" :name="block.icon" />
         </div>
         <span class="title">{{ block.title }}</span>
         <span class="blue-line" />
@@ -219,6 +233,7 @@ onBeforeUnmount(() => {
           type="button"
           class="arrow prev"
           :class="{ disabled: !canPrev }"
+          :disabled="!canPrev"
           aria-label="Anterior"
           @click="step(-1)"
         >
@@ -228,6 +243,7 @@ onBeforeUnmount(() => {
           type="button"
           class="arrow next"
           :class="{ disabled: !canNext }"
+          :disabled="!canNext"
           aria-label="Próximo"
           @click="step(1)"
         >
@@ -250,7 +266,7 @@ onBeforeUnmount(() => {
           <div v-for="(games, i) in pages" :key="i" class="card-container">
             <GameCard
               v-for="(game, j) in games"
-              :key="`${game.name}-${j}`"
+              :key="`${game.id}-${j}`"
               :game="game"
               :layout="block.layout"
             />
@@ -259,11 +275,11 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
-    <div v-if="block.total > shown" class="more">
-      <span class="more-label">Mostrando {{ shown }} de {{ block.total }} jogos</span>
+    <div v-if="block.games.length > PAGE_SIZE" class="more">
+      <span class="more-label">Mostrando {{ shown }} de {{ block.games.length }} jogos</span>
       <button class="more-btn" type="button" @click="showAll">
-        <span class="more-btn-label">Mostrar tudo</span>
-        <SvgIcon class="more-btn-icon" name="chevron-circle" />
+        <span class="more-btn-label">{{ expanded ? 'Recolher' : 'Mostrar tudo' }}</span>
+        <SvgIcon class="more-btn-icon" :class="{ up: expanded }" name="chevron-circle" />
       </button>
     </div>
   </div>
@@ -316,6 +332,10 @@ onBeforeUnmount(() => {
   width: 1.875rem;
   height: 1.875rem;
   font-size: 1.875rem;
+}
+
+.logo-img {
+  object-fit: contain;
 }
 
 .title {
@@ -380,6 +400,7 @@ onBeforeUnmount(() => {
 
 .arrow.disabled {
   color: var(--arrow-btn-fg-disabled);
+  pointer-events: none;
 }
 
 .arrow .svg-icon {
@@ -449,5 +470,9 @@ onBeforeUnmount(() => {
   height: 0.75rem;
   margin-left: 0.1875rem;
   transition: transform 0.3s;
+}
+
+.more-btn-icon.up {
+  transform: rotate(180deg);
 }
 </style>

@@ -1,13 +1,31 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 import SvgIcon from '../base/SvgIcon.vue'
 import type { Game } from '../../api/mock'
+import { useAuthStore } from '../../stores/auth'
+import { useHomeStore } from '../../stores/home'
 
 const props = defineProps<{ game: Game; layout: 'popular' | 'grid' | 'search' }>()
 const router = useRouter()
+const auth = useAuthStore()
+const home = useHomeStore()
+const collected = computed(() => home.isCollected(props.game.id))
 
 function open() {
+  if (!auth.isLoggedIn) {
+    auth.openLogin()
+    return
+  }
   void router.push(`/game/action/${props.game.id}`)
+}
+
+function onFavorite() {
+  if (!auth.isLoggedIn) {
+    auth.openLogin()
+    return
+  }
+  void home.collect(props.game.id)
 }
 </script>
 
@@ -15,7 +33,15 @@ function open() {
   <div class="game-card" :class="layout" @click="open">
     <img class="game-img" :src="game.image" :alt="game.name" loading="lazy" />
     <SvgIcon class="platform-icon" :name="`wordmark-${game.provider}`" />
-    <SvgIcon class="favorite" name="favorite" />
+    <button
+      type="button"
+      class="favorite"
+      :class="{ on: collected }"
+      aria-label="Favorito"
+      @click.stop="onFavorite"
+    >
+      <SvgIcon name="favorite" />
+    </button>
   </div>
 </template>
 
@@ -71,13 +97,28 @@ function open() {
 /* `color: transparent` is deliberate: the star path is filled with
    currentColor, so it knocks a hole through the white ring behind it. */
 .favorite {
+  display: flex;
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
   z-index: 4;
+  padding: 0;
+  align-items: center;
+  justify-content: center;
   color: rgba(0, 0, 0, 0);
+  background: none;
+  border: 0;
   border-radius: 50%;
   box-shadow: rgba(0, 0, 0, 0.4) 0 0.125rem 0.3125rem 0;
+}
+
+.favorite :deep(.svg-icon) {
+  width: 100%;
+  height: 100%;
+}
+
+.favorite.on {
+  color: #ffc84c;
 }
 
 .popular .favorite,

@@ -78,15 +78,9 @@ const options: PerfilOption[] = [
   { key: 'resgate', label: 'Código de Resgate', icon: `${ICONS}/resgate.svg` },
   { key: 'suporte', label: 'Suporte', icon: `${ICONS}/customer.png` },
   { key: 'seguranca', label: 'Centro de Segurança', icon: `${ICONS}/security.png` },
+  { key: 'idioma', label: 'Idioma', icon: `${ICONS}/idioma.svg` },
   { key: 'sair', label: 'Sair', icon: `${ICONS}/logout.png` },
 ]
-
-export const perfilLogoutCopy = {
-  title: 'Sair',
-  message: 'Tem certeza de que deseja sair?',
-  cancel: 'Cancelar',
-  confirm: 'Sair',
-}
 
 function settle<T>(value: T, ms = 120): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))

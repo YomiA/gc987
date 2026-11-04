@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
+import AppToast from './components/base/AppToast.vue'
+import PageLoading from './components/base/PageLoading.vue'
 import SideFab from './components/inicio/SideFab.vue'
 
 const route = useRoute()
@@ -122,6 +124,8 @@ const showFab = computed(() => {
 
   <RouterView />
   <SideFab v-if="showFab" />
+  <PageLoading />
+  <AppToast />
 </template>
 
 <style scoped>

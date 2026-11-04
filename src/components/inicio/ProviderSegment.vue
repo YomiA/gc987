@@ -132,7 +132,8 @@ watch(
         @click="emitSelect(tab.key)"
       >
         <span class="btn-wall">
-          <SvgIcon v-if="tab.icon" class="type-icon" :name="tab.icon" />
+          <img v-if="tab.image" class="type-icon photo" :src="tab.image" alt="" />
+          <SvgIcon v-else-if="tab.icon" class="type-icon" :name="tab.icon" />
           <i
             v-else
             class="type-img"
@@ -220,6 +221,10 @@ watch(
   width: 2.25rem;
   height: 2.25rem;
   font-size: 2.25rem;
+}
+
+.type-icon.photo {
+  object-fit: contain;
 }
 
 .type-img {

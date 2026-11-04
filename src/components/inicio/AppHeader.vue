@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import SvgIcon from '../base/SvgIcon.vue'
 
 defineEmits<{ menu: []; login: []; register: []; search: [] }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
@@ -15,8 +18,8 @@ defineEmits<{ menu: []; login: []; register: []; search: [] }>()
     </div>
 
     <div class="actions">
-      <button class="btn btn-login" type="button" @click="$emit('login')">Entrar</button>
-      <button class="btn btn-register" type="button" @click="$emit('register')">Registro</button>
+      <button class="btn btn-login" type="button" @click="$emit('login')">{{ t('login.enter') }}</button>
+      <button class="btn btn-register" type="button" @click="$emit('register')">{{ t('login.register') }}</button>
     </div>
 
     <button class="search" type="button" aria-label="Buscar" @click="$emit('search')">
@@ -72,7 +75,7 @@ defineEmits<{ menu: []; login: []; register: []; search: [] }>()
 
 .actions {
   display: flex;
-  width: 8.05225rem;
+  width: auto;
   height: 1.5rem;
   align-items: center;
   flex: 0 0 auto;
@@ -90,6 +93,7 @@ defineEmits<{ menu: []; login: []; register: []; search: [] }>()
   line-height: 0.75rem;
   text-align: center;
   text-transform: uppercase;
+  white-space: nowrap;
   color: rgb(255, 255, 255);
   border-radius: 0.375rem;
   box-shadow: var(--btn-md-shadow);
@@ -100,12 +104,12 @@ defineEmits<{ menu: []; login: []; register: []; search: [] }>()
 }
 
 .btn-login {
-  width: 3.370119rem;
+  min-width: 3.370119rem;
   background-image: var(--btn-blue);
 }
 
 .btn-register {
-  width: 4.057131rem;
+  min-width: 4.057131rem;
   margin-left: 0.625rem;
   background-image: var(--btn-green);
 }

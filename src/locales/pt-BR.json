@@ -1,0 +1,39 @@
+{
+  "login": {
+    "title": "Faça login na sua conta",
+    "registerTitle": "Crie uma conta de jogo",
+    "noAccount": "Não tem uma conta?",
+    "hasAccount": "já tem uma conta?",
+    "register": "Registro",
+    "enter": "Entrar",
+    "phone": "Telefone",
+    "password": "Senha",
+    "confirm": "Confirmar senha",
+    "phoneInvalid": "Número de telefone inválido",
+    "passwordRule": "6-16 caracteres",
+    "passwordMismatch": "As senhas não coincidem",
+    "remember": "Lembrar Senha",
+    "forgot": "Esqueceu a senha?",
+    "failed": "Falha no login",
+    "registerFailed": "Falha no registro",
+    "expired": "Seu login expirou, faça login novamente",
+    "requestFailed": "Falha na solicitação"
+  },
+  "perfil": {
+    "relatorios": "Relatórios",
+    "convidar": "Convidar",
+    "convidarNote": "Venha para o GC987.COM jogar comigo e descubra como ganhar dinheiro de verdade!",
+    "resgate": "Código de Resgate",
+    "suporte": "Suporte",
+    "seguranca": "Centro de Segurança",
+    "idioma": "Idioma",
+    "sair": "Sair",
+    "logoutTitle": "Sair",
+    "logoutMessage": "Tem certeza de que deseja sair?",
+    "logoutCancel": "Cancelar",
+    "langTitle": "Idioma",
+    "langPt": "Português",
+    "langEn": "English",
+    "langZh": "中文"
+  }
+}

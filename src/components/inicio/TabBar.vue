@@ -41,7 +41,11 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
               {{ item.label }}
             </span>
           </div>
-          <div class="underline" :style="{ left: `${underlineLeft}rem` }" />
+          <div
+            class="underline"
+            :class="{ hidden: active === 'deposito' }"
+            :style="active === 'deposito' ? undefined : { left: `${underlineLeft}rem` }"
+          />
         </div>
       </div>
     </div>
@@ -125,7 +129,7 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
   color: rgb(255, 255, 255);
 }
 
-.label.accent {
+.label.accent:not(.active) {
   color: var(--segment-indicator-line);
 }
 
@@ -138,6 +142,10 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
   border-radius: 0.125rem;
   transform: translateX(-0.25rem);
   transition: left 0.3s;
+}
+
+.underline.hidden {
+  visibility: hidden;
 }
 
 .deposit {

@@ -2,10 +2,10 @@
 /**
  * /withdrawSubView — Saque header record icon.
  *
- * Two toolbar tabs, no TabBar. Empty mock lists. Geometry from
- * docs/research/gc987-com/withdraw-sub-view/.
+ * Registro de Saques loads POST /cashOutOrderRecord. The day window uses the
+ * site timezone. Status is not sent. Auditoria stays the empty mock.
  */
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import SvgIcon from '../components/base/SvgIcon.vue'
 import WithdrawAuditSelect from '../components/withdraw/WithdrawAuditSelect.vue'
@@ -14,10 +14,13 @@ import {
   formatAmount,
   withdrawAuditFilters,
   withdrawDateRanges,
+  withdrawStatusText,
   withdrawSubCopy as copy,
   type WithdrawSubTab,
 } from '../api/withdrawRecord'
 import { useWithdrawRecordStore } from '../stores/withdrawRecord'
+import { showToast } from '../toast'
+import { formatDateTime } from '../utils/timeZone'
 
 const TABS: { key: WithdrawSubTab; label: string }[] = [
   { key: 'saques', label: copy.saquesTab },
@@ -27,11 +30,48 @@ const TABS: { key: WithdrawSubTab; label: string }[] = [
 const router = useRouter()
 const records = useWithdrawRecordStore()
 const row = ref<HTMLElement | null>(null)
+const scroller = ref<HTMLElement | null>(null)
 const indicator = ref({ left: 0, width: 0 })
 const slides = ref(false)
 let observer: ResizeObserver | null = null
 
-const saquesTotal = computed(() => String(records.saquesTotalCents / 100))
+const moreDots = [
+  { top: '0%', left: '32%', delay: '-1000ms' },
+  { top: '20.5692%', left: '24.5134%', delay: '-888.889ms' },
+  { top: '31.5138%', left: '5.55674%', delay: '-777.778ms' },
+  { top: '27.7128%', left: '-16%', delay: '-666.667ms' },
+  { top: '10.9446%', left: '-30.0702%', delay: '-555.556ms' },
+  { top: '-10.9446%', left: '-30.0702%', delay: '-444.444ms' },
+  { top: '-27.7128%', left: '-16%', delay: '-333.333ms' },
+  { top: '-31.5138%', left: '5.55674%', delay: '-222.222ms' },
+  { top: '-20.5692%', left: '24.5134%', delay: '-111.111ms' },
+]
+
+function statusOf(code: number) {
+  return withdrawStatusText[code] ?? { label: String(code), color: '#8792af' }
+}
+
+function amountOf(value: number) {
+  return formatAmount(Math.round(Number(value) * 100))
+}
+
+async function copyText(value: string) {
+  if (!value) return
+  try {
+    await navigator.clipboard.writeText(value)
+  } catch {
+    /* clipboard can be blocked; the toast still confirms the tap */
+  }
+  showToast(copy.copied, 'success')
+}
+
+function maybeLoadMore() {
+  const el = scroller.value
+  if (!el || records.tab !== 'saques' || el.clientHeight === 0) return
+  if (!records.hasMore || records.loading || records.loadingMore) return
+  if (el.scrollTop + el.clientHeight < el.scrollHeight - 48) return
+  void records.load(false)
+}
 
 function goBack() {
   if (router.options.history.state.back) router.back()
@@ -53,8 +93,17 @@ watch(
   () => requestAnimationFrame(measure),
 )
 
+watch(
+  () => records.records.length,
+  async () => {
+    await nextTick()
+    maybeLoadMore()
+  },
+)
+
 onMounted(() => {
-  void records.load()
+  void records.load(true)
+  void records.loadAudit()
   requestAnimationFrame(measure)
   if (typeof ResizeObserver !== 'undefined' && row.value) {
     observer = new ResizeObserver(measure)
@@ -95,7 +144,7 @@ onBeforeUnmount(() => observer?.disconnect())
       </div>
     </header>
 
-    <div class="page-scroller sub-body" :class="records.tab">
+    <div ref="scroller" class="page-scroller sub-body" :class="records.tab" @scroll="maybeLoadMore">
       <div v-if="records.tab === 'saques'" class="top-area">
         <WithdrawTimeFilter
           :options="withdrawDateRanges"
@@ -104,7 +153,7 @@ onBeforeUnmount(() => observer?.disconnect())
         />
         <div class="total-area">
           {{ copy.totalLabel }}
-          <span class="amount success">{{ saquesTotal }}</span>
+          <span class="amount success">{{ formatAmount(records.totalAmountCents) }}</span>
         </div>
       </div>
 
@@ -120,7 +169,54 @@ onBeforeUnmount(() => observer?.disconnect())
         />
       </div>
 
-      <div class="empty">
+      <template v-if="records.tab === 'saques'">
+        <div v-if="records.loading" class="list-loading" role="status" aria-label="Loading">
+          <span class="dots" aria-hidden="true">
+            <i v-for="n in 8" :key="n" :style="{ '--i': n - 1 }" />
+          </span>
+        </div>
+
+        <div v-else-if="records.records.length === 0" class="empty">
+          <div class="empty-bg-img" />
+          <span class="empty-label">{{ copy.empty }}</span>
+        </div>
+
+        <div v-for="row in records.records" :key="row.id" class="record-wrap">
+          <div class="line top">
+            <p class="name">{{ copy.name }}</p>
+            <p class="money">{{ amountOf(row.orderAmt) }}</p>
+          </div>
+          <div class="line middle">
+            <p class="time">{{ formatDateTime(row.orderTime) }}</p>
+          </div>
+          <div class="line bottom">
+            <p class="order-line">
+              <span class="order-no">{{ row.transactionId || row.id }}</span>
+              <button
+                type="button"
+                class="copy"
+                aria-label="Copiar"
+                @click="copyText(row.transactionId || String(row.id))"
+              >
+                <SvgIcon class="copy-icon" name="record-copy" />
+              </button>
+            </p>
+            <span class="status" :style="{ color: statusOf(row.status).color }">{{ statusOf(row.status).label }}</span>
+          </div>
+        </div>
+
+        <div v-if="records.loadingMore" class="more-loading" role="status" aria-label="Loading">
+          <span class="bubbles" aria-hidden="true">
+            <i
+              v-for="(dot, n) in moreDots"
+              :key="n"
+              :style="{ top: dot.top, left: dot.left, animationDelay: dot.delay }"
+            />
+          </span>
+        </div>
+      </template>
+
+      <div v-else class="empty">
         <div class="empty-bg-img" />
         <span class="empty-label">{{ copy.empty }}</span>
       </div>
@@ -245,6 +341,176 @@ onBeforeUnmount(() => observer?.disconnect())
 
 .amount.success {
   color: #27d48b;
+}
+
+.list-loading,
+.more-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #116fcd;
+}
+
+.list-loading {
+  height: 18rem;
+  color: #1680dc;
+}
+
+.dots,
+.bubbles {
+  position: relative;
+  display: block;
+}
+
+.dots {
+  width: 1.75rem;
+  height: 1.75rem;
+}
+
+.dots i {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.3125rem;
+  height: 0.3125rem;
+  margin: -0.15625rem;
+  border-radius: 50%;
+  background-color: currentColor;
+  transform: rotate(calc(var(--i) * 45deg)) translateY(-0.625rem);
+  animation: spinner-dots 0.9s linear infinite;
+  animation-delay: calc(var(--i) * -0.1125s);
+}
+
+.more-loading {
+  height: 41px;
+}
+
+.bubbles {
+  width: 28px;
+  height: 28px;
+}
+
+.bubbles i {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  animation: spinner-scale-out 1s linear infinite;
+}
+
+.bubbles i::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4.375px;
+  height: 4.375px;
+  margin: -2.1875px 0 0 -2.1875px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@keyframes spinner-dots {
+  0%,
+  70%,
+  100% {
+    opacity: 0.25;
+  }
+  35% {
+    opacity: 1;
+  }
+}
+
+@keyframes spinner-scale-out {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
+}
+
+.record-wrap {
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.5625rem 0.625rem 0.5rem;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  background: var(--color-bg-200);
+}
+
+.line {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0;
+}
+
+.top {
+  margin-bottom: 1rem;
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 500;
+  line-height: 1.3125rem;
+}
+
+.name,
+.money,
+.time,
+.order-line {
+  margin: 0;
+}
+
+.middle {
+  margin-bottom: 0.375rem;
+  color: #6d788d;
+  font-size: 0.75rem;
+  line-height: 1.125rem;
+}
+
+.bottom {
+  color: #9ba7be;
+  font-size: 0.75rem;
+  line-height: 1.8125rem;
+}
+
+.order-line {
+  display: flex;
+  min-width: 0;
+  flex: 1;
+  align-items: center;
+}
+
+.order-no {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.copy {
+  display: inline-flex;
+  flex: 0 0 auto;
+  margin-left: 0.1875rem;
+  padding: 0;
+  align-items: center;
+  color: #9ba7be;
+  background: transparent;
+  cursor: pointer;
+}
+
+.copy-icon {
+  width: 1.8rem;
+  height: 1.8rem;
+  color: #9ba7be;
+}
+
+.status {
+  flex: 0 0 auto;
+  margin-left: 0.5rem;
+  font-size: 0.625rem;
+  line-height: 1.8125rem;
 }
 
 .audit-header {

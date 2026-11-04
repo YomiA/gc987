@@ -42,7 +42,8 @@ const emit = defineEmits<{
                 @click="emit('select', tab.key)"
               >
                 <span class="icon-wrap">
-                  <SvgIcon v-if="tab.icon" class="icon-svg" :name="tab.icon" />
+                  <img v-if="tab.image" class="icon-photo" :src="tab.image" alt="" />
+                  <SvgIcon v-else-if="tab.icon" class="icon-svg" :name="tab.icon" />
                   <i
                     v-else
                     class="icon-sprite"
@@ -223,11 +224,16 @@ const emit = defineEmits<{
 }
 
 .icon-svg,
-.icon-sprite {
+.icon-sprite,
+.icon-photo {
   display: block;
   width: 1.75rem;
   height: 1.75rem;
   font-size: 1.75rem;
+}
+
+.icon-photo {
+  object-fit: contain;
 }
 
 .icon-sprite {

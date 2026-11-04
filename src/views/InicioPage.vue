@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 import AppHeader from '../components/inicio/AppHeader.vue'
 import AppInstallBar from '../components/inicio/AppInstallBar.vue'
 import GameBlockView from '../components/inicio/GameBlock.vue'
@@ -23,14 +24,13 @@ import { usePwaStore } from '../stores/pwa'
 
 const router = useRouter()
 const home = useHomeStore()
+const auth = useAuthStore()
 const pwa = usePwaStore()
 const menuOpen = ref(false)
-const authOpen = ref(false)
-const authMode = ref<'login' | 'register'>('login')
 
 function openAuth(mode: 'login' | 'register') {
-  authMode.value = mode
-  authOpen.value = true
+  if (mode === 'register') auth.openRegister()
+  else auth.openLogin()
 }
 const scroller = ref<HTMLElement | null>(null)
 const contentTick = ref(0)
@@ -178,6 +178,13 @@ const footerTerms = [
   '3. O fato de um jogador jogar ou ganhar em um jogo de apostas sociais não significa que ele ganhará em apostas com dinheiro real e jogos relacionados no futuro.',
 ].join('\n\n')
 
+watch(
+  () => auth.isLoggedIn,
+  (loggedIn, wasLoggedIn) => {
+    if (loggedIn && !wasLoggedIn) void home.loadRemote()
+  },
+)
+
 onMounted(() => {
   void home.load().then(() => {
     void nextTick(() => {
@@ -227,10 +234,15 @@ onBeforeUnmount(() => {
     </div>
 
     <SupportButton />
-    <ToTopButton :visible="showToTop && !pwa.modalOpen && !authOpen" @top="scrollToTop" />
+    <ToTopButton :visible="showToTop && !pwa.modalOpen && !auth.dialogOpen" @top="scrollToTop" />
     <TabBar :items="home.tabBarItems" :active="home.activeTab" @select="onTabSelect" />
     <PwaModal v-if="pwa.modalOpen" @close="pwa.closeModal()" />
-    <LoginModal v-if="authOpen" v-model:mode="authMode" @close="authOpen = false" />
+    <LoginModal
+      v-if="auth.dialogOpen"
+      :mode="auth.dialogMode"
+      @update:mode="auth.setDialogMode"
+      @close="auth.closeDialog()"
+    />
     <SideMenu
       :open="menuOpen"
       :tabs="home.providerTabs"

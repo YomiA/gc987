@@ -1,29 +1,28 @@
 <script setup lang="ts">
 /**
- * Logout confirm on /main/perfil (Sair row). Live is an `ion-modal` covering
- * the 390 column: host paints `rgba(0,0,0,.8)`, panel `.logout-modal` is
- * 346×196, radius 10. Cancelar dismisses. Sair calls the empty `logout`
- * stub — the live request is not cloned.
+ * Logout confirm on /main/perfil (Sair row).
  */
-import { perfilLogoutCopy as copy } from '../../api/perfil'
+import { useI18n } from 'vue-i18n'
 
 defineEmits<{
   cancel: []
   sair: []
 }>()
+
+const { t } = useI18n()
 </script>
 
 <template>
   <div class="overlay" @click="$emit('cancel')">
     <div class="logout-modal" @click.stop>
-      <div class="logout-modal-title">{{ copy.title }}</div>
-      <div class="logout-modal-message">{{ copy.message }}</div>
+      <div class="logout-modal-title">{{ t('perfil.logoutTitle') }}</div>
+      <div class="logout-modal-message">{{ t('perfil.logoutMessage') }}</div>
       <div class="logout-modal-btn">
         <button type="button" class="logout-modal-btn-left" @click="$emit('cancel')">
-          {{ copy.cancel }}
+          {{ t('perfil.logoutCancel') }}
         </button>
         <button type="button" class="logout-modal-btn-right" @click="$emit('sair')">
-          {{ copy.confirm }}
+          {{ t('perfil.sair') }}
         </button>
       </div>
     </div>

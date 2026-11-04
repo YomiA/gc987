@@ -4,12 +4,14 @@
  * input, chips, submit. Geometry from https://gc987.com/main/entrar at 390.
  */
 import SvgIcon from '../base/SvgIcon.vue'
+import SuffixDots from './SuffixDots.vue'
 import { formatAmount } from '../../api/entrar'
 
 const props = defineProps<{
   tabLabel: string
   reco: string
   channelLabel: string
+  channelIcon: string
   channelReco: boolean
   promo: string
   currency: string
@@ -18,6 +20,7 @@ const props = defineProps<{
   amounts: number[]
   selectedCents: number | null
   canSubmit: boolean
+  submitting: boolean
   submitLabel: string
 }>()
 
@@ -49,6 +52,7 @@ function onInput(event: Event) {
     <ul class="channel-list">
       <li class="channel on">
         <div v-if="props.channelReco" class="channel-tag"><i>{{ props.reco }}</i></div>
+        <img v-if="props.channelIcon" class="channel-icon" :src="props.channelIcon" alt="" />
         {{ props.channelLabel }}
       </li>
     </ul>
@@ -98,12 +102,10 @@ function onInput(event: Event) {
     <button
       type="button"
       class="submit"
-      :class="{ disabled: !props.canSubmit }"
-      :disabled="!props.canSubmit"
+      :class="{ disabled: !props.canSubmit, loading: props.submitting }"
+      :disabled="!props.canSubmit || props.submitting"
       @click="emit('submit')"
-    >
-      {{ props.submitLabel }}
-    </button>
+      >{{ props.submitLabel }}<SuffixDots :on="props.submitting" /></button>
   </div>
 </template>
 
@@ -178,16 +180,28 @@ function onInput(event: Event) {
 
 .channel {
   position: relative;
-  width: 6.875rem;
+  display: flex;
+  width: auto;
+  min-width: 6.875rem;
   height: 2.5rem;
   margin-top: 0.9375rem;
+  padding: 0 0.75rem;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
   border-radius: 0.375rem;
   font-size: 1rem;
   font-weight: 400;
-  line-height: 2.5rem;
+  line-height: 1.25rem;
   color: rgb(255, 255, 255);
   text-align: center;
   background-image: linear-gradient(0deg, #0167ca 0%, #38a8fa 100%);
+}
+
+.channel-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
 }
 
 .channel-tag {
@@ -383,5 +397,11 @@ function onInput(event: Event) {
   opacity: 0.5;
   pointer-events: none;
   color: rgba(255, 255, 255, 0.5);
+}
+
+.submit.loading {
+  opacity: 1;
+  color: #fff;
+  pointer-events: none;
 }
 </style>
