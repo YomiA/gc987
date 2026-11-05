@@ -35,55 +35,52 @@ const lineTransform = computed(
 
 const segmentEl = ref<HTMLElement | null>(null)
 
-/** Live ion-segment.segment-scrollable is overflow-x auto; desktop also
- *  converts mouse drag into scrollLeft (touch/trackpad already pan). */
-const DRAG_THRESHOLD = 5
+/**
+ * Live ion-segment (data-v-4c8b2c4e) is overflow-x auto with the scrollbar
+ * hidden. Touch and trackpad pan it natively. A desktop mouse does not, so
+ * the live control writes scrollLeft from mousedown/mousemove and ignores
+ * vertical jitter. Cancelling when the first pixels are taller than they are
+ * wide drops ordinary mouse drags on this short bar.
+ */
+const DRAG_THRESHOLD = 10
 
 let startX = 0
-let startY = 0
 let startScroll = 0
-let pointerId: number | null = null
+let dragging = false
 let didDrag = false
 
 function onScroll(event: Event) {
   scrollLeft.value = (event.target as HTMLElement).scrollLeft
 }
 
-function onPointerDown(e: PointerEvent) {
+function onMouseDown(e: MouseEvent) {
   if (e.button !== 0) return
   const el = segmentEl.value
   if (!el) return
-  startX = e.clientX
-  startY = e.clientY
-  startScroll = el.scrollLeft
+  dragging = true
   didDrag = false
-  pointerId = e.pointerId
+  startX = e.pageX
+  startScroll = el.scrollLeft
 }
 
-function onPointerMove(e: PointerEvent) {
-  if (e.pointerId !== pointerId) return
+function onMouseMove(e: MouseEvent) {
+  if (!dragging) return
   const el = segmentEl.value
   if (!el) return
-  const dx = e.clientX - startX
-  const dy = e.clientY - startY
-  if (!didDrag) {
-    if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return
-    if (Math.abs(dy) > Math.abs(dx)) {
-      pointerId = null
-      return
-    }
-    didDrag = true
-    try {
-      el.setPointerCapture(e.pointerId)
-    } catch {
-      /* synthetic events cannot capture */
-    }
-  }
+  const dx = e.pageX - startX
+  if (Math.abs(dx) <= DRAG_THRESHOLD) return
+  didDrag = true
+  e.preventDefault()
   el.scrollLeft = startScroll - dx
 }
 
-function onPointerUp() {
-  pointerId = null
+function onMouseUp() {
+  dragging = false
+  if (!didDrag) return
+  // click is dispatched after mouseup, still in this turn. Clear after it.
+  setTimeout(() => {
+    didDrag = false
+  }, 0)
 }
 
 function onClickCapture(e: MouseEvent) {
@@ -117,10 +114,11 @@ watch(
       ref="segmentEl"
       class="segment"
       @scroll.passive="onScroll"
-      @pointerdown="onPointerDown"
-      @pointermove="onPointerMove"
-      @pointerup="onPointerUp"
-      @pointercancel="onPointerUp"
+      @mousedown="onMouseDown"
+      @mousemove="onMouseMove"
+      @mouseup="onMouseUp"
+      @mouseleave="onMouseUp"
+      @dragstart.prevent
       @click.capture="onClickCapture"
     >
       <button
@@ -140,7 +138,7 @@ watch(
             :style="{ backgroundPosition: tab.spritePosition ?? undefined }"
           />
           <span class="label-wall">
-            <span class="label">{{ tab.label }}</span>
+            <span class="label">{{ tr(tab.label) }}</span>
           </span>
         </span>
       </button>

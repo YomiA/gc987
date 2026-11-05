@@ -29,7 +29,7 @@ function choose(code: AppLocale) {
         :class="{ on: locale === item.code }"
         @click="choose(item.code)"
       >
-        <span>{{ item.label }}</span>
+        <span>{{ tr(item.label) }}</span>
         <span v-if="locale === item.code" class="mark" aria-hidden="true"></span>
       </button>
     </div>

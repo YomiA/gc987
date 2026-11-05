@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
     @click="toggle"
   >
     <div class="time">
-      {{ props.options.find((option) => option.key === props.modelValue)?.label ?? '' }}
+      {{ tr(props.options.find((option) => option.key === props.modelValue)?.label ?? '') }}
     </div>
     <svg class="caret" viewBox="0 0 512 512" aria-hidden="true">
       <path
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
                   :class="{ on: option.key === props.modelValue }"
                   @click="pick(option.key)"
                 >
-                  {{ option.label }}
+                  {{ tr(option.label) }}
                 </div>
               </div>
             </div>

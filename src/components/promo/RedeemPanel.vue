@@ -12,19 +12,19 @@ const code = ref('')
            collapsing into the title's, which is what puts the title 40px below
            the content edge. -->
       <div class="banner-slot" />
-      <p class="title">Por favor, insira o código de resgate</p>
+      <p class="title">{{ tr('Por favor, insira o código de resgate') }}</p>
 
       <div class="input-wrap">
         <input
           v-model="code"
           class="code-input"
           type="text"
-          placeholder="Por favor, insira o código de resgate"
+          :placeholder="tr('Por favor, insira o código de resgate')"
         />
       </div>
 
       <div class="submit-row">
-        <button type="button" class="submit">Resgatar Bônus</button>
+        <button type="button" class="submit">{{ tr('Resgatar Bônus') }}</button>
       </div>
 
       <!-- Live page keeps an empty description block under the button. -->

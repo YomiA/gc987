@@ -16,19 +16,19 @@ defineProps<{ info: SpreadAgentInfo }>()
   <section class="agent-info">
     <div class="info">
       <div class="ids">
-        <div class="row"><span class="minor">MeuID:</span><span class="value">{{ info.myId }}</span></div>
-        <div class="row"><span class="minor">ConvidadorID:</span><span class="value">{{ info.inviterId }}</span></div>
-        <div class="row collect">Coletável <span class="money">{{ info.collectable }}</span></div>
+        <div class="row"><span class="minor">{{ tr('MeuID:') }}</span><span class="value">{{ tr(info.myId) }}</span></div>
+        <div class="row"><span class="minor">{{ tr('ConvidadorID:') }}</span><span class="value">{{ tr(info.inviterId) }}</span></div>
+        <div class="row collect">{{ tr('Coletável') }} <span class="money">{{ tr(info.collectable) }}</span></div>
       </div>
 
       <div class="actions">
-        <button type="button" class="btn receber"><span class="btn-inner">Receber</span></button>
-        <button type="button" class="btn historico"><span class="btn-inner">Histórico</span></button>
+        <button type="button" class="btn receber"><span class="btn-inner">{{ tr('Receber') }}</span></button>
+        <button type="button" class="btn historico"><span class="btn-inner">{{ tr('Histórico') }}</span></button>
       </div>
     </div>
 
     <div class="receive-rule">
-      <div class="text"><span class="hint">{{ info.hint }}</span></div>
+      <div class="text"><span class="hint">{{ tr(info.hint) }}</span></div>
     </div>
   </section>
 </template>

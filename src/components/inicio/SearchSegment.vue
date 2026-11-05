@@ -127,7 +127,7 @@ function addRipple(event: PointerEvent) {
     >
       <span class="tab">
         <img class="tab-img" :src="tab.icon" alt="" />
-        <span class="tab-label">{{ tab.label }}</span>
+        <span class="tab-label">{{ tr(tab.label) }}</span>
       </span>
       <span class="seg-indicator animated" />
     </button>

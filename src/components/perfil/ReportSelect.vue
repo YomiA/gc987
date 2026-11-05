@@ -74,7 +74,7 @@ onBeforeUnmount(() => {
 <template>
   <div ref="trigger" class="rs-trigger" :class="{ open }" @click="toggle">
     <div class="rs-label">
-      {{ props.options.find((option) => option.key === props.modelValue)?.label ?? '' }}
+      {{ tr(props.options.find((option) => option.key === props.modelValue)?.label ?? '') }}
     </div>
 
     <!-- ionicons caret-down, flipped by the `on` class while the panel is up. -->
@@ -99,7 +99,7 @@ onBeforeUnmount(() => {
                   :class="{ on: option.key === props.modelValue }"
                   @click="pick(option.key)"
                 >
-                  {{ option.label }}
+                  {{ tr(option.label) }}
                 </p>
               </div>
             </div>

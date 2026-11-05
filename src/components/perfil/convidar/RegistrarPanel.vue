@@ -68,13 +68,13 @@ async function onSubmit() {
 
 <template>
   <form class="reg" @submit.prevent="onSubmit">
-    <p class="hint">{{ copy.hint }}</p>
+    <p class="hint">{{ tr(copy.hint) }}</p>
 
     <div class="item" :class="{ err: !!phoneError() }">
       <div class="field has-prefix">
         <span class="prefix">
           <SvgIcon class="flag" name="flag-br" />
-          <span class="dial">{{ copy.dial }}</span>
+          <span class="dial">{{ tr(copy.dial) }}</span>
         </span>
         <input
           class="control"
@@ -82,7 +82,7 @@ async function onSubmit() {
           inputmode="numeric"
           autocomplete="tel"
           maxlength="11"
-          :placeholder="copy.phonePlaceholder"
+          :placeholder="tr(copy.phonePlaceholder)"
           :value="phone"
           @input="onPhoneInput"
           @blur="phoneTouched = true"
@@ -91,7 +91,7 @@ async function onSubmit() {
           <SvgIcon class="clear-icon" name="register-clear" />
         </button>
       </div>
-      <p v-if="phoneError()" class="error">{{ phoneError() }}</p>
+      <p v-if="phoneError()" class="error">{{ tr(phoneError()) }}</p>
     </div>
 
     <div class="item" :class="{ err: !!passwordError() }">
@@ -101,7 +101,7 @@ async function onSubmit() {
           :type="showPassword ? 'text' : 'password'"
           maxlength="16"
           autocomplete="new-password"
-          :placeholder="copy.passwordPlaceholder"
+          :placeholder="tr(copy.passwordPlaceholder)"
           v-model="password"
           @blur="passwordTouched = true"
         />
@@ -109,7 +109,7 @@ async function onSubmit() {
       <button type="button" class="eye" @click="showPassword = !showPassword">
         <SvgIcon :name="showPassword ? 'register-eye-off' : 'register-eye'" />
       </button>
-      <p v-if="passwordError()" class="error">{{ passwordError() }}</p>
+      <p v-if="passwordError()" class="error">{{ tr(passwordError()) }}</p>
     </div>
 
     <div class="item">
@@ -119,7 +119,7 @@ async function onSubmit() {
           :type="showConfirm ? 'text' : 'password'"
           maxlength="16"
           autocomplete="new-password"
-          :placeholder="copy.confirmPlaceholder"
+          :placeholder="tr(copy.confirmPlaceholder)"
           v-model="confirm"
         />
       </div>
@@ -128,14 +128,14 @@ async function onSubmit() {
       </button>
     </div>
 
-    <button type="submit" class="submit"><span class="submit-inner">{{ copy.submit }}</span></button>
+    <button type="submit" class="submit"><span class="submit-inner">{{ tr(copy.submit) }}</span></button>
   </form>
 
   <Teleport to="body">
     <Transition name="toast">
       <div v-if="toast" class="toast-root">
         <div class="toast-panel">
-          <p class="toast-msg">{{ toast }}</p>
+          <p class="toast-msg">{{ tr(toast) }}</p>
         </div>
       </div>
     </Transition>

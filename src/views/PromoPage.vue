@@ -9,15 +9,22 @@ import RedeemPanel from '../components/promo/RedeemPanel.vue'
 import VipPanel from '../components/promo/VipPanel.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import type { PromoEvent } from '../api/promo'
+import { selectMainTab } from '../auth/tabGuard'
+import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 import { usePromoStore } from '../stores/promo'
 
 const router = useRouter()
+const auth = useAuthStore()
 const home = useHomeStore()
 const promo = usePromoStore()
 
 function openEvent(event: PromoEvent) {
   if (event.type === 'VIP') {
+    if (!auth.isLoggedIn) {
+      auth.openLogin()
+      return
+    }
     void router.push('/activity/vip')
     return
   }
@@ -33,23 +40,15 @@ function openRebateHistory() {
 }
 
 function onTabSelect(key: string) {
-  if (key === 'inicio') {
-    void router.push('/main/inicio')
+  selectMainTab(router, key)
+}
+
+function onPromoTab(key: string) {
+  if (key === 'vip' && !auth.isLoggedIn) {
+    auth.openLogin()
     return
   }
-  if (key === 'deposito') {
-    void router.push('/main/entrar')
-    return
-  }
-  if (key === 'perfil') {
-    void router.push('/main/perfil')
-    return
-  }
-  if (key === 'saque') {
-    void router.push('/main/withdraw')
-    return
-  }
-  home.selectTab(key)
+  promo.selectTab(key)
 }
 
 onMounted(() => {
@@ -62,7 +61,7 @@ onMounted(() => {
 
 <template>
   <div class="ion-page">
-    <PromoSegment :tabs="promo.tabs" :active="promo.activeTab" @select="promo.selectTab" />
+    <PromoSegment :tabs="promo.tabs" :active="promo.activeTab" @select="onPromoTab" />
 
     <div v-if="promo.activeTab === 'eventos'" class="page-scroller promo-content">
       <div class="event-list">

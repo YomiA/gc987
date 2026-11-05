@@ -34,7 +34,7 @@ onBeforeUnmount(() => cancelAnimationFrame(frame))
 </script>
 
 <template>
-  <div v-if="visible" class="page-loading" role="status" aria-label="Loading">
+  <div v-if="visible" class="page-loading" role="status" :aria-label="tr('Loading')">
     <svg class="crescent" viewBox="0 0 64 64" aria-hidden="true">
       <circle r="26" transform="translate(32,32)" />
     </svg>

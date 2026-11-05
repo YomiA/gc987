@@ -16,6 +16,7 @@ import RealNameModal from '../components/entrar/RealNameModal.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import SvgIcon from '../components/base/SvgIcon.vue'
 import { entrarCopy } from '../api/entrar'
+import { selectMainTab } from '../auth/tabGuard'
 import { useEntrarStore } from '../stores/entrar'
 import { useHomeStore } from '../stores/home'
 
@@ -42,23 +43,7 @@ function openRecords() {
 }
 
 function onTabSelect(key: string) {
-  if (key === 'inicio') {
-    void router.push('/main/inicio')
-    return
-  }
-  if (key === 'promo') {
-    void router.push('/main/promo')
-    return
-  }
-  if (key === 'perfil') {
-    void router.push('/main/perfil')
-    return
-  }
-  if (key === 'saque') {
-    void router.push('/main/withdraw')
-    return
-  }
-  home.selectTab(key)
+  selectMainTab(router, key)
 }
 
 async function copyText(value: string) {
@@ -87,12 +72,12 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
     <header class="entrar-header" :class="{ qr: !!entrar.payUrl }">
       <div class="toolbar">
         <button v-if="entrar.payUrl" type="button" class="finish" @click="entrar.clearPay()">
-          {{ entrarCopy.finish }}
+          {{ tr(entrarCopy.finish) }}
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ entrarCopy.title }}</span>
+          <span class="title-text">{{ tr(entrarCopy.title) }}</span>
         </h1>
-        <button type="button" class="record" aria-label="Registro de Depósito" @click.stop="openRecords">
+        <button type="button" class="record" :aria-label="tr('Registro de Depósito')" @click.stop="openRecords">
           <SvgIcon class="record-icon" name="entrar-record" />
         </button>
       </div>
@@ -123,7 +108,7 @@ onBeforeUnmount(() => window.clearTimeout(toastTimer))
         :channel-reco="entrar.channel.reco"
         :promo="entrarCopy.promo"
         :currency="entrarCopy.currency"
-        :placeholder="entrar.placeholder"
+        :placeholder="tr(entrar.placeholder)"
         :amount-reais="entrar.amountReais"
         :amounts="entrar.amounts"
         :selected-cents="entrar.selectedCents"

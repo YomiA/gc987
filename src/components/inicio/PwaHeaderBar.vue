@@ -1,22 +1,36 @@
 <script setup lang="ts">
 import SvgIcon from '../base/SvgIcon.vue'
-import { usePwaInstall } from '../../composables/usePwaInstall'
+import { isAppleMobile, usePwaInstall } from '../../composables/usePwaInstall'
+import { usePwaStore } from '../../stores/pwa'
 
 const emit = defineEmits<{ close: [] }>()
+const pwa = usePwaStore()
 const { promptInstall } = usePwaInstall()
+
+/**
+ * Live header Instalar: iPhone opens the Safari add-to-home sheet.
+ * Android calls the browser install prompt from `beforeinstallprompt`.
+ */
+async function onInstall() {
+  if (isAppleMobile()) {
+    pwa.openGuide()
+    return
+  }
+  await promptInstall()
+}
 </script>
 
 <template>
-  <div class="pwa-bar">
+  <div class="pwa-bar" @click="onInstall">
     <img class="app-icon" src="/images/brand/ICON.png" alt="" />
     <div class="copy">
-      <p class="headline">Baixe Nosso APP, Ganhe Super Prêmios!</p>
+      <p class="headline">{{ tr('Baixe Nosso APP, Ganhe Super Prêmios!') }}</p>
       <img class="prize" src="/images/brand/pwa-prize.png" alt="" />
     </div>
     <div class="install">
-      <button type="button" @click="promptInstall">Instalar</button>
+      <button type="button" @click.stop="onInstall">{{ tr('Instalar') }}</button>
     </div>
-    <button class="close" type="button" aria-label="Fechar" @click="emit('close')">
+    <button class="close" type="button" :aria-label="tr('Fechar')" @click.stop="emit('close')">
       <SvgIcon name="close" />
     </button>
   </div>

@@ -16,8 +16,8 @@ defineProps<{ card: SpreadSummaryCard }>()
   <section class="card">
     <div class="item">
       <div class="item-inner">
-        <span class="title">{{ card.title }}</span>
-        <span class="more">{{ card.more }}</span>
+        <span class="title">{{ tr(card.title) }}</span>
+        <span class="more">{{ tr(card.more) }}</span>
         <SvgIcon class="chev" name="chevron-forward" />
       </div>
     </div>
@@ -28,8 +28,8 @@ defineProps<{ card: SpreadSummaryCard }>()
       class="item"
     >
       <div class="item-inner" :class="{ last: index === card.rows.length - 1 }">
-        <span class="label">{{ row.label }}</span>
-        <span class="value" :class="row.tone">{{ row.value }}</span>
+        <span class="label">{{ tr(row.label) }}</span>
+        <span class="value" :class="row.tone">{{ tr(row.value) }}</span>
       </div>
     </div>
   </section>

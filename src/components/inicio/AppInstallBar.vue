@@ -4,17 +4,17 @@ import SvgIcon from '../base/SvgIcon.vue'
 
 <template>
   <div class="install-container">
-    <div class="top-line">Baixar o aplicativo</div>
+    <div class="top-line">{{ tr('Baixar o aplicativo') }}</div>
     <div class="middle-line">
-      Baixe e instale o aplicativo no seu desktop para uma experiência de jogo mais fluida
+      {{ tr('Baixe e instale o aplicativo no seu desktop para uma experiência de jogo mais fluida') }}
     </div>
     <div class="store-row">
       <div class="store-col">
         <div class="store-btn">
           <SvgIcon class="store-icon apple" name="apple" />
           <div>
-            <p class="store-sub">Aplicativo</p>
-            <p class="store-text">Baixar iOS</p>
+            <p class="store-sub">{{ tr('Aplicativo') }}</p>
+            <p class="store-text">{{ tr('Baixar iOS') }}</p>
           </div>
         </div>
       </div>
@@ -22,8 +22,8 @@ import SvgIcon from '../base/SvgIcon.vue'
         <div class="store-btn">
           <SvgIcon class="store-icon" name="android" />
           <div>
-            <p class="store-sub">Aplicativo</p>
-            <p class="store-text">Baixar Android</p>
+            <p class="store-sub">{{ tr('Aplicativo') }}</p>
+            <p class="store-text">{{ tr('Baixar Android') }}</p>
           </div>
         </div>
       </div>

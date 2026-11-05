@@ -11,7 +11,7 @@ const emit = defineEmits<{ select: [key: string] }>()
 </script>
 
 <template>
-  <nav class="rail" aria-label="Plataformas">
+  <nav class="rail" :aria-label="tr('Plataformas')">
     <button
       v-for="item in platforms"
       :key="item.key"
@@ -31,7 +31,7 @@ const emit = defineEmits<{ select: [key: string] }>()
         class="rail-sprite"
         :style="{ backgroundPosition: item.spritePosition ?? undefined }"
       />
-      <span class="rail-label">{{ item.label }}</span>
+      <span class="rail-label">{{ tr(item.label) }}</span>
     </button>
   </nav>
 </template>

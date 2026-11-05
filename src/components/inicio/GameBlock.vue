@@ -219,12 +219,12 @@ onBeforeUnmount(() => {
           <img v-if="block.image" class="logo logo-img" :src="block.image" alt="" />
           <SvgIcon v-else class="logo" :name="block.icon" />
         </div>
-        <span class="title">{{ block.title }}</span>
+        <span class="title">{{ tr(block.title) }}</span>
         <span class="blue-line" />
         <span class="count">
-          <span class="count-value">{{ block.total }}</span>
+          <span class="count-value">{{ tr(block.total) }}</span>
           <br />
-          <span class="count-label">Todos</span>
+          <span class="count-label">{{ tr('Todos') }}</span>
         </span>
       </div>
 
@@ -234,7 +234,7 @@ onBeforeUnmount(() => {
           class="arrow prev"
           :class="{ disabled: !canPrev }"
           :disabled="!canPrev"
-          aria-label="Anterior"
+          :aria-label="tr('Anterior')"
           @click="step(-1)"
         >
           <SvgIcon name="arrow-left" />
@@ -244,7 +244,7 @@ onBeforeUnmount(() => {
           class="arrow next"
           :class="{ disabled: !canNext }"
           :disabled="!canNext"
-          aria-label="Próximo"
+          :aria-label="tr('Próximo')"
           @click="step(1)"
         >
           <SvgIcon name="arrow-right" />
@@ -276,9 +276,9 @@ onBeforeUnmount(() => {
     </div>
 
     <div v-if="block.games.length > PAGE_SIZE" class="more">
-      <span class="more-label">Mostrando {{ shown }} de {{ block.games.length }} jogos</span>
+      <span class="more-label">{{ $t('home.showing', { shown, total: block.games.length }) }}</span>
       <button class="more-btn" type="button" @click="showAll">
-        <span class="more-btn-label">{{ expanded ? 'Recolher' : 'Mostrar tudo' }}</span>
+        <span class="more-btn-label">{{ tr(expanded ? 'Recolher' : 'Mostrar tudo') }}</span>
         <SvgIcon class="more-btn-icon" :class="{ up: expanded }" name="chevron-circle" />
       </button>
     </div>

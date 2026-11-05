@@ -23,15 +23,15 @@ const progress = computed(() =>
       <div class="left">
         <img class="crown" :src="props.vip.crown" alt="" />
         <div class="level-badge">
-          <span :style="{ color: props.vip.levelBadgeColor }">{{ props.vip.levelBadge }}</span>
+          <span :style="{ color: props.vip.levelBadgeColor }">{{ tr(props.vip.levelBadge) }}</span>
         </div>
       </div>
 
       <div class="right">
         <div class="level">
           <p>
-            <span>Siga </span><span class="important-text">{{ props.vip.nextLevel }}</span
-            ><span> Ainda precisa apostar {{ formatAmount(remaining) }}</span>
+            <span>{{ tr('Siga') }} </span><span class="important-text">{{ tr(props.vip.nextLevel) }}</span
+            ><span> {{ tr('Ainda precisa apostar') }} {{ formatAmount(remaining) }}</span>
           </p>
           <SvgIcon class="chevron-forward" name="chevron-forward" />
         </div>
@@ -40,7 +40,7 @@ const progress = computed(() =>
 
     <div class="bottom">
       <div class="line">
-        <span class="line-label">Aposta necessária</span>
+        <span class="line-label">{{ tr('Aposta necessária') }}</span>
         <span class="line-track">
           <div class="progress">
             <div class="progress-bar">

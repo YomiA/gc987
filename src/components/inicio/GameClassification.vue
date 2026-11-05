@@ -1,18 +1,31 @@
 <script setup lang="ts">
+import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { categoryPlatforms } from '../../api/mock'
+import { categoryPlatforms, type ClassificationGenre } from '../../api/mock'
 
-defineProps<{ genres: string[]; brands: string[] }>()
+const props = defineProps<{ genres: ClassificationGenre[] }>()
 const router = useRouter()
+const selected = ref(0)
 
-function openGenre(genre: string) {
-  if (genre !== 'Slot') return
-  void router.push('/game/category/ELECTRONIC/0')
+const brands = computed(() => props.genres[selected.value]?.brands ?? [])
+
+/** Live sort.* route segment. FISHING is FISH on our category page. */
+const routeType: Record<string, string> = {
+  Slot: 'ELECTRONIC',
+  Pesca: 'FISH',
+  Cassino: 'VIDEO',
+  Cartas: 'CHESS',
+}
+
+function selectGenre(index: number) {
+  selected.value = index
 }
 
 function openBrand(brand: string) {
+  const genre = props.genres[selected.value]?.label ?? 'Slot'
   const hit = categoryPlatforms.find((item) => item.label.toLowerCase() === brand.toLowerCase())
-  void router.push(`/game/category/ELECTRONIC/${hit?.key ?? '0'}`)
+  if (!hit) return
+  void router.push(`/game/category/${routeType[genre] ?? 'ELECTRONIC'}/${hit.key}`)
 }
 </script>
 
@@ -20,32 +33,33 @@ function openBrand(brand: string) {
   <div class="classification">
     <div class="head">
       <img class="logo" src="/images/brand/LOGO.png" alt="" />
-      <span class="welcome">Bem-vindo à gc987.com</span>
+      <span class="welcome">{{ tr('Bem-vindo à gc987.com') }}</span>
     </div>
 
     <div class="intro">
-      <p>©2026 gc987.com Todos os direitos reservados <span class="age">21+</span></p>
+      <p>{{ tr('©2026 gc987.com Todos os direitos reservados') }} <span class="age">21+</span></p>
     </div>
 
     <section class="row">
       <div class="col">
-        <span class="col-title">Gênero de jogo</span>
+        <span class="col-title">{{ tr('Gênero de jogo') }}</span>
         <ul class="list">
           <li
             v-for="(genre, i) in genres"
-            :key="genre"
-            :class="{ active: i === 0, link: genre === 'Slot' }"
-            @click="openGenre(genre)"
+            :key="genre.label"
+            class="link"
+            :class="{ active: i === selected }"
+            @click="selectGenre(i)"
           >
-            {{ genre }}
+            {{ tr(genre.label) }}
           </li>
         </ul>
       </div>
       <div class="col">
-        <span class="col-title">Marca de games</span>
+        <span class="col-title">{{ tr('Marca de games') }}</span>
         <ul class="list platform-list">
           <li v-for="brand in brands" :key="brand" class="link" @click="openBrand(brand)">
-            {{ brand }}
+            {{ tr(brand) }}
           </li>
         </ul>
       </div>

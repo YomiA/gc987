@@ -31,14 +31,14 @@ function onConfirm() {
 
 <template>
   <div class="overlay" @click="$emit('close')">
-    <div class="pop-wrap" role="dialog" aria-modal="true" :aria-label="copy.passwordTitle" @click.stop>
-      <button type="button" class="close" aria-label="Fechar" :disabled="submitting" @click="$emit('close')">
+    <div class="pop-wrap" role="dialog" aria-modal="true" :aria-label="tr(copy.passwordTitle)" @click.stop>
+      <button type="button" class="close" :aria-label="tr('Fechar')" :disabled="submitting" @click="$emit('close')">
         <SvgIcon class="close-icon" name="close" />
       </button>
-      <p class="title">{{ copy.passwordTitle }}</p>
-      <p class="action">{{ copy.passwordAction }}</p>
+      <p class="title">{{ tr(copy.passwordTitle) }}</p>
+      <p class="action">{{ tr(copy.passwordAction) }}</p>
       <p class="amount">
-        <span>{{ copy.currency }}</span
+        <span>{{ tr(copy.currency) }}</span
         ><span class="sum">{{ formatAmount(amountCents) }}</span>
       </p>
       <div class="line" />
@@ -49,7 +49,7 @@ function onConfirm() {
         :disabled="password.length !== 6 || submitting"
         @click="onConfirm"
       >
-        {{ copy.submit }}<SuffixDots :on="submitting" />
+        {{ tr(copy.submit) }}<SuffixDots :on="submitting" />
       </button>
     </div>
   </div>

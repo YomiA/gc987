@@ -38,7 +38,7 @@ function openPicker() {
     <div class="filters">
       <div ref="field" class="date" @click="openPicker">
         <div class="time-choose">
-          <span class="date-text">{{ dateLabel }}</span>
+          <span class="date-text">{{ tr(dateLabel) }}</span>
           <SvgIcon class="date-icon" name="spread-calendar" />
         </div>
       </div>
@@ -62,7 +62,7 @@ function openPicker() {
           :key="column.key"
           class="head-cell"
           :style="{ width: column.width }"
-          >{{ column.label }}</span
+          >{{ tr(column.label) }}</span
         >
       </div>
     </div>
@@ -70,7 +70,7 @@ function openPicker() {
     <div class="list">
       <div v-if="!rows.length" class="empty">
         <div class="empty-bg-img" />
-        <span class="empty-label">Sem Registros</span>
+        <span class="empty-label">{{ tr('Sem Registros') }}</span>
       </div>
     </div>
 

@@ -4,6 +4,8 @@
  * userId / tenantCode / Authorization are sent only when a login token exists.
  */
 
+import { serviceWorkerUrl } from '../pwa/sw-url'
+
 const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY || ''
 
 export let lastPushError = ''
@@ -111,7 +113,7 @@ export async function silentSubscribeAfterAuth() {
     }
     let registration = await navigator.serviceWorker.getRegistration()
     if (!registration) {
-      registration = await navigator.serviceWorker.register('/sw.js')
+      registration = await navigator.serviceWorker.register(serviceWorkerUrl)
     }
     const reg = await waitForSwReady()
     let sub = await reg.pushManager.getSubscription()

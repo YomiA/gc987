@@ -35,7 +35,7 @@ onMounted(() => {
         <button type="button" class="back" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
-        <h1 class="toolbar-title"><span class="title-text">Centro de Mensagens</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr('Centro de Mensagens') }}</span></h1>
       </div>
 
       <div class="tab-box">
@@ -48,7 +48,7 @@ onMounted(() => {
 
       <div v-else class="empty">
         <div class="empty-bg-img" />
-        <span class="empty-label">Sem Registros</span>
+        <span class="empty-label">{{ tr('Sem Registros') }}</span>
       </div>
     </div>
   </div>

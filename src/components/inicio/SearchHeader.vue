@@ -36,10 +36,10 @@ function onInput(event: Event) {
 <template>
   <header class="search-header" :class="{ 'placeholder-light': lightPlaceholder }">
     <div class="toolbar">
-      <button type="button" class="back" aria-label="Voltar" @click="emit('back')">
+      <button type="button" class="back" :aria-label="tr('Voltar')" @click="emit('back')">
         <SvgIcon class="back-icon" name="report-back" />
       </button>
-        <h1 class="toolbar-title"><span class="title-text">{{ title }}</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr(title) }}</span></h1>
     </div>
 
     <div class="search-toolbar">
@@ -48,8 +48,8 @@ function onInput(event: Event) {
           class="search-input"
           type="search"
           name="game-search"
-          aria-label="search text"
-          :placeholder="placeholder"
+          :aria-label="tr('search text')"
+          :placeholder="tr(placeholder)"
           autocapitalize="off"
           autocomplete="off"
           autocorrect="off"
@@ -65,7 +65,7 @@ function onInput(event: Event) {
           v-else
           type="button"
           class="search-btn"
-          aria-label="search"
+          :aria-label="tr('search')"
           @click="emit('search')"
         >
           <SvgIcon class="search-icon" name="searchbar-search" />

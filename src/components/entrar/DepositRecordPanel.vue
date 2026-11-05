@@ -82,12 +82,12 @@ onMounted(() => {
         @update:model-value="records.selectDate"
       />
       <div class="total-area">
-        {{ copy.totalLabel }}
+        {{ tr(copy.totalLabel) }}
         <span class="amount">{{ formatAmount(records.totalAmountCents) }}</span>
       </div>
     </div>
 
-    <div v-if="records.loading" class="list-loading" role="status" aria-label="Loading">
+    <div v-if="records.loading" class="list-loading" role="status" :aria-label="tr('Loading')">
       <span class="dots" aria-hidden="true">
         <i v-for="n in 8" :key="n" :style="{ '--i': n - 1 }" />
       </span>
@@ -95,29 +95,29 @@ onMounted(() => {
 
     <div v-else-if="records.records.length === 0" class="empty">
       <div class="empty-bg-img" />
-      <span class="empty-label">{{ copy.empty }}</span>
+      <span class="empty-label">{{ tr(copy.empty) }}</span>
     </div>
 
     <div v-for="row in records.records" :key="row.id" class="record-wrap">
       <div class="line top">
-        <p class="name">{{ copy.name }}</p>
-        <p class="money">{{ amountOf(row.orderAmt) }}</p>
+        <p class="name">{{ tr(copy.name) }}</p>
+        <p class="money">{{ tr(amountOf(row.orderAmt)) }}</p>
       </div>
       <div class="line middle">
         <p class="time">{{ formatDateTime(row.orderTime) }}</p>
       </div>
       <div class="line bottom">
         <p class="order-line">
-          <span class="order-no">{{ row.transactionId || row.id }}</span>
-          <button type="button" class="copy" aria-label="Copiar" @click="copyText(row.transactionId || String(row.id))">
+          <span class="order-no">{{ tr(row.transactionId || row.id) }}</span>
+          <button type="button" class="copy" :aria-label="tr('Copiar')" @click="copyText(row.transactionId || String(row.id))">
             <SvgIcon class="copy-icon" name="record-copy" />
           </button>
         </p>
-        <span class="status" :style="{ color: statusOf(row.status).color }">{{ statusOf(row.status).label }}</span>
+        <span class="status" :style="{ color: statusOf(row.status).color }">{{ tr(statusOf(row.status).label) }}</span>
       </div>
     </div>
 
-    <div v-if="records.loadingMore" class="more-loading" role="status" aria-label="Loading">
+    <div v-if="records.loadingMore" class="more-loading" role="status" :aria-label="tr('Loading')">
       <span class="bubbles" aria-hidden="true">
         <i
           v-for="(dot, n) in moreDots"

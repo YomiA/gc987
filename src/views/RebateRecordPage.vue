@@ -28,11 +28,11 @@ function goBack() {
   <div class="ion-page">
     <header class="rec-header">
       <div class="toolbar">
-        <button type="button" class="back" aria-label="Voltar" @click="goBack">
+        <button type="button" class="back" :aria-label="tr('Voltar')" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ copy.title }}</span>
+          <span class="title-text">{{ tr(copy.title) }}</span>
         </h1>
       </div>
     </header>
@@ -46,13 +46,13 @@ function goBack() {
           :options="rebatePlatforms"
           :anchor="filterRow"
         />
-        <span class="col-label">{{ copy.betCol }}</span>
-        <span class="col-label rate">{{ copy.rateCol }}</span>
+        <span class="col-label">{{ tr(copy.betCol) }}</span>
+        <span class="col-label rate">{{ tr(copy.rateCol) }}</span>
       </div>
 
       <div class="empty">
         <div class="empty-img" />
-        <span>{{ copy.empty }}</span>
+        <span>{{ tr(copy.empty) }}</span>
       </div>
     </div>
   </div>

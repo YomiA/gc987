@@ -128,20 +128,20 @@ watch(
                 <div class="crown">
                   <img :src="crown(info.level)" alt="" />
                   <span class="crown-badge card-badge" :style="{ color: badgeColor(info.level) }">
-                    V{{ info.level }}
+                    V{{ tr(info.level) }}
                   </span>
                 </div>
               </div>
               <div class="card-text">
                 <div>
                   <p class="dim">
-                    Siga
-                    <span class="next-level">VIP{{ info.nextLevel }}</span>
+                    {{ tr('Siga') }}
+                    <span class="next-level">VIP{{ tr(info.nextLevel) }}</span>
                   </p>
                   <!-- One line: a line break here would drop the space Vue
                        condenses away, and the live text has one. -->
                   <p class="need-line">
-                    <span class="dim">Ainda precisa apostar</span> <span class="need">{{ formatAmount(info.remainingBet) }}</span>
+                    <span class="dim">{{ tr('Ainda precisa apostar') }}</span> <span class="need">{{ formatAmount(info.remainingBet) }}</span>
                   </p>
                 </div>
               </div>
@@ -149,16 +149,16 @@ watch(
 
             <div class="card-right">
               <div>
-                <div class="btn-collect">Coletar Tudo</div>
-                <div class="btn-history"><span>Histórias</span></div>
+                <div class="btn-collect">{{ tr('Coletar Tudo') }}</div>
+                <div class="btn-history"><span>{{ tr('Histórias') }}</span></div>
               </div>
             </div>
           </div>
-          <div class="current-level">Nível Atual</div>
+          <div class="current-level">{{ tr('Nível Atual') }}</div>
         </div>
       </div>
 
-      <div class="list-title">Lista de níveis VIP</div>
+      <div class="list-title">{{ tr('Lista de níveis VIP') }}</div>
 
       <div class="sub-sticky">
         <div ref="subRow" class="sub-row">
@@ -170,11 +170,11 @@ watch(
             :class="{ on: tab.key === subTab }"
             @click="emit('selectSubTab', tab.key)"
           >
-            <span>{{ tab.label }}</span>
+            <span>{{ tr(tab.label) }}</span>
           </button>
         </div>
         <div v-if="subTab !== 'retention'" class="table-head">
-          <span v-for="head in heads" :key="head">{{ head }}</span>
+          <span v-for="head in heads" :key="head">{{ tr(head) }}</span>
         </div>
       </div>
 
@@ -191,7 +191,7 @@ watch(
                 <div class="crown-cell">
                   <img :src="crown(level.level)" alt="" />
                   <span class="crown-badge row-badge" :style="{ color: badgeColor(level.level) }">
-                    V{{ level.level }}
+                    V{{ tr(level.level) }}
                   </span>
                 </div>
               </div>
@@ -216,23 +216,23 @@ watch(
 
           <div v-else class="retention">
             <div>
-              <div class="retention-title">Instruções para manter o nível</div>
-              <p v-for="rule in retentionRules" :key="rule" class="retention-p">{{ rule }}</p>
+              <div class="retention-title">{{ tr('Instruções para manter o nível') }}</div>
+              <p v-for="rule in retentionRules" :key="rule" class="retention-p">{{ tr(rule) }}</p>
             </div>
             <div>
-              <div class="retention-title table-title">Tabela de níveis de manutenção</div>
+              <div class="retention-title table-title">{{ tr('Tabela de níveis de manutenção') }}</div>
               <div class="table-box">
                 <table class="retention-table">
                   <thead>
                     <tr>
-                      <th>Nível VIP</th>
-                      <th>A manutenção requer recarga</th>
-                      <th>A manutenção requer aposta</th>
+                      <th>{{ tr('Nível VIP') }}</th>
+                      <th>{{ tr('A manutenção requer recarga') }}</th>
+                      <th>{{ tr('A manutenção requer aposta') }}</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr v-for="level in levels" :key="level.level">
-                      <th>{{ level.level }}</th>
+                      <th>{{ tr(level.level) }}</th>
                       <th>{{ formatAmount(level.retentionRecharge) }}</th>
                       <th>{{ formatAmount(level.retentionBet) }}</th>
                     </tr>
@@ -245,8 +245,8 @@ watch(
       </div>
 
       <div class="rules">
-        <div class="rules-title">Instruções sobre regras VIP</div>
-        <p v-for="rule in rules" :key="rule">{{ rule }}</p>
+        <div class="rules-title">{{ tr('Instruções sobre regras VIP') }}</div>
+        <p v-for="rule in rules" :key="rule">{{ tr(rule) }}</p>
       </div>
     </div>
 
@@ -254,7 +254,7 @@ watch(
          centred column that is the same box as an absolute one, and it keeps
          hugging the column instead of the window on a wide viewport. -->
     <div class="vip-footer">
-      <div class="upgrade-btn">Reclamar Recompensa de Upgrade</div>
+      <div class="upgrade-btn">{{ tr('Reclamar Recompensa de Upgrade') }}</div>
     </div>
   </div>
 </template>

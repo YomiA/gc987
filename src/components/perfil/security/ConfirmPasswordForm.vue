@@ -32,7 +32,7 @@ function onSubmit() {
 
 <template>
   <form class="confirm-form" @submit.prevent="onSubmit">
-    <p class="heading">{{ copy.heading }}</p>
+    <p class="heading">{{ tr(copy.heading) }}</p>
 
     <div class="item">
       <div class="bar">
@@ -44,7 +44,7 @@ function onSubmit() {
           spellcheck="false"
           autocapitalize="off"
           autocorrect="off"
-          :placeholder="copy.password"
+          :placeholder="tr(copy.password)"
           v-model="password"
         />
       </div>
@@ -66,7 +66,7 @@ function onSubmit() {
           spellcheck="false"
           autocapitalize="off"
           autocorrect="off"
-          :placeholder="copy.confirmPassword"
+          :placeholder="tr(copy.confirmPassword)"
           v-model="confirmPassword"
         />
       </div>
@@ -79,7 +79,7 @@ function onSubmit() {
     </div>
 
     <div class="submit-item">
-      <button type="submit" class="submit">{{ copy.confirm }}</button>
+      <button type="submit" class="submit">{{ tr(copy.confirm) }}</button>
     </div>
   </form>
 </template>

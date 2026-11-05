@@ -89,7 +89,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="ab-select">
     <div ref="field" class="ab-field" @click="toggle">
-      <span class="ab-label">{{ label }}</span>
+      <span class="ab-label">{{ tr(label) }}</span>
       <SvgIcon class="ab-caret" :class="{ up: open }" name="chevron-down" />
     </div>
 
@@ -107,7 +107,7 @@ onBeforeUnmount(() => {
               :class="{ on: option.key === modelValue }"
               @click="pick(option.key)"
             >
-              {{ option.label }}
+              {{ tr(option.label) }}
             </p>
           </div>
         </div>

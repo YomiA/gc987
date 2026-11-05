@@ -21,9 +21,9 @@ const emit = defineEmits<{
     :aria-hidden="open ? 'false' : 'true'"
   >
     <div class="backdrop" @click="emit('close')" />
-    <aside class="panel" role="dialog" aria-label="Menu">
+    <aside class="panel" role="dialog" :aria-label="tr('Menu')">
       <div class="menu-header">
-        <button class="menu-btn" type="button" aria-label="Fechar" @click="emit('close')">
+        <button class="menu-btn" type="button" :aria-label="tr('Fechar')" @click="emit('close')">
           <SvgIcon class="menu-icon" name="menu" />
         </button>
         <img class="logo" src="/images/brand/LOGO.png" alt="" />
@@ -50,20 +50,20 @@ const emit = defineEmits<{
                     :style="{ backgroundPosition: tab.spritePosition ?? undefined }"
                   />
                 </span>
-                <span class="item-label">{{ tab.label }}</span>
+                <span class="item-label">{{ tr(tab.label) }}</span>
               </button>
             </div>
           </div>
         </div>
 
-        <button class="records" type="button">Recordes de Apostas</button>
+        <button class="records" type="button">{{ tr('Recordes de Apostas') }}</button>
         <div class="grid-gap" />
 
         <div class="support-wrap">
           <div class="support">
             <span class="support-line" />
             <div class="support-copy">
-              <p class="support-title">Suporte</p>
+              <p class="support-title">{{ tr('Suporte') }}</p>
               <p class="support-sub">24/7</p>
             </div>
             <span class="support-icon">

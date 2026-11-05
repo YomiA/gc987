@@ -15,11 +15,11 @@ const emit = defineEmits<{ close: [] }>()
     <div class="panel">
       <header class="rec-header">
         <div class="toolbar">
-          <button type="button" class="back" aria-label="Voltar" @click="emit('close')">
+          <button type="button" class="back" :aria-label="tr('Voltar')" @click="emit('close')">
             <SvgIcon class="back-icon" name="report-back" />
           </button>
           <h1 class="toolbar-title">
-            <span class="title-text">{{ copy.title }}</span>
+            <span class="title-text">{{ tr(copy.title) }}</span>
           </h1>
         </div>
       </header>

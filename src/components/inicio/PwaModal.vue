@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import SvgIcon from '../base/SvgIcon.vue'
-import { usePwaInstall } from '../../composables/usePwaInstall'
+import { isAppleMobile, usePwaInstall } from '../../composables/usePwaInstall'
 
 const emit = defineEmits<{ close: [] }>()
 const { promptInstall } = usePwaInstall()
@@ -14,9 +14,7 @@ async function onInstall() {
  * Live CompulsoryModal: `os !== "iOSH5"` gates `.tip-box`. Apple phones
  * (iPhone/iPad) therefore never get the Android install steps.
  */
-const isAppleDevice =
-  /iPhone|iPad|iPod/i.test(navigator.userAgent) ||
-  (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+const isAppleDevice = isAppleMobile()
 
 const androidSteps = [
   'Clique no botão acima para baixar o arquivo de instalação',
@@ -32,7 +30,7 @@ const androidSteps = [
       <div class="content">
         <div class="header" />
         <div class="close-row">
-          <button class="close" type="button" aria-label="Fechar" @click="emit('close')">
+          <button class="close" type="button" :aria-label="tr('Fechar')" @click="emit('close')">
             <svg viewBox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
               <rect width="30" height="30" rx="10" fill="#909090" fill-opacity="0.3" />
               <path
@@ -46,10 +44,10 @@ const androidSteps = [
         </div>
 
         <div class="body">
-          <p class="title">Descobrir uma nova versão</p>
+          <p class="title">{{ tr('Descobrir uma nova versão') }}</p>
           <div class="desc-wrap">
             <p class="desc">
-              Baixe o aplicativo para a sua área de trabalho para uma experiência mais fluida
+              {{ tr('Baixe o aplicativo para a sua área de trabalho para uma experiência mais fluida') }}
             </p>
           </div>
 
@@ -61,7 +59,7 @@ const androidSteps = [
           <div class="action-row">
             <div class="install-btn" @click="onInstall">
               <SvgIcon class="install-icon" name="pwa-download" />
-              <span class="install-label">Instalar</span>
+              <span class="install-label">{{ tr('Instalar') }}</span>
             </div>
             <div class="service-btn">
               <SvgIcon class="service-icon" name="pwa-service" />
@@ -69,19 +67,18 @@ const androidSteps = [
           </div>
 
           <div v-if="!isAppleDevice" class="tip-box">
-            <p class="tip-title">Instalação de um aplicativo Android:</p>
+            <p class="tip-title">{{ tr('Instalação de um aplicativo Android:') }}</p>
             <div v-for="(step, i) in androidSteps" :key="i" class="tip-step">
-              <p class="tip-index">{{ i + 1 }}.</p>
-              <span>{{ step }}</span>
+              <p class="tip-index">{{ tr(i + 1) }}.</p>
+              <span>{{ tr(step) }}</span>
             </div>
             <div class="warn">
               <div class="warn-head">
                 <SvgIcon class="warn-icon" name="pwa-tip" />
-                <p class="warn-title">Aviso Amigável:</p>
+                <p class="warn-title">{{ tr('Aviso Amigável:') }}</p>
               </div>
               <p class="warn-body">
-                Este aplicativo passou na certificação de segurança do Google Play, portanto, fique
-                à vontade para instalá-lo.
+                {{ tr('Este aplicativo passou na certificação de segurança do Google Play, portanto, fique à vontade para instalá-lo.') }}
               </p>
             </div>
           </div>

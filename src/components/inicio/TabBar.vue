@@ -38,7 +38,7 @@ const underlineLeft = computed(() => 2.4375 + Math.max(0, activeIndex.value) * 4
                 'flexible-text': !item.icon,
               }"
             >
-              {{ item.label }}
+              {{ tr(item.label) }}
             </span>
           </div>
           <div

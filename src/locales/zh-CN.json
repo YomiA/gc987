@@ -35,5 +35,8 @@
     "langPt": "Português",
     "langEn": "English",
     "langZh": "中文"
+  },
+  "home": {
+    "showing": "显示 {shown} / {total} 个游戏"
   }
 }

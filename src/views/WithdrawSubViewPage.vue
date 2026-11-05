@@ -130,7 +130,7 @@ onBeforeUnmount(() => observer?.disconnect())
             :class="{ on: records.tab === tab.key }"
             @click="records.selectTab(tab.key)"
           >
-            <span class="seg-label" :class="{ on: records.tab === tab.key }">{{ tab.label }}</span>
+            <span class="seg-label" :class="{ on: records.tab === tab.key }">{{ tr(tab.label) }}</span>
           </button>
           <span
             class="seg-indicator"
@@ -152,14 +152,14 @@ onBeforeUnmount(() => observer?.disconnect())
           @update:model-value="records.selectDate"
         />
         <div class="total-area">
-          {{ copy.totalLabel }}
+          {{ tr(copy.totalLabel) }}
           <span class="amount success">{{ formatAmount(records.totalAmountCents) }}</span>
         </div>
       </div>
 
       <div v-else class="audit-header">
         <p class="detail-text">
-          {{ copy.auditLabel }}
+          {{ tr(copy.auditLabel) }}
           <span class="amount currency">{{ formatAmount(records.auditAmountCents) }}</span>
         </p>
         <WithdrawAuditSelect
@@ -170,7 +170,7 @@ onBeforeUnmount(() => observer?.disconnect())
       </div>
 
       <template v-if="records.tab === 'saques'">
-        <div v-if="records.loading" class="list-loading" role="status" aria-label="Loading">
+        <div v-if="records.loading" class="list-loading" role="status" :aria-label="tr('Loading')">
           <span class="dots" aria-hidden="true">
             <i v-for="n in 8" :key="n" :style="{ '--i': n - 1 }" />
           </span>
@@ -178,34 +178,34 @@ onBeforeUnmount(() => observer?.disconnect())
 
         <div v-else-if="records.records.length === 0" class="empty">
           <div class="empty-bg-img" />
-          <span class="empty-label">{{ copy.empty }}</span>
+          <span class="empty-label">{{ tr(copy.empty) }}</span>
         </div>
 
         <div v-for="row in records.records" :key="row.id" class="record-wrap">
           <div class="line top">
-            <p class="name">{{ copy.name }}</p>
-            <p class="money">{{ amountOf(row.orderAmt) }}</p>
+            <p class="name">{{ tr(copy.name) }}</p>
+            <p class="money">{{ tr(amountOf(row.orderAmt)) }}</p>
           </div>
           <div class="line middle">
             <p class="time">{{ formatDateTime(row.orderTime) }}</p>
           </div>
           <div class="line bottom">
             <p class="order-line">
-              <span class="order-no">{{ row.transactionId || row.id }}</span>
+              <span class="order-no">{{ tr(row.transactionId || row.id) }}</span>
               <button
                 type="button"
                 class="copy"
-                aria-label="Copiar"
+                :aria-label="tr('Copiar')"
                 @click="copyText(row.transactionId || String(row.id))"
               >
                 <SvgIcon class="copy-icon" name="record-copy" />
               </button>
             </p>
-            <span class="status" :style="{ color: statusOf(row.status).color }">{{ statusOf(row.status).label }}</span>
+            <span class="status" :style="{ color: statusOf(row.status).color }">{{ tr(statusOf(row.status).label) }}</span>
           </div>
         </div>
 
-        <div v-if="records.loadingMore" class="more-loading" role="status" aria-label="Loading">
+        <div v-if="records.loadingMore" class="more-loading" role="status" :aria-label="tr('Loading')">
           <span class="bubbles" aria-hidden="true">
             <i
               v-for="(dot, n) in moreDots"
@@ -218,7 +218,7 @@ onBeforeUnmount(() => observer?.disconnect())
 
       <div v-else class="empty">
         <div class="empty-bg-img" />
-        <span class="empty-label">{{ copy.empty }}</span>
+        <span class="empty-label">{{ tr(copy.empty) }}</span>
       </div>
     </div>
   </div>

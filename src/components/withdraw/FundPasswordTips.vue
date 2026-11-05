@@ -12,11 +12,11 @@ defineEmits<{ confirm: [] }>()
   <div class="overlay">
     <div class="main-bg" @click.stop>
       <div class="content-wrapper">
-        <div class="content">{{ message }}</div>
+        <div class="content">{{ tr(message) }}</div>
       </div>
       <div class="btn-wrapper">
         <button type="button" class="left-btn" @click="$emit('confirm')">
-          {{ confirm }}
+          {{ tr(confirm) }}
         </button>
       </div>
     </div>

@@ -9,7 +9,7 @@ defineProps<{ message: string }>()
 <template>
   <div class="toast-root">
     <div class="toast-panel">
-      <p class="toast-msg">{{ message }}</p>
+      <p class="toast-msg">{{ tr(message) }}</p>
     </div>
   </div>
 </template>

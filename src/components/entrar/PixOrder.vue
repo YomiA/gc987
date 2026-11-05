@@ -31,14 +31,14 @@ onBeforeUnmount(() => window.clearInterval(timer))
     <ul class="tips">
       <li v-for="(tip, i) in entrarCopy.tips" :key="i">
         <span class="dotted" />
-        {{ tip }}
+        {{ tr(tip) }}
       </li>
     </ul>
 
     <div class="qr-area">
       <div class="amount">
-        <span class="symbol">{{ entrarCopy.currency }}</span>
-        <span class="amount-num">{{ amountLabel }}</span>
+        <span class="symbol">{{ tr(entrarCopy.currency) }}</span>
+        <span class="amount-num">{{ tr(amountLabel) }}</span>
         <button type="button" class="icon-btn" @click="emit('copy', amountLabel)">
           <SvgIcon class="copy-icon" name="entrar-copy" />
         </button>
@@ -49,12 +49,12 @@ onBeforeUnmount(() => window.clearInterval(timer))
       </div>
 
       <button type="button" class="qr-btn" @click="emit('copy', props.order.pixCopy)">
-        {{ entrarCopy.copyQr }}
+        {{ tr(entrarCopy.copyQr) }}
       </button>
 
       <div class="qr-code-info">
-        <span>{{ entrarCopy.qrAddress }}</span>
-        <span class="code">{{ props.order.pixMask }}</span>
+        <span>{{ tr(entrarCopy.qrAddress) }}</span>
+        <span class="code">{{ tr(props.order.pixMask) }}</span>
         <button type="button" class="icon-btn" @click="emit('copy', props.order.pixCopy)">
           <SvgIcon class="copy-icon" name="entrar-copy" />
         </button>
@@ -62,28 +62,28 @@ onBeforeUnmount(() => window.clearInterval(timer))
 
       <div class="count-down">
         <SvgIcon class="time-icon" name="entrar-time" />
-        <span class="count-down-text">{{ entrarCopy.ttl }}</span>
+        <span class="count-down-text">{{ tr(entrarCopy.ttl) }}</span>
         <div class="count-down-time">
-          <span class="hour">{{ left.h }}</span>
-          <span class="minute">{{ left.m }}</span>
-          <span class="second">{{ left.s }}</span>
+          <span class="hour">{{ tr(left.h) }}</span>
+          <span class="minute">{{ tr(left.m) }}</span>
+          <span class="second">{{ tr(left.s) }}</span>
         </div>
       </div>
     </div>
 
     <ul class="order-detail">
       <li>
-        <span class="left">{{ entrarCopy.status }}</span>
-        <span class="right pending">{{ props.order.status }}</span>
+        <span class="left">{{ tr(entrarCopy.status) }}</span>
+        <span class="right pending">{{ tr(props.order.status) }}</span>
       </li>
       <li>
-        <span class="left">{{ entrarCopy.created }}</span>
-        <span class="right">{{ props.order.createdLabel }}</span>
+        <span class="left">{{ tr(entrarCopy.created) }}</span>
+        <span class="right">{{ tr(props.order.createdLabel) }}</span>
       </li>
       <li>
-        <span class="left">{{ entrarCopy.orderNo }}</span>
+        <span class="left">{{ tr(entrarCopy.orderNo) }}</span>
         <span class="right">
-          {{ props.order.orderNo }}
+          {{ tr(props.order.orderNo) }}
           <button type="button" class="icon-btn" @click="emit('copy', props.order.orderNo)">
             <SvgIcon class="copy-icon" name="entrar-copy" />
           </button>

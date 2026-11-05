@@ -7,7 +7,6 @@
 import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import CategoryGameGrid from '../components/inicio/CategoryGameGrid.vue'
-import LoginModal from '../components/inicio/LoginModal.vue'
 import CategoryRail from '../components/inicio/CategoryRail.vue'
 import CategorySortTabs, { type CategorySortTab } from '../components/inicio/CategorySortTabs.vue'
 import SearchEmpty from '../components/inicio/SearchEmpty.vue'
@@ -19,7 +18,6 @@ import {
   gameTypeTitles,
   uniqueCatalog,
 } from '../api/mock'
-import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 
 const TABS: CategorySortTab[] = [
@@ -33,7 +31,6 @@ const VALID_PLATFORM = new Set(categoryPlatforms.map((item) => item.key))
 
 const route = useRoute()
 const router = useRouter()
-const auth = useAuthStore()
 const home = useHomeStore()
 const query = ref('')
 const submitted = ref('')
@@ -119,8 +116,8 @@ onMounted(() => {
     <SearchHeader
       v-model="query"
       :loading="loading"
-      :title="title"
-      placeholder="PesquisarJogos"
+      :title="tr(title)"
+      :placeholder="tr('PesquisarJogos')"
       light-placeholder
       @back="goBack"
       @search="onSearch"
@@ -133,12 +130,6 @@ onMounted(() => {
         <CategoryGameGrid v-else :games="shown" />
       </div>
     </div>
-    <LoginModal
-      v-if="auth.dialogOpen"
-      :mode="auth.dialogMode"
-      @update:mode="auth.setDialogMode"
-      @close="auth.closeDialog()"
-    />
   </div>
 </template>
 

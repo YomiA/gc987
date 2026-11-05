@@ -23,6 +23,8 @@ interface RequestOptions {
   body?: unknown
   /** Skip the access token. Login uses this. */
   auth?: boolean
+  /** A 401 throws, but does not clear the session or open login. */
+  keepSession?: boolean
   /** Internal: a 401 has already tried to refresh once. */
   retry?: boolean
 }
@@ -109,6 +111,10 @@ export async function request<T>(path: string, options: RequestOptions = {}): Pr
   const resp = await fetch(`${BASE}${path}`, init)
   const data = (await resp.json().catch(() => ({}))) as ApiEnvelope<T>
   const code = Number(data.code ?? (resp.ok ? 200 : resp.status))
+
+  if ((resp.status === 401 || code === 401) && options.keepSession) {
+    throw new ApiError(messageOf(data, tr('login.expired')), 401)
+  }
 
   if ((resp.status === 401 || code === 401) && options.auth !== false && !options.retry) {
     const renewed = await refreshOnce()

@@ -93,7 +93,7 @@ onBeforeUnmount(() => {
 <template>
   <div class="audit-select">
     <div id="click-trigger" ref="field" class="select-box" @click="toggle">
-      <div class="box"><p>{{ label() }}</p></div>
+      <div class="box"><p>{{ tr(label()) }}</p></div>
       <SvgIcon class="arrow" :class="{ up: open && !leaving }" name="chevron-down" />
     </div>
 
@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
             :class="{ active: option.key === props.modelValue }"
             @click="pick(option.key)"
           >
-            <p>{{ option.label }}</p>
+            <p>{{ tr(option.label) }}</p>
           </li>
         </ul>
       </div>

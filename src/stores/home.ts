@@ -22,11 +22,35 @@ import { buildProviderCatalog } from '../utils/productCatalog'
 import {
   api,
   type Banner,
+  type ClassificationGenre,
   type GameBlock,
   type Promo,
   type ProviderTab,
   type TabBarItem,
 } from '../api/mock'
+
+/** /walletBalance amounts are reais. Missing or failed reads stay at 0. */
+function walletReais(data: unknown): number {
+  const pick = (value: unknown) => {
+    if (typeof value === 'number' && Number.isFinite(value)) return value
+    if (typeof value === 'string' && value.trim() !== '') {
+      const n = Number(value)
+      if (Number.isFinite(n)) return n
+    }
+    return null
+  }
+  const direct = pick(data)
+  if (direct != null) return direct
+  if (!data || typeof data !== 'object') return 0
+  const bag = data as Record<string, unknown>
+  const inner =
+    bag.data && typeof bag.data === 'object' ? (bag.data as Record<string, unknown>) : bag
+  for (const key of ['userAmt', 'balance', 'walletBalance', 'amt', 'amount']) {
+    const found = pick(inner[key] ?? bag[key])
+    if (found != null) return found
+  }
+  return 0
+}
 
 export const useHomeStore = defineStore('home', () => {
   const banners = ref<Banner[]>([])
@@ -35,8 +59,7 @@ export const useHomeStore = defineStore('home', () => {
   const gameBlocks = ref<GameBlock[]>([])
   const tabBarItems = ref<TabBarItem[]>([])
   const marqueeNotices = ref<string[]>([])
-  const genres = ref<string[]>([])
-  const brands = ref<string[]>([])
+  const genres = ref<ClassificationGenre[]>([])
 
   const activeProvider = ref('POPULAR')
   const activeTab = ref('inicio')
@@ -47,6 +70,8 @@ export const useHomeStore = defineStore('home', () => {
   const products = ref<HomeProduct[]>([])
   const historyRecords = ref<unknown>(null)
   const wallet = ref<unknown>(null)
+  /** Reais from /walletBalance. An error or a missing field stays at 0. */
+  const balanceCents = computed(() => Math.round(walletReais(wallet.value) * 100))
   /** Product ids returned by /productCollectRecord. */
   const collectedIds = ref<string[]>([])
   const collectedIdSet = computed(() => new Set(collectedIds.value))
@@ -104,6 +129,8 @@ export const useHomeStore = defineStore('home', () => {
   let catalogTask: Promise<void> | null = null
   let sessionUser = ''
   let sessionTask: Promise<void> | null = null
+  /** Set only after this visit's login or register succeeds. */
+  let walletQueued = false
 
   function loadCatalog() {
     if (catalogTask) return catalogTask
@@ -152,11 +179,6 @@ export const useHomeStore = defineStore('home', () => {
           historyRecords.value = resp.data ?? null
         })
         .catch(() => undefined),
-      walletBalance()
-        .then((resp) => {
-          wallet.value = resp.data ?? null
-        })
-        .catch(() => undefined),
       productCollectRecord()
         .then((resp) => {
           collectedIds.value = collectIdsOf(resp.data)
@@ -164,6 +186,23 @@ export const useHomeStore = defineStore('home', () => {
         .catch(() => undefined),
     ]).then(() => undefined)
     return sessionTask
+  }
+
+  /** Ask for /walletBalance after this visit's login or register. */
+  function queueWalletRefresh() {
+    walletQueued = true
+  }
+
+  /** A cold visit does not call /walletBalance. A failed read keeps the signed-in header. */
+  async function refreshQueuedWallet() {
+    if (!walletQueued || !accessToken.value) return
+    walletQueued = false
+    try {
+      const resp = await walletBalance()
+      wallet.value = resp.data ?? null
+    } catch {
+      /* A 401 here must not open the login dialog. */
+    }
   }
 
   watch(accessToken, (token) => {
@@ -207,7 +246,6 @@ export const useHomeStore = defineStore('home', () => {
       tabBarItems.value = bar
       marqueeNotices.value = notices
       genres.value = cls.genres
-      brands.value = cls.brands
       loaded.value = true
     }
     await loadRemote()
@@ -229,7 +267,6 @@ export const useHomeStore = defineStore('home', () => {
     tabBarItems,
     marqueeNotices,
     genres,
-    brands,
     activeProvider,
     activeTab,
     loaded,
@@ -239,10 +276,13 @@ export const useHomeStore = defineStore('home', () => {
     products,
     historyRecords,
     wallet,
+    balanceCents,
     collectedIds,
     collectedProducts,
     load,
     loadRemote,
+    queueWalletRefresh,
+    refreshQueuedWallet,
     isCollected,
     collect,
     selectProvider,

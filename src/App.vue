@@ -3,10 +3,13 @@ import { computed, onBeforeUnmount, onMounted } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 import AppToast from './components/base/AppToast.vue'
 import PageLoading from './components/base/PageLoading.vue'
+import LoginModal from './components/inicio/LoginModal.vue'
 import SideFab from './components/inicio/SideFab.vue'
+import { useAuthStore } from './stores/auth'
 
 const route = useRoute()
 const router = useRouter()
+const auth = useAuthStore()
 
 function onPushNavigate(event: Event) {
   const url = (event as CustomEvent<{ url?: string }>).detail?.url
@@ -24,6 +27,7 @@ const showFab = computed(() => {
   const path = route.path
   return (
     !path.startsWith('/game/action') &&
+    path !== '/transition' &&
     !path.startsWith('/game/search') &&
     !path.startsWith('/game/category') &&
     !path.startsWith('/activity/') &&
@@ -125,6 +129,13 @@ const showFab = computed(() => {
   <RouterView />
   <SideFab v-if="showFab" />
   <PageLoading />
+  <div v-if="auth.dialogOpen" class="auth-host">
+    <LoginModal
+      :mode="auth.dialogMode"
+      @update:mode="auth.setDialogMode"
+      @close="auth.closeDialog()"
+    />
+  </div>
   <AppToast />
 </template>
 
@@ -133,5 +144,16 @@ const showFab = computed(() => {
   position: absolute;
   width: 0;
   height: 0;
+}
+
+.auth-host {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: 20020;
+  width: 100%;
+  max-width: var(--app-max-width);
+  transform: translateX(-50%);
 }
 </style>

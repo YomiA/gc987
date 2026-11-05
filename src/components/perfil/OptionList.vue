@@ -24,10 +24,10 @@ const emit = defineEmits<{ select: [key: string] }>()
     >
       <div class="left">
         <img class="row-icon" :src="item.icon" alt="" />
-        <span class="label">{{ item.label }}</span>
+        <span class="label">{{ tr(item.label) }}</span>
       </div>
       <div class="middle">
-        <span v-if="item.note" class="invite-text">{{ item.note }}</span>
+        <span v-if="item.note" class="invite-text">{{ tr(item.note) }}</span>
       </div>
       <SvgIcon class="row-chevron" name="chevron-forward" />
     </div>

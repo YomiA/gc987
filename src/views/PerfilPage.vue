@@ -8,6 +8,7 @@ import LanguageModal from '../components/perfil/LanguageModal.vue'
 import ProfileCard from '../components/perfil/ProfileCard.vue'
 import VipProgressCard from '../components/perfil/VipProgressCard.vue'
 import TabBar from '../components/inicio/TabBar.vue'
+import { selectMainTab } from '../auth/tabGuard'
 import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 import { usePerfilStore } from '../stores/perfil'
@@ -31,23 +32,7 @@ const optionItems = computed(() =>
 )
 
 function onTabSelect(key: string) {
-  if (key === 'inicio') {
-    void router.push('/main/inicio')
-    return
-  }
-  if (key === 'promo') {
-    void router.push('/main/promo')
-    return
-  }
-  if (key === 'deposito') {
-    void router.push('/main/entrar')
-    return
-  }
-  if (key === 'saque') {
-    void router.push('/main/withdraw')
-    return
-  }
-  home.selectTab(key)
+  selectMainTab(router, key)
 }
 
 function goActivityVip() {

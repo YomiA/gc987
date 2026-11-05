@@ -49,31 +49,31 @@ onMounted(() => {
   <div class="ion-page">
     <header class="bind-header">
       <div class="toolbar">
-        <button type="button" class="back" aria-label="Voltar" @click="goBack">
+        <button type="button" class="back" :aria-label="tr('Voltar')" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ copy.bindTitle }}</span>
+          <span class="title-text">{{ tr(copy.bindTitle) }}</span>
         </h1>
       </div>
     </header>
 
     <div class="page-scroller bind-body">
       <div class="tab-list">
-        <div class="tab on">{{ copy.tab }}</div>
+        <div class="tab on">{{ tr(copy.tab) }}</div>
       </div>
 
       <div class="tip tip-1">
-        <p>{{ copy.tip1Num }}</p>
-        {{ copy.tip1 }}
+        <p>{{ tr(copy.tip1Num) }}</p>
+        {{ tr(copy.tip1) }}
       </div>
       <div class="tip tip-2">
-        <p>{{ copy.tip2Num }}</p>
-        {{ copy.tip2 }}
+        <p>{{ tr(copy.tip2Num) }}</p>
+        {{ tr(copy.tip2) }}
       </div>
 
       <label class="field">
-        <span class="label">{{ copy.nameLabel }}</span>
+        <span class="label">{{ tr(copy.nameLabel) }}</span>
         <div class="input-area">
           <input
             class="text-input"
@@ -81,7 +81,7 @@ onMounted(() => {
             maxlength="128"
             autocomplete="off"
             spellcheck="false"
-            :placeholder="copy.namePlaceholder"
+            :placeholder="tr(copy.namePlaceholder)"
             :value="name"
             @input="onName"
           />
@@ -89,15 +89,15 @@ onMounted(() => {
       </label>
 
       <label class="field pix-field">
-        <span class="label">{{ copy.pixLabel }}</span>
+        <span class="label">{{ tr(copy.pixLabel) }}</span>
         <div class="input-area phone">
-          <span class="prefix">{{ copy.pixPrefix }}</span>
+          <span class="prefix">{{ tr(copy.pixPrefix) }}</span>
           <input
             class="text-input"
             type="tel"
             maxlength="11"
             autocomplete="off"
-            :placeholder="copy.pixPlaceholder"
+            :placeholder="tr(copy.pixPlaceholder)"
             :value="pix"
             @input="onPix"
           />
@@ -107,7 +107,7 @@ onMounted(() => {
 
     <div class="bind-footer">
       <button type="button" class="submit" :class="{ on: canSubmit }" :disabled="!canSubmit" @click="submit">
-        {{ copy.submit }}
+        {{ tr(copy.submit) }}
       </button>
     </div>
   </div>

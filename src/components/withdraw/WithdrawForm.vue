@@ -39,9 +39,9 @@ function onSubmit() {
   <div class="form">
     <div class="balance-area">
       <p class="balance-wrap">
-        <span class="account">{{ copy.account }}</span>
+        <span class="account">{{ tr(copy.account) }}</span>
         <span class="balance-w"
-          >{{ copy.currency }}<span class="amount">{{ formatAmount(withdraw.balanceCents) }}</span></span
+          >{{ tr(copy.currency) }}<span class="amount">{{ formatAmount(withdraw.balanceCents) }}</span></span
         >
       </p>
     </div>
@@ -61,15 +61,15 @@ function onSubmit() {
             alt=""
             @error="hideIcon(item.icon)"
           />
-          <span v-if="item.label">{{ item.label }}</span>
+          <span v-if="item.label">{{ tr(item.label) }}</span>
         </li>
-        <li v-if="withdraw.channels.length === 0" class="active">{{ copy.channel }}</li>
+        <li v-if="withdraw.channels.length === 0" class="active">{{ tr(copy.channel) }}</li>
       </ul>
     </div>
 
     <div class="line" />
 
-    <h6 class="amount-title">{{ copy.amountTitle }}</h6>
+    <h6 class="amount-title">{{ tr(copy.amountTitle) }}</h6>
 
     <ul class="amount-list">
       <li
@@ -90,7 +90,7 @@ function onSubmit() {
 
     <h6 v-if="withdraw.overBalance" class="tips">
       <SvgIcon class="help" name="withdraw-help" />
-      <span>{{ copy.feePrefix }} {{ formatAmount(withdraw.balanceCents) }} {{ copy.feeSuffix }}</span>
+      <span>{{ tr(copy.feePrefix) }} {{ formatAmount(withdraw.balanceCents) }} {{ tr(copy.feeSuffix) }}</span>
     </h6>
 
     <div class="item-row">
@@ -99,7 +99,7 @@ function onSubmit() {
         class="amount-input"
         type="number"
         inputmode="decimal"
-        :placeholder="withdraw.placeholder"
+        :placeholder="tr(withdraw.placeholder)"
         :value="withdraw.amountReais"
         @input="onAmountInput"
       />
@@ -107,26 +107,26 @@ function onSubmit() {
         type="button"
         class="clear-btn"
         :class="{ hide: withdraw.amountReais === '' }"
-        aria-label="reset"
+        :aria-label="tr('reset')"
         @click="withdraw.clearAmount()"
       >
         <SvgIcon class="clear-icon" name="register-clear" />
       </button>
-      <p v-if="withdraw.amountError" class="amount-error">{{ copy.amountError }}</p>
+      <p v-if="withdraw.amountError" class="amount-error">{{ tr(copy.amountError) }}</p>
     </div>
 
     <div class="line" />
 
     <div class="channel-wrap sub-tab">
-      <p class="method-title">{{ copy.methodTitle }}</p>
+      <p class="method-title">{{ tr(copy.methodTitle) }}</p>
       <ul class="channel-list">
-        <li class="active">{{ copy.method }}</li>
+        <li class="active">{{ tr(copy.method) }}</li>
       </ul>
     </div>
 
     <div class="form-wrap">
       <div class="item">
-        <p class="label">{{ copy.nameLabel }}</p>
+        <p class="label">{{ tr(copy.nameLabel) }}</p>
         <div class="field" :class="{ invalid: withdraw.nameError }">
           <input
             class="text-input"
@@ -136,7 +136,7 @@ function onSubmit() {
             spellcheck="false"
             autocapitalize="off"
             autocorrect="off"
-            :placeholder="copy.namePlaceholder"
+            :placeholder="tr(copy.namePlaceholder)"
             :value="withdraw.name"
             @input="onNameInput"
           />
@@ -144,7 +144,7 @@ function onSubmit() {
             type="button"
             class="field-clear"
             :class="{ hide: withdraw.name === '' }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="withdraw.clearName()"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
@@ -152,11 +152,11 @@ function onSubmit() {
           <span class="highlight" />
           <div class="input-bottom" />
         </div>
-        <p v-if="withdraw.nameError" class="field-error">{{ copy.nameError }}</p>
+        <p v-if="withdraw.nameError" class="field-error">{{ tr(copy.nameError) }}</p>
       </div>
 
       <div class="item">
-        <p class="label">{{ copy.cpfLabel }}</p>
+        <p class="label">{{ tr(copy.cpfLabel) }}</p>
         <div class="field" :class="{ invalid: withdraw.cpfError }">
           <input
             class="text-input"
@@ -164,7 +164,7 @@ function onSubmit() {
             maxlength="11"
             autocomplete="off"
             spellcheck="false"
-            :placeholder="copy.cpfPlaceholder"
+            :placeholder="tr(copy.cpfPlaceholder)"
             :value="withdraw.cpf"
             @input="onCpfInput"
           />
@@ -172,7 +172,7 @@ function onSubmit() {
             type="button"
             class="field-clear"
             :class="{ hide: withdraw.cpf === '' }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="withdraw.clearCpf()"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
@@ -180,12 +180,12 @@ function onSubmit() {
           <span class="highlight" />
           <div class="input-bottom" />
         </div>
-        <p v-if="withdraw.cpfError" class="field-error">{{ copy.cpfError }}</p>
+        <p v-if="withdraw.cpfError" class="field-error">{{ tr(copy.cpfError) }}</p>
       </div>
     </div>
 
     <button type="button" class="submit" @click="onSubmit">
-      {{ copy.submit }}
+      {{ tr(copy.submit) }}
     </button>
   </div>
 </template>

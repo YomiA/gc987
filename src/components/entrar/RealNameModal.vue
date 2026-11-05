@@ -43,23 +43,21 @@ function submit() {
 
 <template>
   <div class="overlay" @click="emit('close')">
-    <div class="dialog" role="dialog" aria-label="Vincular CPF" @click.stop>
-      <h2 class="title">Vincular CPF</h2>
+    <div class="dialog" role="dialog" :aria-label="tr('Vincular CPF')" @click.stop>
+      <h2 class="title">{{ tr('Vincular CPF') }}</h2>
       <p class="tip">
-        Caro usuário, o canal de pagamento atual precisa que você complete suas informações de
-        identidade de pagamento. Para garantir um processo de pagamento tranquilo, por favor,
-        preencha as seguintes informações
+        {{ tr('Caro usuário, o canal de pagamento atual precisa que você complete suas informações de identidade de pagamento. Para garantir um processo de pagamento tranquilo, por favor, preencha as seguintes informações') }}
       </p>
 
       <div class="item">
-        <p class="label">Nome</p>
+        <p class="label">{{ tr('Nome') }}</p>
         <div class="input-area" :class="{ invalid: nameError }">
           <input
             class="text-input"
             type="text"
             maxlength="64"
             autocomplete="name"
-            :placeholder="'Por favor, insira seu nome'"
+            :placeholder="tr('Por favor, insira seu nome')"
             :value="name"
             @input="onName"
           />
@@ -67,17 +65,17 @@ function submit() {
             type="button"
             class="clear"
             :class="{ hide: name === '' }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="name = ''"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
           </button>
         </div>
-        <p v-if="nameError" class="error">{{ nameError }}</p>
+        <p v-if="nameError" class="error">{{ tr(nameError) }}</p>
       </div>
 
       <div class="item">
-        <p class="label">CPF ID</p>
+        <p class="label">{{ tr('CPF ID') }}</p>
         <div class="input-area" :class="{ invalid: idError }">
           <input
             class="text-input"
@@ -85,7 +83,7 @@ function submit() {
             inputmode="numeric"
             maxlength="18"
             autocomplete="off"
-            placeholder="Por favor, insira o CPF ID para pagamento"
+            :placeholder="tr('Por favor, insira o CPF ID para pagamento')"
             :value="idNo"
             @input="onId"
           />
@@ -93,13 +91,13 @@ function submit() {
             type="button"
             class="clear"
             :class="{ hide: idNo === '' }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="idNo = ''"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
           </button>
         </div>
-        <p v-if="idError" class="error">{{ idError }}</p>
+        <p v-if="idError" class="error">{{ tr(idError) }}</p>
       </div>
 
       <button
@@ -108,7 +106,7 @@ function submit() {
         :class="{ loading: props.submitting }"
         :disabled="!canSubmit || props.submitting"
         @click="submit"
-      >Enviar<SuffixDots :on="props.submitting" /></button>
+      >{{ tr('Enviar') }}<SuffixDots :on="props.submitting" /></button>
     </div>
   </div>
 </template>

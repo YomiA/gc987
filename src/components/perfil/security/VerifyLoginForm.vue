@@ -37,8 +37,8 @@ function onSubmit() {
 <template>
   <form class="verify-form" @submit.prevent="onSubmit">
     <div v-if="showIntro" class="intro">
-      <p class="heading">{{ copy.loginHeading }}</p>
-      <p class="tip">{{ tip }}</p>
+      <p class="heading">{{ tr(copy.loginHeading) }}</p>
+      <p class="tip">{{ tr(tip) }}</p>
     </div>
     <div v-else class="intro-slot" />
 
@@ -56,14 +56,14 @@ function onSubmit() {
             spellcheck="false"
             autocapitalize="off"
             autocorrect="off"
-            :placeholder="copy.placeholder"
+            :placeholder="tr(copy.placeholder)"
             v-model="password"
           />
           <button
             type="button"
             class="clear"
             :class="{ on: !!password }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="password = ''"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
@@ -78,12 +78,12 @@ function onSubmit() {
         </div>
       </div>
       <div class="hint" :class="{ on: !!error }">
-        <p class="error"><SvgIcon class="warn" name="security-warning" />{{ copy.error }}</p>
+        <p class="error"><SvgIcon class="warn" name="security-warning" />{{ tr(copy.error) }}</p>
       </div>
     </div>
 
     <div class="submit-item">
-      <button type="submit" class="submit">{{ copy.confirm }}</button>
+      <button type="submit" class="submit">{{ tr(copy.confirm) }}</button>
     </div>
   </form>
 </template>

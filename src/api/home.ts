@@ -85,9 +85,13 @@ export function productHistoryRecord() {
   return post<unknown>('/productHistoryRecord')
 }
 
-/** Wallet balance. Login required. */
+/** Wallet balance. Login required. A 401 must not clear the session. */
 export function walletBalance() {
-  return post<unknown>('/walletBalance')
+  return request<Envelope<unknown>>('/walletBalance', {
+    method: 'POST',
+    body: {},
+    keepSession: true,
+  })
 }
 
 /** Collected product ids. Login required. Called when the home page opens. */

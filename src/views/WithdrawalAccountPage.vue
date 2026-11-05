@@ -27,28 +27,28 @@ onMounted(() => {
   <div class="ion-page">
     <header class="acc-header">
       <div class="toolbar">
-        <button type="button" class="back" aria-label="Voltar" @click="goBack">
+        <button type="button" class="back" :aria-label="tr('Voltar')" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ copy.title }}</span>
+          <span class="title-text">{{ tr(copy.title) }}</span>
         </h1>
       </div>
     </header>
 
     <div class="page-scroller acc-body">
       <div class="tab-list">
-        <div class="tab on">{{ copy.tab }}</div>
+        <div class="tab on">{{ tr(copy.tab) }}</div>
       </div>
 
       <div v-for="item in accounts.items" :key="item.id" class="bank-card">
-        <span class="card-name">{{ item.name }}</span>
-        <span class="card-pix">{{ item.pix }}</span>
+        <span class="card-name">{{ tr(item.name) }}</span>
+        <span class="card-pix">{{ tr(item.pix) }}</span>
       </div>
 
       <button type="button" class="add-card" @click="router.push('/withdrawalBindAccount')">
         <span class="plus" aria-hidden="true">+</span>
-        {{ copy.add }}
+        {{ tr(copy.add) }}
       </button>
     </div>
   </div>

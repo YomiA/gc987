@@ -103,7 +103,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div ref="trigger" class="ds-trigger" :class="{ open }" @click="toggle">
-    <div class="ds-label">{{ triggerLabel }}</div>
+    <div class="ds-label">{{ tr(triggerLabel) }}</div>
     <!-- ionicons caret-down, flipped while the panel is up. -->
     <svg class="ds-caret" viewBox="0 0 512 512" aria-hidden="true">
       <path
@@ -127,7 +127,7 @@ onBeforeUnmount(() => {
                   :class="{ on: option.key === modelValue }"
                   @click="pick(option.key)"
                 >
-                  {{ option.label }}
+                  {{ tr(option.label) }}
                 </p>
               </div>
             </div>

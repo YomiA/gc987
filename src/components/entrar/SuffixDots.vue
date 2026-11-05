@@ -29,4 +29,4 @@ watch(
 onBeforeUnmount(() => window.clearInterval(timer))
 </script>
 
-<template>{{ dots }}</template>
+<template>{{ tr(dots) }}</template>

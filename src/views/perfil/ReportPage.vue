@@ -36,7 +36,7 @@ onMounted(() => void report.load())
         <button type="button" class="back" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
-        <h1 class="toolbar-title"><span class="title-text">Relatórios</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr('Relatórios') }}</span></h1>
       </div>
 
       <ReportSegment :tabs="report.tabs" :active="report.active" @select="report.selectTab" />
@@ -60,7 +60,7 @@ onMounted(() => void report.load())
       <div class="page-scroller report-list">
         <div v-if="showEmpty" class="empty" :class="{ 'empty-box': layout === 'bet' }">
           <div class="empty-bg-img" />
-          <span class="empty-label">Sem Registros</span>
+          <span class="empty-label">{{ tr('Sem Registros') }}</span>
         </div>
       </div>
 

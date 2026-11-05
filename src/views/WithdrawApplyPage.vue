@@ -36,13 +36,13 @@ onMounted(() => {
   <div class="ion-page">
     <header class="withdraw-header">
       <div class="toolbar">
-        <button type="button" class="back" aria-label="Voltar" @click="goBack">
+        <button type="button" class="back" :aria-label="tr('Voltar')" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ withdrawCopy.title }}</span>
+          <span class="title-text">{{ tr(withdrawCopy.title) }}</span>
         </h1>
-        <button type="button" class="record" aria-label="Registro de Saque" @click="router.push('/withdrawSubView')">
+        <button type="button" class="record" :aria-label="tr('Registro de Saque')" @click="router.push('/withdrawSubView')">
           <SvgIcon class="record-icon" name="entrar-record" />
         </button>
       </div>

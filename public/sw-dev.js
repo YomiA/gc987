@@ -1,4 +1,4 @@
-/* Push + install service worker. Manifest stays on /api/manifest. */
+/* Dev service worker: push only. No fetch cache, so Vite updates stay live. */
 
 self.addEventListener('install', () => {
   self.skipWaiting()

@@ -42,8 +42,8 @@ function onInput(event: Event) {
     <div class="seg">
       <button type="button" class="seg-btn on">
         <span class="seg-inner">
-          <span class="seg-label">{{ props.tabLabel }}</span>
-          <span class="seg-tag">{{ props.reco }}</span>
+          <span class="seg-label">{{ tr(props.tabLabel) }}</span>
+          <span class="seg-tag">{{ tr(props.reco) }}</span>
         </span>
         <span class="seg-indicator" />
       </button>
@@ -51,25 +51,25 @@ function onInput(event: Event) {
 
     <ul class="channel-list">
       <li class="channel on">
-        <div v-if="props.channelReco" class="channel-tag"><i>{{ props.reco }}</i></div>
+        <div v-if="props.channelReco" class="channel-tag"><i>{{ tr(props.reco) }}</i></div>
         <img v-if="props.channelIcon" class="channel-icon" :src="props.channelIcon" alt="" />
-        {{ props.channelLabel }}
+        {{ tr(props.channelLabel) }}
       </li>
     </ul>
 
     <div class="line" />
 
     <p class="text-description">
-      <span class="desc-text">{{ props.promo }}</span>
+      <span class="desc-text">{{ tr(props.promo) }}</span>
     </p>
 
     <div class="money-input">
-      <span class="left-label">{{ props.currency }}</span>
+      <span class="left-label">{{ tr(props.currency) }}</span>
       <input
         class="native-input"
         type="number"
         inputmode="decimal"
-        :placeholder="props.placeholder"
+        :placeholder="tr(props.placeholder)"
         :value="props.amountReais"
         @input="onInput"
       />
@@ -77,7 +77,7 @@ function onInput(event: Event) {
         type="button"
         class="clear-btn"
         :class="{ hide: props.amountReais === '' }"
-        aria-label="reset"
+        :aria-label="tr('reset')"
         @click="emit('clear')"
       >
         <SvgIcon class="clear-icon" name="register-clear" />
@@ -105,7 +105,7 @@ function onInput(event: Event) {
       :class="{ disabled: !props.canSubmit, loading: props.submitting }"
       :disabled="!props.canSubmit || props.submitting"
       @click="emit('submit')"
-      >{{ props.submitLabel }}<SuffixDots :on="props.submitting" /></button>
+      >{{ tr(props.submitLabel) }}<SuffixDots :on="props.submitting" /></button>
   </div>
 </template>
 

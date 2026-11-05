@@ -44,7 +44,7 @@ function onConfirm() {
         <button type="button" class="back" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
-        <h1 class="toolbar-title"><span class="title-text">{{ securityVerifyCopy.title }}</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr(securityVerifyCopy.title) }}</span></h1>
       </div>
     </header>
 

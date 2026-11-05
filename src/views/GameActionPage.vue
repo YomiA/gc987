@@ -3,7 +3,8 @@
  * /game/action/:id — game launch chrome.
  *
  * The card opens this route. POST /enterProduct returns the game link, shown
- * in the frame. The top-left Lobby chip calls POST /logoutTransfer and goes back.
+ * in the frame. The top-left Lobby chip leaves for /transition at once.
+ * That page calls POST /logoutTransfer and opens home when it succeeds.
  */
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
@@ -24,17 +25,10 @@ function goBack() {
   else void router.replace('/main/inicio')
 }
 
-async function leaveGame() {
+function leaveGame() {
   if (left) return
   left = true
-  if (started) {
-    try {
-      await logoutTransfer()
-    } catch (error) {
-      showToast(error instanceof Error ? error.message : String(error), 'error')
-    }
-  }
-  goBack()
+  void router.replace('/transition')
 }
 
 onMounted(async () => {
@@ -75,7 +69,7 @@ onBeforeUnmount(() => {
   <div class="ion-page game-page">
     <button type="button" class="lobby" @click="leaveGame">
       <SvgIcon class="home" name="game-lobby-home" />
-      <p class="label"> Lobby </p>
+      <p class="label"> {{ tr('Lobby') }} </p>
     </button>
     <iframe
       v-if="gameUrl"
@@ -85,7 +79,7 @@ onBeforeUnmount(() => {
       allow="fullscreen; autoplay; clipboard-write; encrypted-media"
       @load="loading = false"
     />
-    <div v-if="loading" id="placeholder">Loading...</div>
+    <div v-if="loading" id="placeholder">{{ tr('Loading...') }}</div>
   </div>
 </template>
 

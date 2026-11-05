@@ -31,8 +31,8 @@ function onRow(row: SecurityRow) {
       @click="onRow(row)"
     >
       <SvgIcon class="row-icon" :name="row.icon" />
-      <span class="label">{{ row.label }}</span>
-      <span class="value">{{ row.value }}</span>
+      <span class="label">{{ tr(row.label) }}</span>
+      <span class="value">{{ tr(row.value) }}</span>
       <SvgIcon v-if="row.detail" class="row-chevron" name="chevron-forward" />
     </div>
   </div>

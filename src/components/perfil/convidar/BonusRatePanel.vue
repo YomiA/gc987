@@ -69,7 +69,7 @@ watch(
         :class="{ on: tab.key === active }"
         @click="emit('select', tab.key)"
       >
-        <span class="seg-label">{{ tab.label }}</span>
+        <span class="seg-label">{{ tr(tab.label) }}</span>
       </button>
       <span
         class="seg-indicator"
@@ -83,7 +83,7 @@ watch(
 
     <div class="head">
       <div class="grid">
-        <span v-for="column in columns" :key="column.key" class="cell">{{ column.label }}</span>
+        <span v-for="column in columns" :key="column.key" class="cell">{{ tr(column.label) }}</span>
       </div>
     </div>
 
@@ -91,9 +91,9 @@ watch(
       <div v-for="item in rows" :key="item.level" class="item">
         <div class="item-native">
           <div class="grid row-grid">
-            <span class="cell">{{ item.level }}</span>
-            <span class="cell">{{ item.performance }}</span>
-            <span class="cell rate-cell">{{ item.rate }}</span>
+            <span class="cell">{{ tr(item.level) }}</span>
+            <span class="cell">{{ tr(item.performance) }}</span>
+            <span class="cell rate-cell">{{ tr(item.rate) }}</span>
           </div>
         </div>
       </div>

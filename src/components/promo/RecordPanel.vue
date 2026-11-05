@@ -21,21 +21,21 @@ const range = ref(dateRanges[0].key)
     <div v-if="props.variant === 'historico'" class="filter-row">
       <DropdownSelect v-model="range" class="date-pill" :options="dateRanges" />
       <div class="bonus">
-        Bônus
+        {{ tr('Bônus') }}
         <span class="amount emphasis">{{ formatAmount(bonus) }}</span>
       </div>
     </div>
 
     <div v-else class="bonus-row">
       <div class="bonus">
-        Bônus
+        {{ tr('Bônus') }}
         <span class="amount emphasis">{{ formatAmount(bonus) }}</span>
       </div>
     </div>
 
     <div class="table-head">
       <div class="head-row">
-        <span v-for="column in COLUMNS" :key="column">{{ column }}</span>
+        <span v-for="column in COLUMNS" :key="column">{{ tr(column) }}</span>
       </div>
     </div>
 
@@ -45,12 +45,12 @@ const range = ref(dateRanges[0].key)
       <div v-if="props.variant === 'historico'" class="rows-spacer" />
       <div class="empty">
         <div class="empty-img" />
-        <span>Sem Registros</span>
+        <span>{{ tr('Sem Registros') }}</span>
       </div>
     </div>
 
     <div v-if="props.variant === 'pendente'" class="footer">
-      <button type="button" class="collect-all">Coletar Tudo</button>
+      <button type="button" class="collect-all">{{ tr('Coletar Tudo') }}</button>
     </div>
   </div>
 </template>

@@ -13,6 +13,7 @@ import FundPasswordTips from '../components/withdraw/FundPasswordTips.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import SvgIcon from '../components/base/SvgIcon.vue'
 import { withdrawCopy } from '../api/withdraw'
+import { selectMainTab } from '../auth/tabGuard'
 import { useWithdrawStore } from '../stores/withdraw'
 import { useHomeStore } from '../stores/home'
 
@@ -21,23 +22,7 @@ const home = useHomeStore()
 const withdraw = useWithdrawStore()
 
 function onTabSelect(key: string) {
-  if (key === 'inicio') {
-    void router.push('/main/inicio')
-    return
-  }
-  if (key === 'promo') {
-    void router.push('/main/promo')
-    return
-  }
-  if (key === 'deposito') {
-    void router.push('/main/entrar')
-    return
-  }
-  if (key === 'perfil') {
-    void router.push('/main/perfil')
-    return
-  }
-  home.selectTab(key)
+  selectMainTab(router, key)
 }
 
 function onFundTipsConfirm() {
@@ -58,9 +43,9 @@ onMounted(() => {
     <header class="withdraw-header">
       <div class="toolbar">
         <h1 class="toolbar-title">
-          <span class="title-text">{{ withdrawCopy.title }}</span>
+          <span class="title-text">{{ tr(withdrawCopy.title) }}</span>
         </h1>
-        <button type="button" class="record" aria-label="Registro de Saque" @click="router.push('/withdrawSubView')">
+        <button type="button" class="record" :aria-label="tr('Registro de Saque')" @click="router.push('/withdrawSubView')">
           <SvgIcon class="record-icon" name="entrar-record" />
         </button>
       </div>

@@ -92,9 +92,9 @@ async function onPickerOpen(open: boolean) {
       <div class="select-date" @click="openRange">
         <div ref="field" class="date">
           <div class="time-choose">
-            <p class="range-part" :class="{ on: step === 1 }">{{ start }}</p>
+            <p class="range-part" :class="{ on: step === 1 }">{{ tr(start) }}</p>
             <span class="separator">～</span>
-            <p class="range-part" :class="{ on: step === 2 }">{{ end }}</p>
+            <p class="range-part" :class="{ on: step === 2 }">{{ tr(end) }}</p>
             <SvgIcon class="date-icon" name="spread-calendar" />
           </div>
         </div>
@@ -114,7 +114,7 @@ async function onPickerOpen(open: boolean) {
           :key="column.key"
           class="head-cell"
           :style="{ width: column.width }"
-          >{{ column.label }}</span
+          >{{ tr(column.label) }}</span
         >
       </div>
     </div>
@@ -124,7 +124,7 @@ async function onPickerOpen(open: boolean) {
 
     <div v-if="!rows.length" class="empty">
       <div class="empty-bg-img" />
-      <span class="empty-label">Sem Registros</span>
+      <span class="empty-label">{{ tr('Sem Registros') }}</span>
     </div>
 
     <div class="tail" />

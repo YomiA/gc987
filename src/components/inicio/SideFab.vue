@@ -128,7 +128,7 @@ onBeforeUnmount(() => {
       <label class="fork" :for="TOGGLE_ID"></label>
       <ul>
         <li class="box-item">
-          <a href="#" aria-label="Reload" @click.prevent="reload">
+          <a href="#" :aria-label="tr('Reload')" @click.prevent="reload">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="50"

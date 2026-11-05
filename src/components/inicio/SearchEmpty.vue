@@ -12,7 +12,7 @@ import SvgIcon from '../base/SvgIcon.vue'
 <template>
   <div class="empty">
     <SvgIcon class="empty-icon" name="search-no-game" />
-    <span class="tip">Nenhum jogo disponível</span>
+    <span class="tip">{{ tr('Nenhum jogo disponível') }}</span>
   </div>
 </template>
 

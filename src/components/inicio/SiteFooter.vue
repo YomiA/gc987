@@ -7,7 +7,7 @@ defineProps<{ terms: string }>()
     <div class="divider" />
     <div class="footer-container">
       <div class="keep-space">
-        <p class="terms">{{ terms }}</p>
+        <p class="terms">{{ terms.split('\n\n').map((item) => tr(item)).join('\n\n') }}</p>
       </div>
     </div>
   </div>

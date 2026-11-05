@@ -38,7 +38,7 @@ const tiles = computed(() => props.categories.filter((c) => c.enabled))
     <div class="rebate-root">
       <div class="receivable">
         <div>
-          <span>Pode ser coletado hoje：</span>
+          <span>{{ tr('Pode ser coletado hoje：') }}</span>
           <span class="amount emphasis">{{ formatAmount(receivable) }}</span>
         </div>
       </div>
@@ -54,13 +54,13 @@ const tiles = computed(() => props.categories.filter((c) => c.enabled))
               :class="{ on: cat.key === activeCategory }"
               @click="emit('selectCategory', cat.key)"
             >
-              <img class="cat-icon" :src="cat.icon" :alt="cat.label" />
-              <span class="cat-label">{{ cat.label }}</span>
+              <img class="cat-icon" :src="cat.icon" :alt="tr(cat.label)" />
+              <span class="cat-label">{{ tr(cat.label) }}</span>
             </button>
           </div>
 
-          <button type="button" class="side-btn claim">Receber</button>
-          <button type="button" class="side-btn history" @click="emit('history')">Histórico</button>
+          <button type="button" class="side-btn claim">{{ tr('Receber') }}</button>
+          <button type="button" class="side-btn history" @click="emit('history')">{{ tr('Histórico') }}</button>
         </div>
 
         <div class="main-right">
@@ -69,13 +69,13 @@ const tiles = computed(() => props.categories.filter((c) => c.enabled))
               <div class="top-rebate">
                 <div class="top-left">
                           <div class="platform">
-                            <span class="logo" :title="row.name" v-html="logo(row.slug)" />
-                            <p class="dim gap">Aposta</p>
+                            <span class="logo" :title="tr(row.name)" v-html="logo(row.slug)" />
+                            <p class="dim gap">{{ tr('Aposta') }}</p>
                           </div>
                   <div class="amount">{{ formatAmount(row.bet) }}</div>
                 </div>
                 <div class="rebate-right">
-                  <span class="dim gap">Taxa de reembolso</span>
+                  <span class="dim gap">{{ tr('Taxa de reembolso') }}</span>
                   <span>{{ formatRate(row.rate) }}</span>
                 </div>
               </div>
@@ -91,7 +91,7 @@ const tiles = computed(() => props.categories.filter((c) => c.enabled))
                   </div>
                 </div>
                 <div class="rebate-right">
-                  <span class="dim gap">Coletável</span>
+                  <span class="dim gap">{{ tr('Coletável') }}</span>
                   <span class="amount emphasis">{{ formatAmount(row.claimable) }}</span>
                 </div>
               </div>

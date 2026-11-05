@@ -146,13 +146,13 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
     :class="{ in: sheetIn }"
     role="dialog"
     aria-modal="true"
-    :aria-label="title"
+    :aria-label="tr(title)"
   >
     <div class="warpper">
       <div class="chrome">
         <div class="header-content">
           <img class="logo" src="/images/brand/LOGO.png" alt="logo" />
-          <button class="btn-close" type="button" aria-label="Fechar" @click="dismiss()">
+          <button class="btn-close" type="button" :aria-label="tr('Fechar')" @click="dismiss()">
             <SvgIcon class="close-icon" name="login-close" />
           </button>
         </div>
@@ -160,10 +160,10 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
 
       <div class="sheet">
         <div class="sheet-header" :class="mode">
-          <p class="title">{{ title }}</p>
+          <p class="title">{{ tr(title) }}</p>
           <span class="switch-row">
-            <span class="hint">{{ hint }}</span>
-            <button class="switch" type="button" @click="toggleMode">{{ switchLabel }}</button>
+            <span class="hint">{{ tr(hint) }}</span>
+            <button class="switch" type="button" @click="toggleMode">{{ tr(switchLabel) }}</button>
           </span>
         </div>
 
@@ -191,7 +191,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   type="button"
                   class="clear"
                   :class="{ on: !!phone }"
-                  aria-label="reset"
+                  :aria-label="tr('reset')"
                   @click="phone = ''"
                 >
                   <SvgIcon class="clear-icon" name="register-clear" />
@@ -199,7 +199,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!phoneError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />{{ phoneError }}
+                  <SvgIcon class="warn" name="security-warning" />{{ tr(phoneError) }}
                 </p>
               </div>
             </div>
@@ -226,7 +226,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   type="button"
                   class="clear"
                   :class="{ on: !!password }"
-                  aria-label="reset"
+                  :aria-label="tr('reset')"
                   @click="password = ''"
                 >
                   <SvgIcon class="clear-icon" name="register-clear" />
@@ -239,7 +239,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!passwordError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />{{ passwordError }}
+                  <SvgIcon class="warn" name="security-warning" />{{ tr(passwordError) }}
                 </p>
               </div>
             </div>
@@ -266,7 +266,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                   type="button"
                   class="clear"
                   :class="{ on: !!confirm }"
-                  aria-label="reset"
+                  :aria-label="tr('reset')"
                   @click="confirm = ''"
                 >
                   <SvgIcon class="clear-icon" name="register-clear" />
@@ -279,7 +279,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
               </div>
               <div class="hint-line" :class="{ on: !!confirmError }">
                 <p class="error">
-                  <SvgIcon class="warn" name="security-warning" />{{ confirmError }}
+                  <SvgIcon class="warn" name="security-warning" />{{ tr(confirmError) }}
                 </p>
               </div>
             </div>
@@ -310,7 +310,7 @@ onBeforeUnmount(() => window.clearTimeout(leaveTimer))
                 :class="{ on: canSubmit && !submitting }"
                 :disabled="!canSubmit || submitting"
               >
-                {{ submitLabel }}
+                {{ tr(submitLabel) }}
               </button>
             </div>
           </form>

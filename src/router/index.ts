@@ -15,6 +15,7 @@ import RebateRecordPage from '../views/RebateRecordPage.vue'
 import EntrarPage from '../views/EntrarPage.vue'
 import GameSearchPage from '../views/GameSearchPage.vue'
 import GameActionPage from '../views/GameActionPage.vue'
+import TransitionPage from '../views/TransitionPage.vue'
 import GameCategoryPage from '../views/GameCategoryPage.vue'
 import WithdrawPage from '../views/WithdrawPage.vue'
 import WithdrawApplyPage from '../views/WithdrawApplyPage.vue'
@@ -55,6 +56,8 @@ const routes: RouteRecordRaw[] = [
   // Homepage header magnifier. Live pathname is /game/search/:provider.
   { path: '/game/search/:provider?', name: 'game-search', component: GameSearchPage },
   { path: '/game/action/:id', name: 'game-action', component: GameActionPage },
+  // Lobby leaves the game here first. Home opens after /logoutTransfer.
+  { path: '/transition', name: 'transition', component: TransitionPage },
   { path: '/game/category/:gameType/:platformId?', name: 'game-category', component: GameCategoryPage },
   // Homepage TabBar Saque. Live pathname is /main/withdraw.
   { path: '/main/withdraw', name: 'withdraw', component: WithdrawPage },

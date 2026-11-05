@@ -23,8 +23,8 @@ function text(row: ReportSummaryRow) {
   <div class="footer-count" :class="props.summary.variant">
     <div class="footer-col">
       <div v-for="row in props.summary.rows" :key="row.key" class="content-flex">
-        <span class="label">{{ row.label }}</span>
-        <div class="value" :class="row.tone">{{ text(row) }}</div>
+        <span class="label">{{ tr(row.label) }}</span>
+        <div class="value" :class="row.tone">{{ tr(text(row)) }}</div>
       </div>
     </div>
   </div>

@@ -31,13 +31,13 @@ function onFavorite() {
 
 <template>
   <div class="game-card" :class="layout" @click="open">
-    <img class="game-img" :src="game.image" :alt="game.name" loading="lazy" />
+    <img class="game-img" :src="game.image" :alt="tr(game.name)" loading="lazy" />
     <SvgIcon class="platform-icon" :name="`wordmark-${game.provider}`" />
     <button
       type="button"
       class="favorite"
       :class="{ on: collected }"
-      aria-label="Favorito"
+      :aria-label="tr('Favorito')"
       @click.stop="onFavorite"
     >
       <SvgIcon name="favorite" />

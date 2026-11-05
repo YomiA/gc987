@@ -10,13 +10,13 @@ const emit = defineEmits<{ top: [] }>()
     v-show="visible"
     class="to-top-box"
     type="button"
-    aria-label="TOP"
+    :aria-label="tr('TOP')"
     @click="emit('top')"
   >
     <i class="icon-wall">
       <SvgIcon class="icon" name="to-top" />
     </i>
-    <span class="to-top-text">TOP</span>
+    <span class="to-top-text">{{ tr('TOP') }}</span>
   </button>
 </template>
 

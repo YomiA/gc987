@@ -22,6 +22,14 @@ try {
   /* ignore */
 }
 
+/** iPhone, iPad, and iPadOS (which reports itself as a Mac with a touch screen). */
+export function isAppleMobile() {
+  if (typeof navigator === 'undefined') return false
+  const ua = navigator.userAgent || ''
+  if (/iPhone|iPad|iPod/i.test(ua)) return true
+  return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1
+}
+
 export function isStandalone() {
   try {
     return (

@@ -12,6 +12,7 @@
  */
 import { computed, ref, watch } from 'vue'
 import SvgIcon from './SvgIcon.vue'
+import { i18n } from '../../i18n'
 import { wallClock } from '../../utils/timeZone'
 
 const props = defineProps<{
@@ -35,10 +36,15 @@ const PANEL_WIDTH = 250
 /** Ionic clamps md popovers 12px away from the viewport edges. */
 const EDGE = 12
 
-const monthFormat = new Intl.DateTimeFormat('pt-BR', { month: 'long', year: 'numeric' })
-const weekdayFormat = new Intl.DateTimeFormat('pt-BR', { weekday: 'short' })
+const intlLocale = computed(() => {
+  const locale = i18n.global.locale.value
+  return locale === 'en' ? 'en-US' : locale
+})
 
-const weekdays = Array.from({ length: 7 }, (_, i) => weekdayFormat.format(new Date(2023, 0, 1 + i)))
+const weekdays = computed(() => {
+  const fmt = new Intl.DateTimeFormat(intlLocale.value, { weekday: 'short' })
+  return Array.from({ length: 7 }, (_, i) => fmt.format(new Date(2023, 0, 1 + i)))
+})
 
 function parse(value: string) {
   const [y, m, d] = value.split('-').map(Number)
@@ -71,7 +77,11 @@ watch(
   },
 )
 
-const monthLabel = computed(() => monthFormat.format(new Date(view.value.y, view.value.m, 1)))
+const monthLabel = computed(() =>
+  new Intl.DateTimeFormat(intlLocale.value, { month: 'long', year: 'numeric' }).format(
+    new Date(view.value.y, view.value.m, 1),
+  ),
+)
 
 /** Leading blanks plus every day of the shown month. */
 const cells = computed(() => {
@@ -144,7 +154,7 @@ function confirm() {
             <div class="dp-title-row">
               <button type="button" class="dp-title">
                 <span class="dp-title-inner">
-                  {{ monthLabel }}
+                  {{ tr(monthLabel) }}
                   <SvgIcon class="dp-caret" name="chevron-forward" />
                 </span>
               </button>
@@ -170,7 +180,7 @@ function confirm() {
             </div>
 
             <div class="dp-week">
-              <span v-for="label in weekdays" :key="label">{{ label }}</span>
+              <span v-for="label in weekdays" :key="label">{{ tr(label) }}</span>
             </div>
           </div>
 
@@ -185,14 +195,14 @@ function confirm() {
                 :disabled="cell.disabled"
                 @click="picked = { y: view.y, m: view.m, d: cell.d }"
               >
-                {{ cell.d }}
+                {{ tr(cell.d) }}
               </button>
             </template>
           </div>
 
           <div class="dp-footer">
-            <button type="button" class="dp-action" @click="close">Cancelar</button>
-            <button type="button" class="dp-action" @click="confirm">Feito</button>
+            <button type="button" class="dp-action" @click="close">{{ tr('Cancelar') }}</button>
+            <button type="button" class="dp-action" @click="confirm">{{ tr('Feito') }}</button>
           </div>
         </div>
       </div>

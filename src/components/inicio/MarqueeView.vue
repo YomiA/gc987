@@ -9,7 +9,7 @@ defineProps<{ notices: string[] }>()
     <SvgIcon class="megaphone" name="megaphone" />
     <div class="marquee">
       <div class="marquee__content">
-        <label class="marquee__item">{{ notices.join('\n') }}</label>
+        <label class="marquee__item">{{ (notices).map((item) => tr(item)).join('\n') }}</label>
       </div>
     </div>
     <div class="badge">

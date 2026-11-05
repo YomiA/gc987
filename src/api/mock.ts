@@ -297,29 +297,44 @@ export function gameMatchesPlatform(game: Game, platformId: string): boolean {
   return provider === id
 }
 
-/** Both lists are in the order the live page renders them. */
-const genres: string[] = ['Slot', 'Pesca', 'Cassino', 'Cartas']
+/**
+ * Footer game types. Live `homeGames` (non-SPORTS), each with its own
+ * `platformList` in the order the page renders. Clicking a type swaps the
+ * right-hand list; it does not open a route.
+ */
+export interface ClassificationGenre {
+  label: string
+  brands: string[]
+}
 
-const brands: string[] = [
-  'PG',
-  'Tada',
-  'CQ9',
-  'JDB',
-  'Spribe',
-  'PP',
-  'CP',
-  'G759',
-  'FaChai',
-  'POPOK',
-  'PLAYSON',
-  'RUBYPLAY',
-  'inout',
-  'FASTSPIN',
-  'PANDA',
-  'TOPPLAYER',
-  'PLAYNGO',
-  'YELLOWBAT',
-  'KAGAMING',
+const genres: ClassificationGenre[] = [
+  {
+    label: 'Slot',
+    brands: [
+      'PG',
+      'Tada',
+      'KAGAMING',
+      'YELLOWBAT',
+      'PLAYNGO',
+      'TOPPLAYER',
+      'PANDA',
+      'FASTSPIN',
+      'inout',
+      'RUBYPLAY',
+      'PLAYSON',
+      'POPOK',
+      'FaChai',
+      'G759',
+      'CP',
+      'PP',
+      'Spribe',
+      'JDB',
+      'CQ9',
+    ],
+  },
+  { label: 'Pesca', brands: ['Tada'] },
+  { label: 'Cassino', brands: ['Evolution'] },
+  { label: 'Cartas', brands: ['Tada'] },
 ]
 
 const settle = <T,>(value: T): Promise<T> =>
@@ -332,5 +347,5 @@ export const api = {
   getGameBlocks: () => settle(gameBlocks),
   getTabBarItems: () => settle(tabBarItems),
   getMarqueeNotices: () => settle(marqueeNotices),
-  getClassification: () => settle({ genres, brands }),
+  getClassification: () => settle({ genres }),
 }

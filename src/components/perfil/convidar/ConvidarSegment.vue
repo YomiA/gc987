@@ -48,7 +48,7 @@ watch(
             :class="{ on: tab.key === active }"
             @click="emit('select', tab.key)"
           >
-            {{ tab.label }}
+            {{ tr(tab.label) }}
           </button>
         </div>
       </div>

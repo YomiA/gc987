@@ -35,6 +35,46 @@
     <script>
       (function () {
         try {
+          if (!('serviceWorker' in navigator)) return
+          if (navigator.serviceWorker.controller) {
+            var reloading = false
+            navigator.serviceWorker.addEventListener('controllerchange', function () {
+              if (reloading) return
+              reloading = true
+              window.location.reload()
+            })
+          }
+          navigator.serviceWorker.getRegistration().then(function (reg) {
+            if (reg) reg.update()
+          }).catch(function () {})
+        } catch (e) {}
+      })()
+    </script>
+    <script>
+      (function () {
+        try {
+          var key = '__chunk_reload'
+          var last = sessionStorage.getItem(key)
+          if (last && Date.now() - Number(last) < 30000) return
+          window.addEventListener(
+            'error',
+            function (event) {
+              var target = event.target
+              if (!target || !target.tagName) return
+              var tag = target.tagName
+              var rel = String(target.rel || '').toLowerCase()
+              if (tag !== 'SCRIPT' && !(tag === 'LINK' && rel === 'stylesheet')) return
+              sessionStorage.setItem(key, String(Date.now()))
+              window.location.reload()
+            },
+            true,
+          )
+        } catch (e) {}
+      })()
+    </script>
+    <script>
+      (function () {
+        try {
           var sp = new URLSearchParams(window.location.search)
           var save = new URLSearchParams()
           ;['id', 'type', 'inviteCode'].forEach(function (key) {

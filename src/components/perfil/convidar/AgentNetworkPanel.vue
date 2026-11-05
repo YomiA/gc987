@@ -23,13 +23,13 @@ defineProps<{ network: SpreadNetwork }>()
     <section class="self">
       <div class="self-row">
         <div class="people self-avatar" :style="{ backgroundImage: `url(${network.self.avatar})` }">
-          <div class="badge badge-a">{{ network.self.badge }}</div>
+          <div class="badge badge-a">{{ tr(network.self.badge) }}</div>
         </div>
 
         <ul class="self-list">
           <li v-for="row in network.self.rows" :key="row.label">
-            <span class="line">{{ row.total }}</span>
-            <span class="line">{{ row.label }} <em class="money">{{ row.value }}</em></span>
+            <span class="line">{{ tr(row.total) }}</span>
+            <span class="line">{{ tr(row.label) }} <em class="money">{{ tr(row.value) }}</em></span>
           </li>
         </ul>
       </div>
@@ -48,8 +48,8 @@ defineProps<{ network: SpreadNetwork }>()
           :class="`chip-${chip.key}`"
         >
           <span
-            >{{ chip.label }} <em class="money">{{ chip.value }}</em><br />
-            {{ chip.note }}</span
+            >{{ tr(chip.label) }} <em class="money">{{ tr(chip.value) }}</em><br />
+            {{ tr(chip.note) }}</span
           >
         </div>
 
@@ -61,14 +61,14 @@ defineProps<{ network: SpreadNetwork }>()
 
             <div class="chip node-chip">
               <span
-                >{{ node.label }} <em class="money">{{ node.value }}</em></span
+                >{{ tr(node.label) }} <em class="money">{{ tr(node.value) }}</em></span
               >
             </div>
 
             <div class="valid">
-              <span class="valid-text">{{ node.valid }}</span>
+              <span class="valid-text">{{ tr(node.valid) }}</span>
               <div class="people" :style="{ backgroundImage: `url(${node.avatar})` }">
-                <div class="badge">{{ node.badge }}</div>
+                <div class="badge">{{ tr(node.badge) }}</div>
               </div>
             </div>
           </li>
@@ -82,8 +82,8 @@ defineProps<{ network: SpreadNetwork }>()
           class="chip chip-toa chip-c2"
         >
           <span
-            >{{ chip.label }} <em class="money">{{ chip.value }}</em><br />
-            {{ chip.note }}</span
+            >{{ tr(chip.label) }} <em class="money">{{ tr(chip.value) }}</em><br />
+            {{ tr(chip.note) }}</span
           >
         </div>
 
@@ -95,14 +95,14 @@ defineProps<{ network: SpreadNetwork }>()
 
             <div class="chip node-chip">
               <span
-                >{{ node.label }} <em class="money">{{ node.value }}</em></span
+                >{{ tr(node.label) }} <em class="money">{{ tr(node.value) }}</em></span
               >
             </div>
 
             <div class="valid">
-              <span class="valid-text">{{ node.valid }}</span>
+              <span class="valid-text">{{ tr(node.valid) }}</span>
               <div class="people" :style="{ backgroundImage: `url(${node.avatar})` }">
-                <div class="badge">{{ node.badge }}</div>
+                <div class="badge">{{ tr(node.badge) }}</div>
               </div>
             </div>
           </li>
@@ -111,90 +111,57 @@ defineProps<{ network: SpreadNetwork }>()
     </section>
 
     <section class="tutorial">
-      <h1><strong>Um exemplo é o seguinte:</strong></h1>
+      <h1><strong>{{ tr('Um exemplo é o seguinte:') }}</strong></h1>
       <p>
-        Suponha que as apostas efetivas atuais de 0 a 10.000 receberão uma comissão de 100 (ou seja,
-        1%) para cada 10.000, e o apostas efetivas acima de 10.000 receberão uma comissão de 300
-        para cada 10.000. (ou seja, 3%), A foi o primeiro a descobrir oportunidades de negócios
-        neste site e imediatamente desenvolveu B1, B2 e B3. B1 desenvolveu ainda mais C1 e C2. B2
-        desenvolveu sem subordinados, e a B3 desenvolveu o relativamente poderoso C3. No segundo
-        dia, a aposta efetiva de B1 é 500, a aposta efetiva de B2 é 3.000, a aposta efetiva de B3 é
-        2.000, a aposta efetiva de C1 é 1.000, a aposta efetiva de C2 é 2.000 e a aposta efetiva de
-        C3 é de até 20.000.
+        {{ tr('Suponha que as apostas efetivas atuais de 0 a 10.000 receberão uma comissão de 100 (ou seja, 1%) para cada 10.000, e o apostas efetivas acima de 10.000 receberão uma comissão de 300 para cada 10.000. (ou seja, 3%), A foi o primeiro a descobrir oportunidades de negócios neste site e imediatamente desenvolveu B1, B2 e B3. B1 desenvolveu ainda mais C1 e C2. B2 desenvolveu sem subordinados, e a B3 desenvolveu o relativamente poderoso C3. No segundo dia, a aposta efetiva de B1 é 500, a aposta efetiva de B2 é 3.000, a aposta efetiva de B3 é 2.000, a aposta efetiva de C1 é 1.000, a aposta efetiva de C2 é 2.000 e a aposta efetiva de C3 é de até 20.000.') }}
       </p>
-      <div>Então o método de cálculo da renda entre eles é o seguinte:</div>
+      <div>{{ tr('Então o método de cálculo da renda entre eles é o seguinte:') }}</div>
       <ul>
         <li>
-          <strong>1. Comissão de B1</strong> (contribuições diretas de C1 e C2) = (1000 + 2000) * 1%
-          = <em>30</em>
+          <strong>{{ tr('1. Comissão de B1') }}</strong> {{ tr('(contribuições diretas de C1 e C2) = (1000 + 2000) * 1% =') }} <em>30</em>
         </li>
-        <li><strong>2. Comissão de B2</strong> (sem subordinados) = (0+0) * 1% = <em> 0</em></li>
+        <li><strong>{{ tr('2. Comissão de B2') }}</strong> {{ tr('(sem subordinados) = (0+0) * 1% =') }} <em> 0</em></li>
         <li>
-          <strong>3. Comissão B3</strong> (contribuição direta de C3) = 20.000 * 3% = <em>600</em>
+          <strong>{{ tr('3. Comissão B3') }}</strong> {{ tr('(contribuição direta de C3) = 20.000 * 3% =') }} <em>600</em>
         </li>
         <li>
           <strong
-            >4. Além das contribuições dos subordinados diretos B1, B2 e B3, a comissão de A também
-            advém das contribuições dos demais subordinados C1, C2 e C3, conforme segue:
+            >{{ tr('4. Além das contribuições dos subordinados diretos B1, B2 e B3, a comissão de A também advém das contribuições dos demais subordinados C1, C2 e C3, conforme segue:') }}
           </strong>
           <ul>
             <li>
-              <strong>( 1 )Comissão direta de A</strong>(contribuições diretas de B1, B2 e B3) =
-              (500+3000+2000) * 3% = <em>165</em>
+              <strong>{{ tr('( 1 )Comissão direta de A') }}</strong>{{ tr('(contribuições diretas de B1, B2 e B3) = (500+3000+2000) * 3% =') }} <em>165</em>
             </li>
             <li>
-              <strong>( 2) Outras comissões de A</strong>(das contribuições C1, C2)=(1000+2000) * 2%=
+              <strong>{{ tr('( 2) Outras comissões de A') }}</strong>{{ tr('(das contribuições C1, C2)=(1000+2000) * 2%=') }}
               <em>60</em>
             </li>
-            <li><strong>(3)Comissão total de A </strong>(direto + outro) = 165+60 = <em>225</em></li>
+            <li><strong>{{ tr('(3)Comissão total de A') }} </strong>{{ tr('(direto + outro) = 165+60 =') }} <em>225</em></li>
           </ul>
         </li>
         <li>
-          <strong>5. Resumo: </strong>
+          <strong>{{ tr('5. Resumo:') }} </strong>
           <ul>
             <li>
-              <strong>(1) Equipe direta</strong>: refere-se aos subordinados desenvolvidos
-              diretamente por A, ou seja, o primeiro nível de relacionamento com A, denominados
-              coletivamente como equipe direta.
+              <strong>{{ tr('(1) Equipe direta') }}</strong>{{ tr(': refere-se aos subordinados desenvolvidos diretamente por A, ou seja, o primeiro nível de relacionamento com A, denominados coletivamente como equipe direta.') }}
             </li>
             <li>
-              <strong>(2) Outras equipes</strong>: Refere-se àquelas que são desenvolvidas por
-              subordinados de A. Possuem relacionamento de segundo nível com A ou superior, ou seja,
-              subordinados de subordinados , e os subordinados dos subordinados.. etc.,
-              coletivamente referidos como outras equipes; como esse modelo de agência pode
-              desenvolver subordinados ilimitados, para conveniência da explicação, este artigo toma
-              apenas a estrutura de 2 níveis como exemplo.
+              <strong>{{ tr('(2) Outras equipes') }}</strong>{{ tr(': Refere-se àquelas que são desenvolvidas por subordinados de A. Possuem relacionamento de segundo nível com A ou superior, ou seja, subordinados de subordinados , e os subordinados dos subordinados.. etc., coletivamente referidos como outras equipes; como esse modelo de agência pode desenvolver subordinados ilimitados, para conveniência da explicação, este artigo toma apenas a estrutura de 2 níveis como exemplo.') }}
             </li>
             <li>
-              <strong>(3) Descrição de A</strong>: O desempenho direto de A é 5.500 e o outro
-              desempenho é 20.000 (devido ao poder de C3). O desempenho total é 28.500 e a comissão
-              correspondente a taxa é de 3%. Como B1 tem um desempenho total de 3.000 e desfruta de
-              um desconto de apenas 1%, enquanto A tem um desempenho total de 28.500 e desfruta de
-              uma taxa de desconto de 3%, então haverá uma diferença de desconto entre A e B1. A
-              diferença é: 3% -1% =2%, essa diferença é a parte contribuída por C1 e C2 para A,
-              então C1 e C2 contribuem para A: (1000+2000)* 2%=60, não há diferença extrema entre A
-              e B3, então C3 contribui para A A comissão de contribuição é 0.
+              <strong>{{ tr('(3) Descrição de A') }}</strong>{{ tr(': O desempenho direto de A é 5.500 e o outro desempenho é 20.000 (devido ao poder de C3). O desempenho total é 28.500 e a comissão correspondente a taxa é de 3%. Como B1 tem um desempenho total de 3.000 e desfruta de um desconto de apenas 1%, enquanto A tem um desempenho total de 28.500 e desfruta de uma taxa de desconto de 3%, então haverá uma diferença de desconto entre A e B1. A diferença é: 3% -1% =2%, essa diferença é a parte contribuída por C1 e C2 para A, então C1 e C2 contribuem para A: (1000+2000)* 2%=60, não há diferença extrema entre A e B3, então C3 contribui para A A comissão de contribuição é 0.') }}
             </li>
             <li>
-              <strong>(4) Descrição de B1</strong>: B1 tem subordinados C1 e C2. Como o desempenho
-              direto é 3.000, o índice de desconto correspondente é de 1%.
+              <strong>{{ tr('(4) Descrição de B1') }}</strong>{{ tr(': B1 tem subordinados C1 e C2. Como o desempenho direto é 3.000, o índice de desconto correspondente é de 1%.') }}
             </li>
             <li>
-              <strong>(5) Explicação B2 </strong>: B2 pode ser preguiçoso e não se beneficiará se
-              não desenvolver seus subordinados.
+              <strong>{{ tr('(5) Explicação B2') }} </strong>{{ tr(': B2 pode ser preguiçoso e não se beneficiará se não desenvolver seus subordinados.') }}
             </li>
             <li>
-              <strong>(6) Explicação B3</strong>: Embora B3 tenha aderido relativamente tarde e seja
-              subordinado de A, seu subordinado C3 é muito poderoso e tem um desempenho direto de
-              20.000, permitindo que B3 diretamente desfrutar de comissões mais elevadas.A proporção
-              é de 3%.
+              <strong>{{ tr('(6) Explicação B3') }}</strong>{{ tr(': Embora B3 tenha aderido relativamente tarde e seja subordinado de A, seu subordinado C3 é muito poderoso e tem um desempenho direto de 20.000, permitindo que B3 diretamente desfrutar de comissões mais elevadas.A proporção é de 3%.') }}
             </li>
             <li>
-              <strong>(7) Resumo das regras</strong>: Não importa quando você ingressa, de quem você
-              é subordinado, não importa em que nível você está, sua renda nunca será afetada e você
-              não sofre mais as perdas dos subordinados dos outros., o desenvolvimento não é
-              restrito. Este é um modelo de agência absolutamente justo e imparcial, e ninguém
-              estará sempre por baixo só porque entrou tarde.
+              <strong>{{ tr('(7) Resumo das regras') }}</strong>{{ tr(': Não importa quando você ingressa, de quem você é subordinado, não importa em que nível você está, sua renda nunca será afetada e você não sofre mais as perdas dos subordinados dos outros., o desenvolvimento não é restrito. Este é um modelo de agência absolutamente justo e imparcial, e ninguém estará sempre por baixo só porque entrou tarde.') }}
             </li>
           </ul>
         </li>

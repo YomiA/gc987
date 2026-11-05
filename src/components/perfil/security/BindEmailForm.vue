@@ -33,7 +33,7 @@ function onSubmit() {
 
 <template>
   <form class="bind-form" @submit.prevent="onSubmit">
-    <p class="heading">{{ copy.heading }}</p>
+    <p class="heading">{{ tr(copy.heading) }}</p>
 
     <div class="field-wrap">
       <div class="field" :class="{ invalid: !!error }">
@@ -47,14 +47,14 @@ function onSubmit() {
             spellcheck="false"
             autocapitalize="off"
             autocorrect="off"
-            :placeholder="copy.placeholder"
+            :placeholder="tr(copy.placeholder)"
             v-model="email"
           />
           <button
             type="button"
             class="clear"
             :class="{ on: !!email }"
-            aria-label="reset"
+            :aria-label="tr('reset')"
             @click="email = ''"
           >
             <SvgIcon class="clear-icon" name="register-clear" />
@@ -63,12 +63,12 @@ function onSubmit() {
         </div>
       </div>
       <div class="hint" :class="{ on: !!error }">
-        <p class="error"><SvgIcon class="warn" name="security-warning" />{{ copy.error }}</p>
+        <p class="error"><SvgIcon class="warn" name="security-warning" />{{ tr(copy.error) }}</p>
       </div>
     </div>
 
     <div class="submit-item">
-      <button type="submit" class="submit">{{ copy.confirm }}</button>
+      <button type="submit" class="submit">{{ tr(copy.confirm) }}</button>
     </div>
   </form>
 </template>

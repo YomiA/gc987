@@ -129,7 +129,7 @@ function addRipple(event: PointerEvent) {
       @pointerdown="addRipple"
       @click="select(tab.key)"
     >
-      <span class="seg-label">{{ tab.label }}</span>
+      <span class="seg-label">{{ tr(tab.label) }}</span>
       <span class="seg-indicator" />
     </button>
   </div>

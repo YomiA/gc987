@@ -74,7 +74,7 @@ watch(
       :class="{ on: tab.key === props.active }"
       @click="emit('select', tab.key)"
     >
-      <span class="seg-label">{{ tab.label }}</span>
+      <span class="seg-label">{{ tr(tab.label) }}</span>
     </button>
     <span
       class="seg-indicator"

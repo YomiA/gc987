@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
+import { selectMainTab } from '../auth/tabGuard'
 import { useAuthStore } from '../stores/auth'
 import AppHeader from '../components/inicio/AppHeader.vue'
 import AppInstallBar from '../components/inicio/AppInstallBar.vue'
@@ -10,6 +11,7 @@ import MarqueeView from '../components/inicio/MarqueeView.vue'
 import PosterSwiper from '../components/inicio/PosterSwiper.vue'
 import PromoGrid from '../components/inicio/PromoGrid.vue'
 import ProviderSegment from '../components/inicio/ProviderSegment.vue'
+import IosPwaGuide from '../components/inicio/IosPwaGuide.vue'
 import PwaHeaderBar from '../components/inicio/PwaHeaderBar.vue'
 import PwaModal from '../components/inicio/PwaModal.vue'
 import SideMenu from '../components/inicio/SideMenu.vue'
@@ -17,7 +19,6 @@ import SiteFooter from '../components/inicio/SiteFooter.vue'
 import SupportButton from '../components/inicio/SupportButton.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import ToTopButton from '../components/inicio/ToTopButton.vue'
-import LoginModal from '../components/inicio/LoginModal.vue'
 import type { GameBlock } from '../api/mock'
 import { useHomeStore } from '../stores/home'
 import { usePwaStore } from '../stores/pwa'
@@ -150,25 +151,8 @@ function onMenuSelect(key: string) {
   onSelectProvider(key)
 }
 
-/** Promoção / Depósito / Perfil are their own routes; remaining tabs stay here. */
 function onTabSelect(key: string) {
-  if (key === 'promo') {
-    void router.push('/main/promo')
-    return
-  }
-  if (key === 'deposito') {
-    void router.push('/main/entrar')
-    return
-  }
-  if (key === 'perfil') {
-    void router.push('/main/perfil')
-    return
-  }
-  if (key === 'saque') {
-    void router.push('/main/withdraw')
-    return
-  }
-  home.selectTab(key)
+  selectMainTab(router, key)
 }
 
 /** Verbatim footer copy from the live page, blank lines included. */
@@ -181,11 +165,14 @@ const footerTerms = [
 watch(
   () => auth.isLoggedIn,
   (loggedIn, wasLoggedIn) => {
-    if (loggedIn && !wasLoggedIn) void home.loadRemote()
+    if (!loggedIn || wasLoggedIn) return
+    void home.loadRemote()
+    void home.refreshQueuedWallet()
   },
 )
 
 onMounted(() => {
+  void home.refreshQueuedWallet()
   void home.load().then(() => {
     void nextTick(() => {
       requestAnimationFrame(measureDockY)
@@ -226,7 +213,7 @@ onBeforeUnmount(() => {
             <GameBlockView v-for="block in visibleBlocks" :key="block.key" :block="block" />
           </div>
           <AppInstallBar />
-          <GameClassification :genres="home.genres" :brands="home.brands" />
+          <GameClassification :genres="home.genres" />
           <SiteFooter :terms="footerTerms" />
         </div>
         <div class="bottom-spacer" />
@@ -234,15 +221,12 @@ onBeforeUnmount(() => {
     </div>
 
     <SupportButton />
-    <ToTopButton :visible="showToTop && !pwa.modalOpen && !auth.dialogOpen" @top="scrollToTop" />
+    <ToTopButton :visible="showToTop && !pwa.modalOpen && !pwa.guideOpen && !auth.dialogOpen" @top="scrollToTop" />
     <TabBar :items="home.tabBarItems" :active="home.activeTab" @select="onTabSelect" />
     <PwaModal v-if="pwa.modalOpen" @close="pwa.closeModal()" />
-    <LoginModal
-      v-if="auth.dialogOpen"
-      :mode="auth.dialogMode"
-      @update:mode="auth.setDialogMode"
-      @close="auth.closeDialog()"
-    />
+    <Transition name="ios-guide">
+      <IosPwaGuide v-if="pwa.guideOpen" @close="pwa.closeGuide()" />
+    </Transition>
     <SideMenu
       :open="menuOpen"
       :tabs="home.providerTabs"

@@ -81,7 +81,7 @@ onBeforeUnmount(() => {
         <button type="button" class="back" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
-        <h1 class="toolbar-title"><span class="title-text">{{ title }}</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr(title) }}</span></h1>
       </div>
     </header>
 

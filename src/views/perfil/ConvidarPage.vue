@@ -39,7 +39,7 @@ onMounted(() => void spread.load())
         <button type="button" class="back" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
-        <h1 class="toolbar-title"><span class="title-text">ConvidarCentro</span></h1>
+        <h1 class="toolbar-title"><span class="title-text">{{ tr('ConvidarCentro') }}</span></h1>
       </div>
 
       <ConvidarSegment :tabs="spread.tabs" :active="spread.active" @select="spread.selectTab" />

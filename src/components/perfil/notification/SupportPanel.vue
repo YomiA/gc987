@@ -16,8 +16,8 @@ defineProps<{ channels: SupportChannel[] }>()
   <div class="board">
     <img class="avatar" :src="copy.avatar" alt="" />
     <div class="online">
-      <p class="online-text">{{ copy.title }}</p>
-      <p class="tips">{{ copy.hint }}</p>
+      <p class="online-text">{{ tr(copy.title) }}</p>
+      <p class="tips">{{ tr(copy.hint) }}</p>
     </div>
   </div>
 
@@ -25,11 +25,11 @@ defineProps<{ channels: SupportChannel[] }>()
     <div v-for="item in channels" :key="item.key" class="service-item">
       <img class="icon" :src="item.logo" alt="" />
       <div class="middle">
-        <p class="nickname">{{ item.nickname }}</p>
-        <p class="account">{{ item.account }}</p>
+        <p class="nickname">{{ tr(item.nickname) }}</p>
+        <p class="account">{{ tr(item.account) }}</p>
       </div>
       <a class="contato" :href="item.url" target="_blank" rel="noopener noreferrer">
-        {{ copy.contact }}
+        {{ tr(copy.contact) }}
       </a>
     </div>
   </div>

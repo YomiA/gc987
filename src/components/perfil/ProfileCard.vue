@@ -20,19 +20,19 @@ const props = defineProps<{ profile: PerfilProfile }>()
 
       <div class="messsage">
         <div class="id-row">
-          <span><span class="user-id">ID: </span> {{ props.profile.id }}</span>
+          <span><span class="user-id">ID: </span> {{ tr(props.profile.id) }}</span>
           <SvgIcon class="copy-icon" name="perfil-copy" />
           <div class="level">
             <img class="crown" :src="props.profile.crown" alt="" />
             <div class="level-badge">
               <span :style="{ color: props.profile.levelBadgeColor }">
-                {{ props.profile.levelBadge }}
+                {{ tr(props.profile.levelBadge) }}
               </span>
             </div>
           </div>
         </div>
 
-        <div class="account-row"><span class="user-account">Conta:</span> {{ props.profile.account }}</div>
+        <div class="account-row"><span class="user-account">{{ tr('Conta:') }}</span> {{ tr(props.profile.account) }}</div>
 
         <div class="money-row">
           <!-- The live page keeps a zero-opacity copy of the amount so the
@@ -55,13 +55,13 @@ const props = defineProps<{ profile: PerfilProfile }>()
       <div class="col">
         <div class="enter-btn withdraw">
           <SvgIcon class="btn-icon" name="perfil-saque" />
-          <span class="enter-withdraw-text">Saque</span>
+          <span class="enter-withdraw-text">{{ tr('Saque') }}</span>
         </div>
       </div>
       <div class="col">
         <div class="enter-btn deposit">
           <SvgIcon class="btn-icon" name="perfil-deposito" />
-          <span class="enter-withdraw-text">Depósito</span>
+          <span class="enter-withdraw-text">{{ tr('Depósito') }}</span>
         </div>
       </div>
     </div>

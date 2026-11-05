@@ -18,7 +18,7 @@ defineProps<{ share: SpreadShareInfo }>()
 
 <template>
   <section class="agent-share-info">
-    <div class="referral-tips">Informação de Referência</div>
+    <div class="referral-tips">{{ tr('Informação de Referência') }}</div>
 
     <div class="body">
       <div class="row">
@@ -26,13 +26,13 @@ defineProps<{ share: SpreadShareInfo }>()
           <div class="qr-pad">
             <div class="qr" />
           </div>
-          <div class="save-qrcode-btn">Salvar</div>
+          <div class="save-qrcode-btn">{{ tr('Salvar') }}</div>
         </div>
 
         <div class="link-col">
-          <p class="link-title">Meu link</p>
+          <p class="link-title">{{ tr('Meu link') }}</p>
           <div class="agent-share-link">
-            <div class="link-text">{{ share.link }}</div>
+            <div class="link-text">{{ tr(share.link) }}</div>
             <div class="link-actions">
               <SvgIcon class="act share" name="convidar-share" />
               <SvgIcon class="act copy" name="convidar-copy" />

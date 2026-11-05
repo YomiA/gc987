@@ -47,11 +47,11 @@ onBeforeUnmount(() => {
   <div class="ion-page">
     <header class="act-header">
       <div class="toolbar">
-        <button type="button" class="back" aria-label="Voltar" @click="goBack">
+        <button type="button" class="back" :aria-label="tr('Voltar')" @click="goBack">
           <SvgIcon class="back-icon" name="report-back" />
         </button>
         <h1 class="toolbar-title">
-          <span class="title-text">{{ detail.title }}</span>
+          <span class="title-text">{{ tr(detail.title) }}</span>
         </h1>
       </div>
     </header>
@@ -61,60 +61,60 @@ onBeforeUnmount(() => {
         <div class="banner" :style="{ backgroundImage: `url(${detail.banner})` }">
           <div class="countdown">
             <div class="tick">
-              <p class="digit">{{ clock.day }}</p>
-              <span class="unit">DAY</span>
+              <p class="digit">{{ tr(clock.day) }}</p>
+              <span class="unit">{{ tr('DAY') }}</span>
             </div>
             <div class="tick">
-              <p class="digit">{{ clock.hrs }}</p>
-              <span class="unit">HRS</span>
+              <p class="digit">{{ tr(clock.hrs) }}</p>
+              <span class="unit">{{ tr('HRS') }}</span>
             </div>
             <div class="tick">
-              <p class="digit">{{ clock.min }}</p>
-              <span class="unit">MIN</span>
+              <p class="digit">{{ tr(clock.min) }}</p>
+              <span class="unit">{{ tr('MIN') }}</span>
             </div>
           </div>
         </div>
 
         <div class="caption-row">
-          <span class="caption">{{ detail.countdownCaption }}</span>
+          <span class="caption">{{ tr(detail.countdownCaption) }}</span>
         </div>
 
-        <p class="rescue-title">{{ detail.rescueTitle }}</p>
+        <p class="rescue-title">{{ tr(detail.rescueTitle) }}</p>
 
         <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>{{ detail.lossCol }}</th>
-                <th>{{ detail.claimCol }}</th>
+                <th>{{ tr(detail.lossCol) }}</th>
+                <th>{{ tr(detail.claimCol) }}</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="tier in detail.tiers" :key="tier.loss">
-                <th class="loss">{{ tier.loss }}</th>
-                <th class="rate">{{ tier.rate }}</th>
+                <th class="loss">{{ tr(tier.loss) }}</th>
+                <th class="rate">{{ tr(tier.rate) }}</th>
               </tr>
             </tbody>
           </table>
         </div>
 
-        <p class="week-title">{{ detail.weekTitle }}</p>
+        <p class="week-title">{{ tr(detail.weekTitle) }}</p>
 
         <div class="profit">
           <div class="profit-col">
-            <p class="profit-label">{{ detail.myLossLabel }}</p>
+            <p class="profit-label">{{ tr(detail.myLossLabel) }}</p>
             <p class="profit-value">R$ {{ formatAmount(detail.myLossCents) }}</p>
           </div>
           <div class="profit-col">
-            <p class="profit-label">{{ detail.claimableLabel }}</p>
+            <p class="profit-label">{{ tr(detail.claimableLabel) }}</p>
             <p class="profit-value">R$ {{ formatAmount(detail.claimableCents) }}</p>
           </div>
         </div>
 
         <div class="rules">
-          <div class="rules-head">{{ detail.rulesTitle }}</div>
+          <div class="rules-head">{{ tr(detail.rulesTitle) }}</div>
           <div class="rules-wrap">
-            <p class="rule-item">{{ detail.rules.join('\n\n') }}</p>
+            <p class="rule-item">{{ (detail.rules).map((item) => tr(item)).join('\n\n') }}</p>
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@ onBeforeUnmount(() => {
 
     <div class="act-footer">
       <button type="button" class="receive" :class="{ unable: !canReceive }" disabled>
-        {{ detail.receive }}
+        {{ tr(detail.receive) }}
       </button>
     </div>
   </div>

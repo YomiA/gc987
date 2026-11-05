@@ -25,7 +25,7 @@ const emit = defineEmits<{ select: [key: string] }>()
       :aria-selected="tab.key === active"
       @click="emit('select', tab.key)"
     >
-      {{ tab.label }}
+      {{ tr(tab.label) }}
     </button>
   </div>
 </template>

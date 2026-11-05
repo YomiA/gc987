@@ -30,11 +30,11 @@ function onSecond(value: string) {
 
 <template>
   <form class="asset-form" @submit.prevent>
-    <p class="heading">{{ copy.heading }}</p>
+    <p class="heading">{{ tr(copy.heading) }}</p>
     <div class="fund">
-      <p class="label">{{ copy.enter }}</p>
+      <p class="label">{{ tr(copy.enter) }}</p>
       <PinPasswordInput autofocus @input="onFirst" />
-      <p class="label">{{ copy.confirm }}</p>
+      <p class="label">{{ tr(copy.confirm) }}</p>
       <PinPasswordInput @input="onSecond" />
     </div>
   </form>
