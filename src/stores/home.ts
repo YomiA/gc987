@@ -123,14 +123,19 @@ export const useHomeStore = defineStore('home', () => {
   }
 
   /**
-   * Layout and the product catalog stay for this page load.
-   * Bottom-nav switches must not ask for them again; a full reload clears this.
+   * Layout and the product catalog stay until this homepage visit ends.
+   * Opening home again, logging out, or returning to the browser tab starts one new pair.
    */
   let catalogTask: Promise<void> | null = null
   let sessionUser = ''
   let sessionTask: Promise<void> | null = null
   /** Set only after this visit's login or register succeeds. */
   let walletQueued = false
+  let signedInTask: Promise<void> | null = null
+  let catalogReload: Promise<void> | null = null
+  let visitTask: Promise<void> | null = null
+  /** The first homepage mount uses the cold load. Later mounts refresh. */
+  let inicioOpened = false
 
   function loadCatalog() {
     if (catalogTask) return catalogTask
@@ -188,6 +193,11 @@ export const useHomeStore = defineStore('home', () => {
     return sessionTask
   }
 
+  /** Drop the cached catalog so the next homepage load asks again. */
+  function markCatalogStale() {
+    catalogTask = null
+  }
+
   /** Ask for /walletBalance after this visit's login or register. */
   function queueWalletRefresh() {
     walletQueued = true
@@ -218,14 +228,84 @@ export const useHomeStore = defineStore('home', () => {
    * Same as abc.com: these requests do not wait on each other.
    * The collect-record ids are matched to the product list after both arrive.
    * /collectProduct is not part of this batch. It runs only from a star click.
-   * Layout and products are fetched once per page load. Login-only records
-   * are fetched once per signed-in user, not on every tab change.
+   * Layout and products stay until this visit ends. Opening the homepage
+   * again, or coming back to the browser tab, starts one new pair.
    */
   async function loadRemote() {
     const tasks = [loadCatalog()]
     if (accessToken.value) tasks.push(loadSession())
     else collectedIds.value = []
     await Promise.all(tasks)
+  }
+
+  /**
+   * Login and register already loaded the catalog on the cold visit.
+   * The rest of the homepage batch is history, favorites, and the balance.
+   * Callers in the same turn share this promise.
+   */
+  function loadSignedIn() {
+    if (signedInTask) return signedInTask
+    signedInTask = (async () => {
+      const tasks: Promise<unknown>[] = []
+      if (!catalogTask) tasks.push(loadCatalog())
+      sessionUser = ''
+      sessionTask = null
+      tasks.push(loadSession())
+      walletQueued = true
+      tasks.push(refreshQueuedWallet())
+      await Promise.all(tasks)
+    })().finally(() => {
+      signedInTask = null
+    })
+    return signedInTask
+  }
+
+  /** One fresh /loadLayout and /loadProduct. A second caller joins the same pair. */
+  function reloadCatalog() {
+    if (catalogReload) return catalogReload
+    catalogTask = null
+    catalogReload = loadCatalog().finally(() => {
+      catalogReload = null
+    })
+    return catalogReload
+  }
+
+  /** Homepage again: both load calls, plus the signed-in records when a token exists. */
+  function reloadVisit() {
+    if (visitTask) return visitTask
+    sessionUser = ''
+    sessionTask = null
+    visitTask = (async () => {
+      const tasks: Promise<unknown>[] = [reloadCatalog()]
+      if (accessToken.value) {
+        tasks.push(loadSession())
+        walletQueued = true
+        tasks.push(refreshQueuedWallet())
+      } else {
+        collectedIds.value = []
+      }
+      await Promise.all(tasks)
+    })().finally(() => {
+      visitTask = null
+    })
+    return visitTask
+  }
+
+  /** First time the homepage opens it loads once. Coming back refreshes once. */
+  function enterInicio() {
+    if (!inicioOpened) {
+      inicioOpened = true
+      return load().then(() => refreshQueuedWallet())
+    }
+    return reloadVisit()
+  }
+
+  /** Search and category share the catalog. The first open uses it; coming back refreshes it. */
+  const catalogVisits = new Set<string>()
+  function enterCatalogPage(key: string) {
+    if (catalogVisits.has(key)) return reloadCatalog()
+    catalogVisits.add(key)
+    return load()
   }
 
   async function load() {
@@ -280,7 +360,14 @@ export const useHomeStore = defineStore('home', () => {
     collectedIds,
     collectedProducts,
     load,
+    loadCatalog,
     loadRemote,
+    loadSignedIn,
+    reloadCatalog,
+    reloadVisit,
+    enterInicio,
+    enterCatalogPage,
+    markCatalogStale,
     queueWalletRefresh,
     refreshQueuedWallet,
     isCollected,

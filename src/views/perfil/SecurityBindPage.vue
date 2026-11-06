@@ -1,25 +1,53 @@
 <script setup lang="ts">
 /**
- * /security/bind/:type — email bind page after a mock login-password
- * verify. Phone bind is not cloned. Submit is mock: toast, then replace
- * back to /security. See docs/research/gc987-com/security/SECURITY_BIND.spec.md.
+ * /security/bind/:type — phone or email after /verifyPassword succeeded.
+ * Sending a code starts a 60s countdown. Confirm posts /bindPhone or
+ * /bindEmail. See docs/research/gc987-com/security/SECURITY_BIND.spec.md.
  */
-import { computed, onBeforeUnmount, ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import SvgIcon from '../../components/base/SvgIcon.vue'
 import BindEmailForm from '../../components/perfil/security/BindEmailForm.vue'
 import CopyToast from '../../components/entrar/CopyToast.vue'
-import { securityBindCopy } from '../../api/security'
+import {
+  bindEmail,
+  bindPhone,
+  securityBindCopy,
+  sendEmailCode,
+  sendPhoneCode,
+} from '../../api/security'
 import { useSecurityStore } from '../../stores/security'
+import { showToast as showAppToast } from '../../toast'
 
+const route = useRoute()
 const router = useRouter()
 const security = useSecurityStore()
 
 const toast = ref('')
+const cooldown = ref(0)
+const sending = ref(false)
+const sent = ref(false)
 let toastTimer = 0
 let leaveTimer = 0
+let cooldownTimer = 0
 
-const title = computed(() => securityBindCopy.title)
+const kind = computed<'phone' | 'email'>(() => (route.params.type === 'phone' ? 'phone' : 'email'))
+const title = computed(() => (kind.value === 'phone' ? securityBindCopy.phoneTitle : securityBindCopy.title))
+
+function guard() {
+  if (route.params.type !== 'phone' && route.params.type !== 'email') {
+    void router.replace('/security')
+    return
+  }
+  if (security.bindTarget !== kind.value) void router.replace(`/security/verify/${kind.value}`)
+}
+
+function resetCode() {
+  cooldown.value = 0
+  sent.value = false
+  sending.value = false
+  window.clearInterval(cooldownTimer)
+}
 
 function goBack() {
   if (router.options.history.state.back) router.back()
@@ -34,22 +62,63 @@ function showToast(message: string) {
   }, 2000)
 }
 
+function startCooldown() {
+  sent.value = true
+  cooldown.value = 60
+  window.clearInterval(cooldownTimer)
+  cooldownTimer = window.setInterval(() => {
+    cooldown.value -= 1
+    if (cooldown.value <= 0) window.clearInterval(cooldownTimer)
+  }, 1000)
+}
+
 function onTooLong() {
   showToast(securityBindCopy.tooLong)
 }
 
-function onConfirm(email: string) {
-  security.bindEmail(email)
-  showToast(securityBindCopy.success)
-  window.clearTimeout(leaveTimer)
-  leaveTimer = window.setTimeout(() => {
-    void router.replace('/security')
-  }, 1000)
+async function onSend(account: string) {
+  if (sending.value || cooldown.value > 0) return
+  sending.value = true
+  try {
+    if (kind.value === 'phone') await sendPhoneCode(account)
+    else await sendEmailCode(account)
+    startCooldown()
+  } catch (error) {
+    showAppToast(error instanceof Error ? error.message : String(error), 'error')
+  } finally {
+    sending.value = false
+  }
 }
+
+async function onConfirm(account: string, verifyCode: string) {
+  try {
+    if (kind.value === 'phone') {
+      await bindPhone(account, verifyCode)
+      security.bindPhone(account)
+    } else {
+      await bindEmail(account, verifyCode)
+      security.bindEmail(account)
+    }
+    showToast(securityBindCopy.success)
+    window.clearTimeout(leaveTimer)
+    leaveTimer = window.setTimeout(() => {
+      void router.replace('/security')
+    }, 1000)
+  } catch (error) {
+    showAppToast(error instanceof Error ? error.message : String(error), 'error')
+  }
+}
+
+onMounted(guard)
+watch(kind, () => {
+  resetCode()
+  guard()
+})
 
 onBeforeUnmount(() => {
   window.clearTimeout(toastTimer)
   window.clearTimeout(leaveTimer)
+  window.clearInterval(cooldownTimer)
 })
 </script>
 
@@ -65,7 +134,16 @@ onBeforeUnmount(() => {
     </header>
 
     <div class="page-scroller verify-body">
-      <BindEmailForm @confirm="onConfirm" @too-long="onTooLong" />
+      <BindEmailForm
+        :key="kind"
+        :kind="kind"
+        :cooldown="cooldown"
+        :sending="sending"
+        :sent="sent"
+        @confirm="onConfirm"
+        @send="onSend"
+        @too-long="onTooLong"
+      />
     </div>
 
     <CopyToast v-if="toast" :message="toast" />

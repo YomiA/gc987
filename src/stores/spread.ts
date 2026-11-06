@@ -57,8 +57,12 @@ export const useSpreadStore = defineStore('spread', () => {
 
   const activeTab = computed(() => tabs.value.find((tab) => tab.key === active.value) ?? null)
 
-  async function load() {
-    if (loaded.value) return
+  let task: Promise<void> | null = null
+
+  function load(force = false) {
+    if (task) return task
+    if (loaded.value && !force) return Promise.resolve()
+    task = (async () => {
     const home = useHomeStore()
     await home.load().catch(() => undefined)
     setSiteTimeZone(home.layout?.timeZone)
@@ -86,6 +90,10 @@ export const useSpreadStore = defineStore('spread', () => {
     rateTabs.value = rates
     await Promise.all([loadPerformance(), loadCommission(), loadRates()])
     loaded.value = true
+    })().finally(() => {
+      task = null
+    })
+    return task
   }
 
   async function loadPerformance() {

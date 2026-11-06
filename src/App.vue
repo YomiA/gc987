@@ -4,12 +4,22 @@ import { RouterView, useRoute, useRouter } from 'vue-router'
 import AppToast from './components/base/AppToast.vue'
 import PageLoading from './components/base/PageLoading.vue'
 import LoginModal from './components/inicio/LoginModal.vue'
+import CashOutPasswordDialog from './components/withdraw/CashOutPasswordDialog.vue'
 import SideFab from './components/inicio/SideFab.vue'
+import { releasePageLoading } from './pageLoading'
+import { refreshCurrentPage } from './pageRefresh'
 import { useAuthStore } from './stores/auth'
+import { useUserStore } from './stores/user'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const user = useUserStore()
+
+function onSetCashOutPassword() {
+  user.closeFundTips()
+  void router.push('/withdrawPW')
+}
 
 function onPushNavigate(event: Event) {
   const url = (event as CustomEvent<{ url?: string }>).detail?.url
@@ -21,8 +31,20 @@ function onPushNavigate(event: Event) {
   void router.push(url)
 }
 
-onMounted(() => window.addEventListener('push:navigate', onPushNavigate))
-onBeforeUnmount(() => window.removeEventListener('push:navigate', onPushNavigate))
+function onVisible() {
+  if (document.visibilityState !== 'visible') return
+  void refreshCurrentPage(route.name)
+}
+
+onMounted(() => {
+  releasePageLoading()
+  window.addEventListener('push:navigate', onPushNavigate)
+  document.addEventListener('visibilitychange', onVisible)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('push:navigate', onPushNavigate)
+  document.removeEventListener('visibilitychange', onVisible)
+})
 const showFab = computed(() => {
   const path = route.path
   return (
@@ -129,6 +151,7 @@ const showFab = computed(() => {
   <RouterView />
   <SideFab v-if="showFab" />
   <PageLoading />
+  <CashOutPasswordDialog v-if="user.fundTipsOpen" @confirm="onSetCashOutPassword" />
   <div v-if="auth.dialogOpen" class="auth-host">
     <LoginModal
       :mode="auth.dialogMode"

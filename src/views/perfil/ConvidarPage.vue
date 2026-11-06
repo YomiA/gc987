@@ -29,7 +29,7 @@ function goBack() {
   else void router.push('/main/perfil')
 }
 
-onMounted(() => void spread.load())
+onMounted(() => void spread.load(true))
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { selectMainTab } from '../auth/tabGuard'
 import { useAuthStore } from '../stores/auth'
@@ -162,18 +162,8 @@ const footerTerms = [
   '3. O fato de um jogador jogar ou ganhar em um jogo de apostas sociais não significa que ele ganhará em apostas com dinheiro real e jogos relacionados no futuro.',
 ].join('\n\n')
 
-watch(
-  () => auth.isLoggedIn,
-  (loggedIn, wasLoggedIn) => {
-    if (!loggedIn || wasLoggedIn) return
-    void home.loadRemote()
-    void home.refreshQueuedWallet()
-  },
-)
-
 onMounted(() => {
-  void home.refreshQueuedWallet()
-  void home.load().then(() => {
+  void home.enterInicio().then(() => {
     void nextTick(() => {
       requestAnimationFrame(measureDockY)
       updateToTop()

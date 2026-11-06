@@ -6,9 +6,16 @@ export const useWithdrawalAccountStore = defineStore('withdrawalAccount', () => 
   const items = ref<PixAccount[]>([])
   const loaded = ref(false)
 
-  async function load() {
-    items.value = await withdrawalAccountApi.list()
-    loaded.value = true
+  let loadTask: Promise<void> | null = null
+  function load() {
+    if (loadTask) return loadTask
+    loadTask = (async () => {
+      items.value = await withdrawalAccountApi.list()
+      loaded.value = true
+    })().finally(() => {
+      loadTask = null
+    })
+    return loadTask
   }
 
   async function add(name: string, pix: string) {

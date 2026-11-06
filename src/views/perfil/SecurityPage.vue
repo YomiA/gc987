@@ -7,9 +7,8 @@
  * docs/research/gc987-com/security/SECURITY_PAGE.spec.md.
  *
  * Password rows push the first Validação page (`/security/verify/password`
- * and `/security/verify/asset`). Unbound E-mail pushes
- * `/security/verify/email`. Bound Telefone keeps the chevron but does not
- * navigate.
+ * and `/security/verify/asset`). Telefone pushes `/security/verify/phone`.
+ * Unbound E-mail pushes `/security/verify/email`.
  */
 import { computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
@@ -28,6 +27,7 @@ const groups = computed(() =>
     perfil.profile?.account ?? '55900000000',
     security.email,
     security.assetPasswordSet,
+    security.phone,
   ),
 )
 
@@ -36,7 +36,7 @@ function goBack() {
   else void router.push('/main/perfil')
 }
 
-onMounted(() => void perfil.load())
+onMounted(() => void perfil.load(true))
 </script>
 
 <template>

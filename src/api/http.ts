@@ -1,5 +1,6 @@
 import { accessToken, authUser, clearSession, refreshToken, setSession } from '../auth/session'
 import { acceptLanguage, i18n } from '../i18n'
+import { beginPageLoading, endPageLoading } from '../pageLoading'
 
 const BASE = import.meta.env.VITE_API_BASE_URL || '/api'
 
@@ -27,9 +28,23 @@ interface RequestOptions {
   keepSession?: boolean
   /** Internal: a 401 has already tried to refresh once. */
   retry?: boolean
+  /** List paging keeps its own spinner and does not cover the page. */
+  silent?: boolean
+  /** Extra headers. Omitted keys are not sent. */
+  headers?: Record<string, string>
 }
 
 let refreshing: Promise<boolean> | null = null
+/** Identical calls started together share one network request. */
+const inflight = new Map<string, Promise<unknown>>()
+
+function requestKey(path: string, options: RequestOptions) {
+  const method = options.method || 'GET'
+  const auth = options.auth === false ? 'anon' : accessToken.value ? 'user' : 'guest'
+  const body = options.body === undefined ? '' : JSON.stringify(options.body)
+  const extra = options.headers ? JSON.stringify(options.headers) : ''
+  return `${method} ${path} ${auth} ${body} ${extra}`
+}
 
 function messageOf(data: ApiEnvelope<unknown>, fallback: string) {
   return data.msg || data.message || fallback
@@ -93,38 +108,55 @@ async function exchangeRefreshToken(): Promise<boolean> {
   }
 }
 
-export async function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-  const headers = baseHeaders()
-  if (options.auth !== false && accessToken.value) {
-    headers.Authorization = `Bearer ${accessToken.value}`
-  }
-  const init: RequestInit = {
-    method: options.method || 'GET',
-    headers,
-    credentials: 'same-origin',
-  }
-  if (options.body !== undefined) {
-    headers['Content-Type'] = 'application/json'
-    init.body = JSON.stringify(options.body)
-  }
+export function request<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  if (options.retry) return requestOnce<T>(path, options)
+  const key = requestKey(path, options)
+  const pending = inflight.get(key)
+  if (pending) return pending as Promise<T>
+  const task = requestOnce<T>(path, options).finally(() => {
+    if (inflight.get(key) === task) inflight.delete(key)
+  })
+  inflight.set(key, task)
+  return task
+}
 
-  const resp = await fetch(`${BASE}${path}`, init)
-  const data = (await resp.json().catch(() => ({}))) as ApiEnvelope<T>
-  const code = Number(data.code ?? (resp.ok ? 200 : resp.status))
+async function requestOnce<T>(path: string, options: RequestOptions = {}): Promise<T> {
+  if (!options.silent) beginPageLoading()
+  try {
+    const headers = baseHeaders(options.headers)
+    if (options.auth !== false && accessToken.value) {
+      headers.Authorization = `Bearer ${accessToken.value}`
+    }
+    const init: RequestInit = {
+      method: options.method || 'GET',
+      headers,
+      credentials: 'same-origin',
+    }
+    if (options.body !== undefined) {
+      headers['Content-Type'] = 'application/json'
+      init.body = JSON.stringify(options.body)
+    }
 
-  if ((resp.status === 401 || code === 401) && options.keepSession) {
-    throw new ApiError(messageOf(data, tr('login.expired')), 401)
-  }
+    const resp = await fetch(`${BASE}${path}`, init)
+    const data = (await resp.json().catch(() => ({}))) as ApiEnvelope<T>
+    const code = Number(data.code ?? (resp.ok ? 200 : resp.status))
 
-  if ((resp.status === 401 || code === 401) && options.auth !== false && !options.retry) {
-    const renewed = await refreshOnce()
-    if (renewed) return request<T>(path, { ...options, retry: true })
-    clearSession()
-    throw new ApiError(messageOf(data, tr('login.expired')), 401)
-  }
+    if ((resp.status === 401 || code === 401) && options.keepSession) {
+      throw new ApiError(messageOf(data, tr('login.expired')), 401)
+    }
 
-  if (!Number.isFinite(code) || code !== 200) {
-    throw new ApiError(messageOf(data, tr('login.requestFailed')), Number.isFinite(code) ? code : 500)
+    if ((resp.status === 401 || code === 401) && options.auth !== false && !options.retry) {
+      const renewed = await refreshOnce()
+      if (renewed) return request<T>(path, { ...options, retry: true })
+      clearSession()
+      throw new ApiError(messageOf(data, tr('login.expired')), 401)
+    }
+
+    if (!Number.isFinite(code) || code !== 200) {
+      throw new ApiError(messageOf(data, tr('login.requestFailed')), Number.isFinite(code) ? code : 500)
+    }
+    return data as T
+  } finally {
+    if (!options.silent) endPageLoading()
   }
-  return data as T
 }

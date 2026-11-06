@@ -57,6 +57,14 @@ export function createCashOutOrder(body: CashOutOrderBody) {
   })
 }
 
+/** First withdrawal password. After this succeeds, /selfInfo reports hasCashOutPwd true. */
+export function setCashOutPwd(password: string) {
+  return request<{ code?: number; data?: unknown }>('/setCashOutPwd', {
+    method: 'POST',
+    body: { password },
+  })
+}
+
 export interface CashOutOrderRecord {
   id: number
   orderTime: string
@@ -84,10 +92,11 @@ export interface CashOutOrderQuery {
 }
 
 /** Withdrawal history. Status stays off the body unless a status is selected. */
-export function cashOutOrderRecord(body: CashOutOrderQuery) {
+export function cashOutOrderRecord(body: CashOutOrderQuery, silent = false) {
   return request<{ code?: number; data?: CashOutOrderPage }>('/cashOutOrderRecord', {
     method: 'POST',
     body,
+    silent,
   })
 }
 

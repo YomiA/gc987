@@ -7,18 +7,44 @@
  * two tabs that have one. Geometry is the live page at 390x844x3; see
  * docs/research/gc987-com/user-report/REPORT_PAGE.spec.md.
  */
-import { computed, onMounted } from 'vue'
+import { computed, nextTick, onMounted, ref, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import SvgIcon from '../../components/base/SvgIcon.vue'
 import ReportFooterCount from '../../components/perfil/ReportFooterCount.vue'
 import ReportSegment from '../../components/perfil/ReportSegment.vue'
 import ReportSelect from '../../components/perfil/ReportSelect.vue'
+import { betGameTypeLabel, betStatusOf, type BetRecord, type ReportFilter } from '../../api/report'
 import { useReportStore } from '../../stores/report'
+import { showToast } from '../../toast'
+import { formatReais } from '../../utils/money'
+import { formatDateTime } from '../../utils/timeZone'
 
 const router = useRouter()
 const report = useReportStore()
+const scroller = ref<HTMLElement>()
+
+// Same nine-dot bubbles as the deposit and withdraw record footers.
+const moreDots = [
+  { top: '0%', left: '32%', delay: '-1000ms' },
+  { top: '20.5692%', left: '24.5134%', delay: '-888.889ms' },
+  { top: '31.5138%', left: '5.55674%', delay: '-777.778ms' },
+  { top: '27.7128%', left: '-16%', delay: '-666.667ms' },
+  { top: '10.9446%', left: '-30.0702%', delay: '-555.556ms' },
+  { top: '-10.9446%', left: '-30.0702%', delay: '-444.444ms' },
+  { top: '-27.7128%', left: '-16%', delay: '-333.333ms' },
+  { top: '-31.5138%', left: '5.55674%', delay: '-222.222ms' },
+  { top: '-20.5692%', left: '24.5134%', delay: '-111.111ms' },
+]
 
 const layout = computed(() => report.activeTab?.layout ?? 'statement')
+const filters = computed((): ReportFilter[] => {
+  const tab = report.activeTab
+  if (!tab) return []
+  if (tab.key !== 'bet') return tab.filters
+  return tab.filters.map((filter) =>
+    filter.key === 'platform' ? { ...filter, options: report.platformOptions } : filter,
+  )
+})
 const showEmpty = computed(() => report.loaded && !report.loading && report.records.length === 0)
 
 function goBack() {
@@ -26,7 +52,45 @@ function goBack() {
   else void router.push('/main/perfil')
 }
 
-onMounted(() => void report.load())
+function profitText(row: BetRecord) {
+  const amount = row.profitAmount
+  if (amount == null || amount === 0) return ''
+  const text = formatReais(amount)
+  return amount > 0 ? `+${text}` : text
+}
+
+function profitTone(row: BetRecord) {
+  const amount = row.profitAmount
+  if (amount == null || amount === 0) return 'white'
+  return amount < 0 ? 'red' : 'green'
+}
+
+async function copyRound(value: string) {
+  if (!value) return
+  try {
+    await navigator.clipboard.writeText(value)
+  } catch {
+    /* clipboard can be blocked; the toast still confirms the tap */
+  }
+  showToast('Cópia Bem-sucedida', 'success')
+}
+
+function maybeLoadMore() {
+  const el = scroller.value
+  if (!el || report.active !== 'bet' || !report.hasMore || report.loading || report.loadingMore) return
+  if (el.scrollTop + el.clientHeight < el.scrollHeight - 48) return
+  void report.loadMore()
+}
+
+watch(
+  () => report.records.length,
+  async () => {
+    await nextTick()
+    maybeLoadMore()
+  },
+)
+
+onMounted(() => void report.load(true))
 </script>
 
 <template>
@@ -46,7 +110,7 @@ onMounted(() => void report.load())
       <div class="top">
         <div class="select-scroll">
           <ReportSelect
-            v-for="filter in report.activeTab.filters"
+            v-for="filter in filters"
             :key="`${report.active}-${filter.key}`"
             class="filter"
             :class="layout === 'statement' ? 'statement-select' : 'betting-select'"
@@ -57,7 +121,37 @@ onMounted(() => void report.load())
         </div>
       </div>
 
-      <div class="page-scroller report-list">
+      <div ref="scroller" class="page-scroller report-list" @scroll="maybeLoadMore">
+        <template v-if="report.active === 'bet'">
+          <div v-for="(row, index) in report.records" :key="`${row.id}-${index}`" class="item">
+            <div class="num">
+              <p class="white">{{ row.platformName }}{{ row.gameType ? ` ${tr(betGameTypeLabel(row.gameType))}` : '' }}</p>
+              <p class="amount" :class="profitTone(row)">{{ profitText(row) }}</p>
+            </div>
+            <div class="num">
+              <p class="white">{{ row.gameName }}</p>
+              <p :class="betStatusOf(row.status).tone">{{ tr(betStatusOf(row.status).label) }}</p>
+            </div>
+            <div class="minor">
+              <p>{{ formatDateTime(row.createTime) }}</p>
+              <div class="copy">
+                <p class="round">{{ row.roundNo }}</p>
+                <button type="button" class="copy-btn" :aria-label="tr('Copiar')" @click="copyRound(row.roundNo)">
+                  <SvgIcon class="copy-icon" name="record-copy" />
+                </button>
+              </div>
+            </div>
+          </div>
+          <div v-if="report.loadingMore" class="more-loading" role="status" :aria-label="tr('Loading')">
+            <span class="bubbles" aria-hidden="true">
+              <i
+                v-for="(dot, n) in moreDots"
+                :key="n"
+                :style="{ top: dot.top, left: dot.left, animationDelay: dot.delay }"
+              />
+            </span>
+          </div>
+        </template>
         <div v-if="showEmpty" class="empty" :class="{ 'empty-box': layout === 'bet' }">
           <div class="empty-bg-img" />
           <span class="empty-label">{{ tr('Sem Registros') }}</span>
@@ -177,6 +271,116 @@ onMounted(() => void report.load())
 /* The nested ion-content.list: --padding-start/end 1rem, scrolls on its own. */
 .report-list {
   padding: 0 1rem;
+}
+
+.item {
+  margin-bottom: 0.625rem;
+  padding: 0.625rem;
+  border-radius: 0.375rem;
+  background: var(--color-bg-200);
+}
+
+.num {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.375rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.white {
+  color: #fff;
+}
+
+.green {
+  color: #27d48b;
+}
+
+.red {
+  color: #ee4639;
+}
+
+.amount {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+
+.minor {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #6d788d;
+  font-size: 0.75rem;
+  line-height: 1rem;
+}
+
+.copy {
+  display: flex;
+  align-items: center;
+}
+
+.round {
+  width: 10rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  text-align: right;
+}
+
+.copy-btn {
+  display: flex;
+  margin-left: 0.375rem;
+  color: inherit;
+}
+
+.copy-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.more-loading {
+  display: flex;
+  height: 41px;
+  align-items: center;
+  justify-content: center;
+  color: #116fcd;
+}
+
+.bubbles {
+  position: relative;
+  display: block;
+  width: 28px;
+  height: 28px;
+}
+
+.bubbles i {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  transform-origin: center center;
+  animation: spinner-scale-out 1s linear infinite;
+}
+
+.bubbles i::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 4.375px;
+  height: 4.375px;
+  margin: -2.1875px 0 0 -2.1875px;
+  border-radius: 50%;
+  background: currentColor;
+}
+
+@keyframes spinner-scale-out {
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0);
+  }
 }
 
 .empty {

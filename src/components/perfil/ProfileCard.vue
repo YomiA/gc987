@@ -9,30 +9,36 @@ import { formatAmount } from '../../api/promo'
 import type { PerfilProfile } from '../../api/perfil'
 
 const props = defineProps<{ profile: PerfilProfile }>()
+
+const emit = defineEmits<{
+  withdraw: []
+  support: []
+  avatar: []
+}>()
 </script>
 
 <template>
   <div class="user card-bg-gradient">
     <div class="top">
-      <div class="avatar">
+      <div class="avatar" @click="emit('avatar')">
         <img :src="props.profile.avatar" alt="" />
       </div>
 
       <div class="messsage">
         <div class="id-row">
-          <span><span class="user-id">ID: </span> {{ tr(props.profile.id) }}</span>
+          <span><span class="user-id">ID: </span> {{ props.profile.id }}</span>
           <SvgIcon class="copy-icon" name="perfil-copy" />
           <div class="level">
             <img class="crown" :src="props.profile.crown" alt="" />
             <div class="level-badge">
               <span :style="{ color: props.profile.levelBadgeColor }">
-                {{ tr(props.profile.levelBadge) }}
+                {{ props.profile.levelBadge }}
               </span>
             </div>
           </div>
         </div>
 
-        <div class="account-row"><span class="user-account">{{ tr('Conta:') }}</span> {{ tr(props.profile.account) }}</div>
+        <div class="account-row"><span class="user-account">{{ tr('Conta:') }}</span> {{ props.profile.account }}</div>
 
         <div class="money-row">
           <!-- The live page keeps a zero-opacity copy of the amount so the
@@ -46,14 +52,14 @@ const props = defineProps<{ profile: PerfilProfile }>()
         </div>
       </div>
 
-      <div class="email">
+      <div class="email" @click="emit('support')">
         <SvgIcon class="email-icon" name="perfil-email" />
       </div>
     </div>
 
     <div class="bottom">
       <div class="col">
-        <div class="enter-btn withdraw">
+        <div class="enter-btn withdraw" @click="emit('withdraw')">
           <SvgIcon class="btn-icon" name="perfil-saque" />
           <span class="enter-withdraw-text">{{ tr('Saque') }}</span>
         </div>
@@ -90,6 +96,7 @@ const props = defineProps<{ profile: PerfilProfile }>()
   height: 4.75rem;
   border-radius: 0.5rem;
   overflow: hidden;
+  cursor: pointer;
 }
 
 .avatar img {
@@ -189,6 +196,7 @@ const props = defineProps<{ profile: PerfilProfile }>()
 .email {
   position: relative;
   width: 1.75rem;
+  cursor: pointer;
 }
 
 .email-icon {
@@ -220,6 +228,7 @@ const props = defineProps<{ profile: PerfilProfile }>()
 /* div.left { background: var(--color-border-600) } */
 .withdraw {
   background: rgb(42, 50, 78);
+  cursor: pointer;
 }
 
 /* div.right { background: var(--theme-color-gradient-200) }, the same value

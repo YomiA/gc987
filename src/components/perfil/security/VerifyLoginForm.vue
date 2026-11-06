@@ -2,10 +2,9 @@
 /**
  * Shared first-step form on /security/verify/password, /asset, and /email.
  * All three reuse the live login-password field (key + Senha de Login
- * placeholder + clear + 16px eye). Email Confirmar emits so the page can
- * push /security/bind/email; password Confirmar emits for
- * /security/confirm/password; asset Confirmar emits for
- * /security/confirm/asset.
+ * placeholder + clear + 16px eye). Phone and email Confirmar emit the
+ * password so the page can check it. Password and asset Confirmar emit
+ * it too, and the page only uses it to move on.
  */
 import { computed, ref } from 'vue'
 import SvgIcon from '../../base/SvgIcon.vue'
@@ -15,12 +14,16 @@ import {
 } from '../../../api/security'
 
 const props = defineProps<{ variant: SecurityVerifyVariant }>()
-const emit = defineEmits<{ confirm: [] }>()
+const emit = defineEmits<{ confirm: [password: string] }>()
 
 const password = ref('')
 const showPassword = ref(false)
 const showIntro = computed(() => props.variant !== 'asset')
-const tip = computed(() => (props.variant === 'email' ? copy.emailTip : copy.loginTip))
+const tip = computed(() => {
+  if (props.variant === 'email') return copy.emailTip
+  if (props.variant === 'phone') return copy.phoneTip
+  return copy.loginTip
+})
 
 /** Live ion-input: empty and 6–16 hide the hint; 1–5 chars show it immediately. */
 const error = computed(() => {
@@ -30,7 +33,7 @@ const error = computed(() => {
 
 function onSubmit() {
   if (error.value || password.value.length < 6) return
-  emit('confirm')
+  emit('confirm', password.value)
 }
 </script>
 
@@ -57,6 +60,7 @@ function onSubmit() {
             autocapitalize="off"
             autocorrect="off"
             :placeholder="tr(copy.placeholder)"
+            required
             v-model="password"
           />
           <button

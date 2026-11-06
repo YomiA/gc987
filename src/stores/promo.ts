@@ -35,8 +35,12 @@ export const usePromoStore = defineStore('promo', () => {
   const vipRetentionRules = ref<string[]>([])
   const vipSubTab = ref('bonus')
 
-  async function load() {
-    if (loaded.value) return
+  let task: Promise<void> | null = null
+
+  function load(force = false) {
+    if (task) return task
+    if (loaded.value && !force) return Promise.resolve()
+    task = (async () => {
     const [t, e, rebate, vip] = await Promise.all([
       promoApi.getTabs(),
       promoApi.getEvents(),
@@ -54,6 +58,10 @@ export const usePromoStore = defineStore('promo', () => {
     vipRules.value = vip.rules
     vipRetentionRules.value = vip.retentionRules
     loaded.value = true
+    })().finally(() => {
+      task = null
+    })
+    return task
   }
 
   function selectTab(key: string) {

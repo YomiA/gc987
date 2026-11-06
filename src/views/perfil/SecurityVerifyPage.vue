@@ -3,10 +3,10 @@
  * /security/verify/password, /asset, and /email — first Validação page.
  *
  * Shared chrome (md elevation-4 header, ion-padding 16px). Login-password
- * and email show the two intro lines (email uses the vincular tip); asset
- * leaves that slot empty. Email Confirmar is mock and pushes
- * /security/bind/email. Password Confirmar is mock and pushes
- * /security/confirm/password. Asset Confirmar is mock and pushes
+ * and email show the two intro lines (email and phone use the vincular
+ * tip); asset leaves that slot empty. Phone and email Confirmar skip
+ * /verifyPassword for now and open the bind page. Password Confirmar pushes
+ * /security/confirm/password. Asset Confirmar pushes
  * /security/confirm/asset. See
  * docs/research/gc987-com/security/SECURITY_VERIFY.spec.md.
  */
@@ -15,13 +15,16 @@ import { useRoute, useRouter } from 'vue-router'
 import SvgIcon from '../../components/base/SvgIcon.vue'
 import VerifyLoginForm from '../../components/perfil/security/VerifyLoginForm.vue'
 import { securityVerifyCopy, type SecurityVerifyVariant } from '../../api/security'
+import { useSecurityStore } from '../../stores/security'
 
 const route = useRoute()
 const router = useRouter()
+const security = useSecurityStore()
 
 const variant = computed<SecurityVerifyVariant>(() => {
   if (route.path.endsWith('/asset')) return 'asset'
   if (route.path.endsWith('/email')) return 'email'
+  if (route.path.endsWith('/phone')) return 'phone'
   return 'password'
 })
 
@@ -31,9 +34,17 @@ function goBack() {
 }
 
 function onConfirm() {
-  if (variant.value === 'email') void router.push('/security/bind/email')
-  if (variant.value === 'password') void router.push('/security/confirm/password')
-  if (variant.value === 'asset') void router.push('/security/confirm/asset')
+  if (variant.value === 'password') {
+    void router.push('/security/confirm/password')
+    return
+  }
+  if (variant.value === 'asset') {
+    void router.push('/security/confirm/asset')
+    return
+  }
+  // /verifyPassword is failing, so phone and email go straight to the bind page.
+  security.allowBind(variant.value)
+  void router.push(`/security/bind/${variant.value}`)
 }
 </script>
 

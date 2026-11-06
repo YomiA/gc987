@@ -66,9 +66,10 @@ export interface PaymentOrderQuery {
 }
 
 /** Deposit history. Status stays off the body; the selected day window is sent. */
-export function paymentOrderRecord(body: PaymentOrderQuery) {
+export function paymentOrderRecord(body: PaymentOrderQuery, silent = false) {
   return request<{ code?: number; data?: PaymentOrderPage }>('/paymentOrderRecord', {
     method: 'POST',
     body,
+    silent,
   })
 }

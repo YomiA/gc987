@@ -1,0 +1,13 @@
+---
+description: 每次调用接口都要显示蓝色圆点 loading
+alwaysApply: true
+---
+
+# 接口 loading
+
+gc987 里每次向后端要数据，都要出现现在这套 loading：半透明黑底（`rgba(0,0,0,0.32)`）加蓝色九个圆点（`#38a8fa`）。组件是 `src/components/base/PageLoading.vue`，开关在 `src/pageLoading.ts`。
+
+- 新接口和旧接口一样，都走 `src/api/http.ts` 的 `request()`。它在请求开始时打开 loading，结束（成功或失败）时关掉。不要在页面里自己 `fetch`。
+- 不要给普通查询传 `silent: true`。漏掉 loading 就是错的。
+- 唯一例外是充值记录、提现记录、投注记录（Relatórios 里 Recordes de Apostas）的上拉下一页：整页不要再盖一层，列表底部用同一套蓝色圆点。第一页仍然走整页 loading。
+- 401 后顺手刷新 token 的那次请求，包在原来那次 loading 里面，不要再加一个。

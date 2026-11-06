@@ -1,38 +1,72 @@
 <script setup lang="ts">
 /**
- * /security/confirm/password form. Painted live UI is two
- * ion-item.password bars (54px #101629, radius 10, 20px eye) — not the
- * Ot verify field. Error-text stays hidden; submit is mock.
+ * /security/confirm/password. The live page has the new password and the
+ * confirm bar. The old password is the extra field this API needs.
+ * An empty bar uses the browser's required prompt. A mismatch is shown
+ * under the confirm bar.
  */
 import { ref } from 'vue'
 import SvgIcon from '../../base/SvgIcon.vue'
 import { isValidConfirmPassword, securityConfirmCopy as copy } from '../../../api/security'
 
 const emit = defineEmits<{
-  confirm: []
-  mismatch: []
+  confirm: [password: string, newPassword: string, againPassword: string]
 }>()
 
+const oldPassword = ref('')
 const password = ref('')
 const confirmPassword = ref('')
+const showOld = ref(false)
 const showPassword = ref(false)
 const showConfirm = ref(false)
+const mismatch = ref(false)
+const short = ref('')
 
 function onSubmit() {
-  if (!isValidConfirmPassword(password.value) || !isValidConfirmPassword(confirmPassword.value)) {
+  short.value = ''
+  mismatch.value = password.value !== confirmPassword.value
+  if (mismatch.value) return
+  if (!isValidConfirmPassword(oldPassword.value)) {
+    short.value = 'old'
     return
   }
-  if (password.value !== confirmPassword.value) {
-    emit('mismatch')
+  if (!isValidConfirmPassword(password.value)) {
+    short.value = 'new'
     return
   }
-  emit('confirm')
+  if (!isValidConfirmPassword(confirmPassword.value)) {
+    short.value = 'again'
+    return
+  }
+  short.value = ''
+  emit('confirm', oldPassword.value, password.value, confirmPassword.value)
 }
 </script>
 
 <template>
   <form class="confirm-form" @submit.prevent="onSubmit">
     <p class="heading">{{ tr(copy.heading) }}</p>
+
+    <div class="item">
+      <div class="bar">
+        <input
+          class="control"
+          :type="showOld ? 'text' : 'password'"
+          maxlength="16"
+          autocomplete="current-password"
+          spellcheck="false"
+          autocapitalize="off"
+          autocorrect="off"
+          :placeholder="tr(copy.oldPassword)"
+          required
+          v-model="oldPassword"
+        />
+      </div>
+      <button type="button" class="eye" @click="showOld = !showOld">
+        <SvgIcon class="eye-icon" :name="showOld ? 'security-eye-show' : 'security-eye-hide'" />
+      </button>
+      <p v-if="short === 'old'" class="hint">{{ tr(copy.rule) }}</p>
+    </div>
 
     <div class="item">
       <div class="bar">
@@ -45,6 +79,7 @@ function onSubmit() {
           autocapitalize="off"
           autocorrect="off"
           :placeholder="tr(copy.password)"
+          required
           v-model="password"
         />
       </div>
@@ -54,6 +89,7 @@ function onSubmit() {
           :name="showPassword ? 'security-eye-show' : 'security-eye-hide'"
         />
       </button>
+      <p v-if="short === 'new'" class="hint">{{ tr(copy.rule) }}</p>
     </div>
 
     <div class="item">
@@ -67,6 +103,7 @@ function onSubmit() {
           autocapitalize="off"
           autocorrect="off"
           :placeholder="tr(copy.confirmPassword)"
+          required
           v-model="confirmPassword"
         />
       </div>
@@ -76,6 +113,8 @@ function onSubmit() {
           :name="showConfirm ? 'security-eye-show' : 'security-eye-hide'"
         />
       </button>
+      <p v-if="mismatch && password !== confirmPassword" class="hint">{{ tr(copy.mismatch) }}</p>
+      <p v-else-if="short === 'again'" class="hint">{{ tr(copy.rule) }}</p>
     </div>
 
     <div class="submit-item">
@@ -93,13 +132,22 @@ function onSubmit() {
   color: var(--color-text-100);
 }
 
-/* ion-item.password: 59 tall, margin 10px 0 5px, inner-padding-end .25rem. */
+/* ion-item.password: 59 tall, margin 10px 0 5px, inner-padding-end .25rem.
+   min-height so the mismatch line can sit under the bar. */
 .item {
   display: block;
   position: relative;
-  height: 3.6875rem;
+  min-height: 3.6875rem;
   margin: 10px 0 5px;
   padding-right: 0.25rem;
+}
+
+.hint {
+  margin: 0.25rem 0 0;
+  font-size: 0.75rem;
+  font-weight: 400;
+  line-height: 1.4;
+  color: rgb(197, 0, 15);
 }
 
 /* ion-input in-item wrapper: 354×54, pad 0 16px, radius 10, bg #101629. */

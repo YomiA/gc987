@@ -96,7 +96,7 @@ function onSearch() {
 }
 
 onMounted(() => {
-  void home.load()
+  void home.enterCatalogPage('search')
 })
 </script>
 

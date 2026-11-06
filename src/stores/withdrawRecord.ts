@@ -51,11 +51,14 @@ export const useWithdrawRecordStore = defineStore('withdrawRecord', () => {
       const home = useHomeStore()
       await home.load().catch(() => undefined)
       setSiteTimeZone(home.layout?.timeZone)
-      const resp = await cashOutOrderRecord({
-        size: PAGE_SIZE,
-        current: next,
-        ...searchWindow(dateRange.value),
-      })
+      const resp = await cashOutOrderRecord(
+        {
+          size: PAGE_SIZE,
+          current: next,
+          ...searchWindow(dateRange.value),
+        },
+        !reset,
+      )
       if (mine !== ticket) return
       const data = resp.data
       const rows = Array.isArray(data?.records) ? data.records : []

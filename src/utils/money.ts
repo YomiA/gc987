@@ -28,6 +28,12 @@ export function formatAmount(cents: number): string {
   return `${negative ? '-' : ''}${whole}${decimal}${digits.slice(-2)}`
 }
 
+/** Money already in reais, such as the profile wager and deposit amounts. */
+export function formatReais(reais: number): string {
+  const n = Number(reais)
+  return formatAmount(Math.round((Number.isFinite(n) ? n : 0) * 100))
+}
+
 /** Whole amounts, such as the deposit range 10 - 50,000. */
 export function formatGrouped(value: number): string {
   const { group } = marks()

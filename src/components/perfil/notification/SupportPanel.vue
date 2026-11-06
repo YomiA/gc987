@@ -28,7 +28,13 @@ defineProps<{ channels: SupportChannel[] }>()
         <p class="nickname">{{ tr(item.nickname) }}</p>
         <p class="account">{{ tr(item.account) }}</p>
       </div>
-      <a class="contato" :href="item.url" target="_blank" rel="noopener noreferrer">
+      <a
+        v-if="item.url"
+        class="contato"
+        :href="item.url"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
         {{ tr(copy.contact) }}
       </a>
     </div>

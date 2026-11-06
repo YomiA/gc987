@@ -120,20 +120,27 @@ export const useWithdrawStore = defineStore('withdraw', () => {
     }
   }
 
-  async function load() {
-    const channelsTask = refreshChannels()
-    if (!loaded.value) {
-      const [am, bal, fee] = await Promise.all([
-        withdrawApi.getAmounts(),
-        withdrawApi.getBalance(),
-        withdrawApi.getFee(),
-      ])
-      if (!channels.value.length) amounts.value = am
-      balanceCents.value = bal
-      feeCents.value = fee
-      loaded.value = true
-    }
-    await channelsTask
+  let loadTask: Promise<void> | null = null
+  function load() {
+    if (loadTask) return loadTask
+    loadTask = (async () => {
+      const channelsTask = refreshChannels()
+      if (!loaded.value) {
+        const [am, bal, fee] = await Promise.all([
+          withdrawApi.getAmounts(),
+          withdrawApi.getBalance(),
+          withdrawApi.getFee(),
+        ])
+        if (!channels.value.length) amounts.value = am
+        balanceCents.value = bal
+        feeCents.value = fee
+        loaded.value = true
+      }
+      await channelsTask
+    })().finally(() => {
+      loadTask = null
+    })
+    return loadTask
   }
 
   function reaisInputFromCents(cents: number) {

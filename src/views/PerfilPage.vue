@@ -5,23 +5,81 @@ import { useRouter } from 'vue-router'
 import OptionList from '../components/perfil/OptionList.vue'
 import LogoutModal from '../components/perfil/LogoutModal.vue'
 import LanguageModal from '../components/perfil/LanguageModal.vue'
+import AvatarModal from '../components/perfil/AvatarModal.vue'
 import ProfileCard from '../components/perfil/ProfileCard.vue'
 import VipProgressCard from '../components/perfil/VipProgressCard.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import { selectMainTab } from '../auth/tabGuard'
+import {
+  selfInfoAmount,
+  showsRechargeProgress,
+  vipLevelNumber,
+} from '../api/user'
+import { showToast } from '../toast'
+import { assetUrl } from '../utils/assetUrl'
 import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
 import { usePerfilStore } from '../stores/perfil'
 import { usePromoStore } from '../stores/promo'
+import { useUserStore } from '../stores/user'
 
 const router = useRouter()
 const auth = useAuthStore()
 const home = useHomeStore()
 const perfil = usePerfilStore()
 const promo = usePromoStore()
+const user = useUserStore()
 const logoutOpen = ref(false)
 const langOpen = ref(false)
+const avatarOpen = ref(false)
 const { t } = useI18n()
+
+const profileView = computed(() => {
+  const base = perfil.profile
+  if (!base) return null
+  const info = auth.isLoggedIn ? user.info : null
+  if (!info) return base
+  const avatar = assetUrl(info.avatar)
+  return {
+    ...base,
+    id: info.userId == null ? '' : String(info.userId),
+    account: info.account ?? '',
+    avatar: avatar || base.avatar,
+    levelBadge: `V${vipLevelNumber(info.level)}`,
+  }
+})
+
+const vipView = computed(() => {
+  const base = perfil.vip
+  if (!base) return null
+  const info = auth.isLoggedIn ? user.info : null
+  if (!info) {
+    return {
+      crown: base.crown,
+      levelBadge: base.levelBadge,
+      levelBadgeColor: base.levelBadgeColor,
+      nextLevel: base.nextLevel,
+      orderAmt: base.currentBet / 100,
+      upgradeOrderAmt: base.requiredBet / 100,
+      rechargeAmt: 0,
+      upgradeRechargeAmt: 0,
+      showRecharge: false,
+    }
+  }
+  const level = vipLevelNumber(info.level)
+  const rechargeNeed = selfInfoAmount(info.upgradeRechargeAmt)
+  return {
+    crown: base.crown,
+    levelBadge: `V${level}`,
+    levelBadgeColor: base.levelBadgeColor,
+    nextLevel: `VIP${level + 1}`,
+    orderAmt: selfInfoAmount(info.orderAmt) ?? 0,
+    upgradeOrderAmt: selfInfoAmount(info.upgradeOrderAmt) ?? 0,
+    rechargeAmt: selfInfoAmount(info.rechargeAmt) ?? 0,
+    upgradeRechargeAmt: rechargeNeed ?? 0,
+    showRecharge: showsRechargeProgress(info),
+  }
+})
 
 const optionItems = computed(() =>
   perfil.options.map((item) => ({
@@ -30,6 +88,11 @@ const optionItems = computed(() =>
     note: item.key === 'convidar' ? t('perfil.convidarNote') : undefined,
   })),
 )
+
+function onAvatar() {
+  if (!auth.isLoggedIn) return
+  avatarOpen.value = true
+}
 
 function onTabSelect(key: string) {
   selectMainTab(router, key)
@@ -56,23 +119,36 @@ function onOptionSelect(key: string) {
 }
 
 function logout() {
+  home.markCatalogStale()
   auth.logout()
   logoutOpen.value = false
+  void router.replace('/main/inicio')
 }
 
 onMounted(() => {
   // The bottom bar is the app-level one shared with /main/inicio, so its items
   // come from the same store even when this route is opened directly.
   void home.load()
-  void perfil.load()
+  void perfil.load(true)
+  if (auth.isLoggedIn) {
+    void user.loadUserInfo().catch((error: unknown) => {
+      showToast(error instanceof Error ? error.message : String(error), 'error')
+    })
+  }
 })
 </script>
 
 <template>
   <div class="ion-page">
     <div class="page-scroller perfil-content">
-      <ProfileCard v-if="perfil.profile" :profile="perfil.profile" />
-      <VipProgressCard v-if="perfil.vip" :vip="perfil.vip" @click="goActivityVip" />
+      <ProfileCard
+        v-if="profileView"
+        :profile="profileView"
+        @withdraw="onTabSelect('saque')"
+        @support="onOptionSelect('suporte')"
+        @avatar="onAvatar"
+      />
+      <VipProgressCard v-if="vipView" :vip="vipView" @click="goActivityVip" />
       <OptionList :items="optionItems" @select="onOptionSelect" />
       <div class="bottom-spacer" />
     </div>
@@ -80,6 +156,7 @@ onMounted(() => {
     <TabBar :items="home.tabBarItems" active="perfil" @select="onTabSelect" />
 
     <LanguageModal v-if="langOpen" @close="langOpen = false" />
+    <AvatarModal v-if="avatarOpen" @close="avatarOpen = false" />
     <LogoutModal v-if="logoutOpen" @cancel="logoutOpen = false" @sair="logout" />
   </div>
 </template>

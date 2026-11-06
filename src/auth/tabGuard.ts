@@ -1,6 +1,7 @@
 import type { Router } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useHomeStore } from '../stores/home'
+import { useUserStore } from '../stores/user'
 
 const LOGIN_TABS = new Set(['deposito', 'saque', 'perfil'])
 
@@ -28,7 +29,7 @@ export function selectMainTab(router: Router, key: string) {
     return
   }
   if (key === 'saque') {
-    void router.push('/main/withdraw')
+    void useUserStore().openWithdraw(router)
     return
   }
   useHomeStore().selectTab(key)

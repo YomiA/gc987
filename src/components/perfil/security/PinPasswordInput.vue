@@ -104,7 +104,7 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   background-color: #1a223a;
-  border-radius: 4px;
+  border-radius: 0.25rem;
   box-sizing: border-box;
 }
 

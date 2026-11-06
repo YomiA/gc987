@@ -76,15 +76,22 @@ export const useEntrarStore = defineStore('entrar', () => {
     channelId.value = Number(item.id)
   }
 
-  /** Fresh channel list every time the deposit page opens. */
-  async function load() {
-    try {
-      const resp = await paymentChannels()
-      const list = resp.data?.channels || []
-      if (list[0]) applyChannel(list[0])
-    } catch (error) {
-      showToast(error instanceof Error ? error.message : String(error), 'error')
-    }
+  /** Fresh channel list every time the deposit page opens. Overlapping calls share one request. */
+  let loadTask: Promise<void> | null = null
+  function load() {
+    if (loadTask) return loadTask
+    loadTask = (async () => {
+      try {
+        const resp = await paymentChannels()
+        const list = resp.data?.channels || []
+        if (list[0]) applyChannel(list[0])
+      } catch (error) {
+        showToast(error instanceof Error ? error.message : String(error), 'error')
+      }
+    })().finally(() => {
+      loadTask = null
+    })
+    return loadTask
   }
 
   function selectAmount(cents: number) {

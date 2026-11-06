@@ -3,6 +3,7 @@ import { computed, ref } from 'vue'
 import { login as loginRequest, register as registerRequest } from '../api/auth'
 import { accessToken, authUser, clearSession, refreshToken, setSession } from '../auth/session'
 import { useHomeStore } from './home'
+import { useUserStore } from './user'
 import { silentSubscribeAfterAuth } from '../composables/usePushNotification'
 import { i18n } from '../i18n'
 import {
@@ -44,14 +45,13 @@ export const useAuthStore = defineStore('auth', () => {
       throw new Error(resp.msg || resp.message || String(i18n.global.t('login.failed')))
     }
     const home = useHomeStore()
-    home.queueWalletRefresh()
     setSession({
       token: data.token,
       refreshToken: data.refreshToken,
       userId: data.userId,
       account,
     })
-    void home.refreshQueuedWallet()
+    void home.loadSignedIn()
     void silentSubscribeAfterAuth()
   }
 
@@ -61,14 +61,13 @@ export const useAuthStore = defineStore('auth', () => {
     const data = resp.data
     if (data?.token && data.refreshToken && data.userId != null) {
       const home = useHomeStore()
-      home.queueWalletRefresh()
       setSession({
         token: data.token,
         refreshToken: data.refreshToken,
         userId: data.userId,
         account,
       })
-      void home.refreshQueuedWallet()
+      void home.loadSignedIn()
       void silentSubscribeAfterAuth()
     } else {
       await login(account, password)
@@ -83,6 +82,7 @@ export const useAuthStore = defineStore('auth', () => {
     const code = stickyInvite()
     clearInviteOnLogout()
     clearSession()
+    useUserStore().reset()
     if (code) void stripInviteFromUrl(code)
   }
 

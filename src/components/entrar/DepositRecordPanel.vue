@@ -5,7 +5,7 @@
  * Scrolling to the end loads the next page of 10 and shows the original
  * 28px bubbles spinner until that page returns.
  */
-import { nextTick, onMounted, ref, watch } from 'vue'
+import { nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import SvgIcon from '../base/SvgIcon.vue'
 import WithdrawTimeFilter from '../withdraw/WithdrawTimeFilter.vue'
 import {
@@ -68,9 +68,17 @@ watch(
   },
 )
 
+function onVisible() {
+  if (document.visibilityState !== 'visible') return
+  void records.load(true)
+}
+
 onMounted(() => {
   void records.load(true)
+  document.addEventListener('visibilitychange', onVisible)
 })
+
+onBeforeUnmount(() => document.removeEventListener('visibilitychange', onVisible))
 </script>
 
 <template>

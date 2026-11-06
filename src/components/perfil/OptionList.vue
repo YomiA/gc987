@@ -7,11 +7,19 @@
  * edge because of `--inner-padding-end: 16px` plus its own -6px right margin,
  * which is what the row's `padding-right` reproduces here.
  */
-import SvgIcon from '../base/SvgIcon.vue'
-import type { PerfilOption } from '../../api/perfil'
+import SvgIcon from "../base/SvgIcon.vue";
+import type { PerfilOption } from "../../api/perfil";
+import { tr } from "../../i18n/tr";
 
-const props = defineProps<{ items: PerfilOption[] }>()
-const emit = defineEmits<{ select: [key: string] }>()
+const props = defineProps<{ items: PerfilOption[] }>();
+const emit = defineEmits<{ select: [key: string] }>();
+
+/** The invite line names the site. The host replaces the GC987.COM token. */
+const siteDomain = location.hostname.replace(/^www\./i, "").toUpperCase();
+
+function noteText(note: string) {
+  return tr(note).split("GC987.COM").join(siteDomain);
+}
 </script>
 
 <template>
@@ -27,7 +35,9 @@ const emit = defineEmits<{ select: [key: string] }>()
         <span class="label">{{ tr(item.label) }}</span>
       </div>
       <div class="middle">
-        <span v-if="item.note" class="invite-text">{{ tr(item.note) }}</span>
+        <span v-if="item.note" class="invite-text">{{
+          noteText(item.note)
+        }}</span>
       </div>
       <SvgIcon class="row-chevron" name="chevron-forward" />
     </div>

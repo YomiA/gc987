@@ -6,6 +6,7 @@ import {
   type NotificationTab,
   type SupportChannel,
 } from '../api/notification'
+import { showToast } from '../toast'
 
 export const useNotificationStore = defineStore('notification', () => {
   const tabs = ref<NotificationTab[]>([])
@@ -13,12 +14,23 @@ export const useNotificationStore = defineStore('notification', () => {
   const active = ref('suporte')
   const loaded = ref(false)
 
-  async function load() {
-    if (loaded.value) return
-    const [t, c] = await Promise.all([getNotificationTabs(), getSupportChannels()])
-    tabs.value = t
-    channels.value = c
-    loaded.value = true
+  let task: Promise<void> | null = null
+
+  function load(force = false) {
+    if (task) return task
+    if (loaded.value && !force) return Promise.resolve()
+    task = (async () => {
+      tabs.value = await getNotificationTabs()
+      try {
+        channels.value = await getSupportChannels()
+        loaded.value = true
+      } catch (error) {
+        showToast(error instanceof Error ? error.message : String(error), 'error')
+      }
+    })().finally(() => {
+      task = null
+    })
+    return task
   }
 
   function selectTab(key: string) {

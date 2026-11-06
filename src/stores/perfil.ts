@@ -8,17 +8,25 @@ export const usePerfilStore = defineStore('perfil', () => {
   const options = ref<PerfilOption[]>([])
   const loaded = ref(false)
 
-  async function load() {
-    if (loaded.value) return
-    const [p, v, o] = await Promise.all([
-      perfilApi.getProfile(),
-      perfilApi.getVip(),
-      perfilApi.getOptions(),
-    ])
-    profile.value = p
-    vip.value = v
-    options.value = o
-    loaded.value = true
+  let task: Promise<void> | null = null
+
+  function load(force = false) {
+    if (task) return task
+    if (loaded.value && !force) return Promise.resolve()
+    task = (async () => {
+      const [p, v, o] = await Promise.all([
+        perfilApi.getProfile(),
+        perfilApi.getVip(),
+        perfilApi.getOptions(),
+      ])
+      profile.value = p
+      vip.value = v
+      options.value = o
+      loaded.value = true
+    })().finally(() => {
+      task = null
+    })
+    return task
   }
 
   return { profile, vip, options, loaded, load }

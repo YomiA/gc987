@@ -24,7 +24,7 @@ function goBack() {
 
 onMounted(() => {
   notes.selectTab('suporte')
-  void notes.load()
+  void notes.load(true)
 })
 </script>
 

@@ -6,15 +6,48 @@
  */
 import { computed } from 'vue'
 import SvgIcon from '../base/SvgIcon.vue'
-import { formatAmount } from '../../api/promo'
-import type { PerfilVip } from '../../api/perfil'
+import { formatReais } from '../../utils/money'
 
-const props = defineProps<{ vip: PerfilVip }>()
+const props = defineProps<{
+  vip: {
+    crown: string
+    levelBadge: string
+    levelBadgeColor: string
+    nextLevel: string
+    /** Reais already wagered. */
+    orderAmt: number
+    /** Reais required to reach the next level. */
+    upgradeOrderAmt: number
+    /** Reais already deposited. */
+    rechargeAmt: number
+    /** Reais of deposit required. The second row exists only when this is in use. */
+    upgradeRechargeAmt: number
+    showRecharge: boolean
+  }
+}>()
 
-const remaining = computed(() => Math.max(0, props.vip.requiredBet - props.vip.currentBet))
-const progress = computed(() =>
-  props.vip.requiredBet > 0 ? Math.min(1, props.vip.currentBet / props.vip.requiredBet) : 0,
-)
+const rows = computed(() => {
+  const list = [
+    {
+      label: 'Aposta necessária',
+      current: props.vip.orderAmt,
+      required: props.vip.upgradeOrderAmt,
+    },
+  ]
+  if (props.vip.showRecharge) {
+    list.push({
+      label: 'Depósito necessária',
+      current: props.vip.rechargeAmt,
+      required: props.vip.upgradeRechargeAmt,
+    })
+  }
+  return list
+})
+
+function ratio(current: number, required: number) {
+  if (!(required > 0)) return 0
+  return Math.min(1, Math.max(0, current / required))
+}
 </script>
 
 <template>
@@ -23,15 +56,16 @@ const progress = computed(() =>
       <div class="left">
         <img class="crown" :src="props.vip.crown" alt="" />
         <div class="level-badge">
-          <span :style="{ color: props.vip.levelBadgeColor }">{{ tr(props.vip.levelBadge) }}</span>
+          <span :style="{ color: props.vip.levelBadgeColor }">{{ props.vip.levelBadge }}</span>
         </div>
       </div>
 
       <div class="right">
         <div class="level">
           <p>
-            <span>{{ tr('Siga') }} </span><span class="important-text">{{ tr(props.vip.nextLevel) }}</span
-            ><span> {{ tr('Ainda precisa apostar') }} {{ formatAmount(remaining) }}</span>
+            <span>{{ `${tr('Siga')} ` }}</span><span class="important-text">{{ props.vip.nextLevel }}</span
+            ><span>{{ ` ${tr('Ainda precisa apostar')} ${formatReais(props.vip.upgradeOrderAmt)}` }}</span
+            ><span v-if="props.vip.showRecharge">{{ `, ${tr('Ainda precisa recarga')} ${formatReais(props.vip.upgradeRechargeAmt)}` }}</span>
           </p>
           <SvgIcon class="chevron-forward" name="chevron-forward" />
         </div>
@@ -39,15 +73,15 @@ const progress = computed(() =>
     </div>
 
     <div class="bottom">
-      <div class="line">
-        <span class="line-label">{{ tr('Aposta necessária') }}</span>
+      <div v-for="row in rows" :key="row.label" class="line">
+        <span class="line-label">{{ tr(row.label) }}</span>
         <span class="line-track">
           <div class="progress">
             <div class="progress-bar">
-              <div class="progress-fill" :style="{ transform: `scaleX(${progress})` }" />
+              <div class="progress-fill" :style="{ transform: `scaleX(${ratio(row.current, row.required)})` }" />
             </div>
             <div class="progress-value">
-              {{ formatAmount(props.vip.currentBet) }}/{{ formatAmount(props.vip.requiredBet) }}
+              {{ formatReais(row.current) }}/{{ formatReais(row.required) }}
             </div>
           </div>
         </span>
@@ -130,6 +164,10 @@ const progress = computed(() =>
 .line {
   display: flex;
   align-items: center;
+}
+
+.line + .line {
+  margin-top: 0.5rem;
 }
 
 /* Narrow enough that the live label wraps onto two lines. */

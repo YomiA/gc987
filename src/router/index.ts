@@ -18,6 +18,7 @@ import GameActionPage from '../views/GameActionPage.vue'
 import TransitionPage from '../views/TransitionPage.vue'
 import GameCategoryPage from '../views/GameCategoryPage.vue'
 import WithdrawPage from '../views/WithdrawPage.vue'
+import WithdrawSetPasswordPage from '../views/WithdrawSetPasswordPage.vue'
 import WithdrawApplyPage from '../views/WithdrawApplyPage.vue'
 import WithdrawSubViewPage from '../views/WithdrawSubViewPage.vue'
 import RechargeRecordPage from '../views/RechargeRecordPage.vue'
@@ -45,6 +46,7 @@ const routes: RouteRecordRaw[] = [
   { path: '/security/verify/password', name: 'security-verify-password', component: SecurityVerifyPage },
   { path: '/security/verify/asset', name: 'security-verify-asset', component: SecurityVerifyPage },
   { path: '/security/verify/email', name: 'security-verify-email', component: SecurityVerifyPage },
+  { path: '/security/verify/phone', name: 'security-verify-phone', component: SecurityVerifyPage },
   { path: '/security/bind/:type', name: 'security-bind', component: SecurityBindPage },
   { path: '/security/confirm/:type', name: 'security-confirm', component: SecurityConfirmPage },
   // Perfil Aposta / VIP card. Same VipPanel as /main/promo's VIP tab.
@@ -61,6 +63,8 @@ const routes: RouteRecordRaw[] = [
   { path: '/game/category/:gameType/:platformId?', name: 'game-category', component: GameCategoryPage },
   // Homepage TabBar Saque. Live pathname is /main/withdraw.
   { path: '/main/withdraw', name: 'withdraw', component: WithdrawPage },
+  // First Saque, before a withdrawal password exists. Live pathname is /withdrawPW.
+  { path: '/withdrawPW', name: 'withdraw-set-password', component: WithdrawSetPasswordPage },
   // Retirar Agora after fund password is set. Live meta hasBottomTab:false.
   { path: '/withdraw/apply', name: 'withdraw-apply', component: WithdrawApplyPage },
   // PIX chip on the Saque form.

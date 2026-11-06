@@ -107,7 +107,7 @@ function onSearch() {
 }
 
 onMounted(() => {
-  void home.load()
+  void home.enterCatalogPage('category')
 })
 </script>
 

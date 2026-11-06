@@ -10,7 +10,7 @@ import SvgIcon from '../../components/base/SvgIcon.vue'
 import ConfirmPasswordForm from '../../components/perfil/security/ConfirmPasswordForm.vue'
 import ConfirmAssetForm from '../../components/perfil/security/ConfirmAssetForm.vue'
 import CopyToast from '../../components/entrar/CopyToast.vue'
-import { securityConfirmAssetCopy, securityConfirmCopy } from '../../api/security'
+import { securityConfirmAssetCopy, securityConfirmCopy, updateLoginPwd } from '../../api/security'
 import { useSecurityStore } from '../../stores/security'
 import { useWithdrawStore } from '../../stores/withdraw'
 
@@ -56,9 +56,14 @@ function leaveToSecurity() {
   }, 1000)
 }
 
-function onPasswordConfirm() {
-  showToast(securityConfirmCopy.success)
-  leaveToSecurity()
+async function onPasswordConfirm(password: string, newPassword: string, againPassword: string) {
+  try {
+    await updateLoginPwd(password, newPassword, againPassword)
+    showToast(securityConfirmCopy.success)
+    leaveToSecurity()
+  } catch (error) {
+    showToast(error instanceof Error ? error.message : String(error))
+  }
 }
 
 function onAssetConfirm() {
@@ -86,7 +91,7 @@ onBeforeUnmount(() => {
     </header>
 
     <div class="page-scroller verify-body">
-      <ConfirmPasswordForm v-if="isPassword" @confirm="onPasswordConfirm" @mismatch="onMismatch" />
+      <ConfirmPasswordForm v-if="isPassword" @confirm="onPasswordConfirm" />
       <ConfirmAssetForm v-else-if="isAsset" @confirm="onAssetConfirm" @mismatch="onMismatch" />
     </div>
 

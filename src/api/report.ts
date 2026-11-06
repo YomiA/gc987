@@ -1,15 +1,18 @@
 /**
- * Fake backend for /user/report (Perfil -> Relatórios). Nothing leaves the app.
+ * Relatórios. The Recordes de Apostas tab calls the backend; the other tabs
+ * still use the empty local answers.
  *
  * Tab order, wrapper flavour, filter sets, option labels and the footer rows are
  * the values read off https://gc987.com/user/report at 390x844x3 while signed
  * in; see docs/research/gc987-com/user-report/REPORT_PAGE.spec.md.
  *
- * The live account has no rows in any range, so `getRecords` answers empty for
- * every tab and the page paints the "Sem Registros" state the original does.
- * Footer money is in cents like the live API sends it, and `formatAmount` from
- * ./promo does the pt-BR grouping.
+ * The Recordes de Apostas tab asks POST /productOrderRecord. Its platform
+ * choices are the homepage productPlatforms, in that list's order.
+ * Other tabs still answer empty until their own APIs are connected.
  */
+
+import { request } from './http'
+import { searchWindow } from './rechargeRecord'
 
 export interface ReportOption {
   key: string
@@ -121,9 +124,7 @@ const tabs: ReportTab[] = [
     layout: 'bet',
     filters: [
       { key: 'date', options: dateOptions },
-      { key: 'type', options: betTypeOptions },
-      { key: 'platform', options: platformOptions },
-      { key: 'game', options: gameOptions },
+      { key: 'platform', options: [{ key: '', label: 'Todas Plataformas' }] },
     ],
     summary: null,
   },
@@ -175,6 +176,139 @@ export interface ReportRecord {
 
 function settle<T>(value: T, ms = 120): Promise<T> {
   return new Promise((resolve) => setTimeout(() => resolve(value), ms))
+}
+
+export interface ProductOrderQuery {
+  current: number
+  size: number
+  startSearchTime: string
+  endSearchTime: string
+  /** Empty string is every platform. */
+  platformId: string
+}
+
+/**
+ * One row of the original Recordes de Apostas list.
+ * Money is reais, the same unit as orderAmt on the other records.
+ */
+export interface BetRecord {
+  id: string
+  platformName: string
+  /** ELECTRONIC, FISHING, CHESS, VIDEO, SPORTS, LOTTERY. */
+  gameType: string
+  /** Missing or 0 leaves the amount blank. */
+  profitAmount: number | null
+  gameName: string
+  /** SETTLED, UNSETTLED, SYSTEMCANCEL, MANUALLYCANCEL. */
+  status: string
+  createTime: string
+  roundNo: string
+}
+
+export interface BetRecordPage {
+  rows: BetRecord[]
+  current: number | null
+  pages: number | null
+}
+
+export const BET_PAGE_SIZE = 20
+
+const GAME_TYPE_LABEL: Record<string, string> = {
+  ELECTRONIC: 'Slot',
+  FISHING: 'Pesca',
+  CHESS: 'Cartas',
+  VIDEO: 'Cassino',
+  SPORTS: 'Esportes',
+  LOTTERY: 'Lotaria',
+}
+
+const BET_STATUS: Record<string, { label: string; tone: 'green' | 'white' | 'red' }> = {
+  SETTLED: { label: 'Liquidado', tone: 'green' },
+  UNSETTLED: { label: 'Não liquidado', tone: 'white' },
+  SYSTEMCANCEL: { label: 'Cancelado pelo sistema', tone: 'red' },
+  MANUALLYCANCEL: { label: 'Cancelado manualmente', tone: 'red' },
+}
+
+export function betGameTypeLabel(code: string) {
+  const key = code.trim().toUpperCase()
+  return GAME_TYPE_LABEL[key] ?? code.trim()
+}
+
+export function betStatusOf(code: string) {
+  if (!code) return { label: '', tone: 'white' as const }
+  return BET_STATUS[code] ?? { label: code, tone: 'red' as const }
+}
+
+function textOf(row: Record<string, unknown>, key: string) {
+  const value = row[key]
+  if (value == null) return ''
+  return String(value)
+}
+
+function moneyOf(row: Record<string, unknown>, key: string) {
+  const value = row[key]
+  if (value == null || value === '') return null
+  const amount = Number(value)
+  return Number.isFinite(amount) ? amount : null
+}
+
+function mapBet(item: unknown, index: number): BetRecord {
+  const row = item && typeof item === 'object' ? (item as Record<string, unknown>) : {}
+  const roundNo = textOf(row, 'roundNo')
+  const id = textOf(row, 'id') || roundNo || String(index)
+  return {
+    id,
+    platformName: textOf(row, 'platformName'),
+    gameType: textOf(row, 'gameType'),
+    profitAmount: moneyOf(row, 'profitAmount'),
+    gameName: textOf(row, 'gameName'),
+    status: textOf(row, 'status'),
+    createTime: textOf(row, 'createTime'),
+    roundNo,
+  }
+}
+
+/** A page object, or a bare list. */
+export function betPageOf(data: unknown): BetRecordPage {
+  let list: unknown[] = []
+  let current: number | null = null
+  let pages: number | null = null
+  if (Array.isArray(data)) {
+    list = data
+  } else if (data && typeof data === 'object') {
+    const bag = data as Record<string, unknown>
+    for (const key of ['records', 'list', 'rows', 'gameRecordList']) {
+      if (Array.isArray(bag[key])) {
+        list = bag[key]
+        break
+      }
+    }
+    const reportedCurrent = Number(bag.current)
+    const reportedPages = Number(bag.pages)
+    if (Number.isFinite(reportedCurrent)) current = reportedCurrent
+    if (Number.isFinite(reportedPages)) pages = reportedPages
+  }
+  return { rows: list.map(mapBet), current, pages }
+}
+
+/** Bet records on the Recordes de Apostas tab. The next page stays silent. */
+export function productOrderRecord(body: ProductOrderQuery, silent = false) {
+  return request<{ code?: number; data?: unknown }>('/productOrderRecord', {
+    method: 'POST',
+    body,
+    silent,
+  })
+}
+
+export function betRecordQuery(dateKey: string, platformId: string, current = 1): ProductOrderQuery {
+  const window = searchWindow(dateKey)
+  return {
+    current,
+    size: BET_PAGE_SIZE,
+    startSearchTime: window.startSearchTime,
+    endSearchTime: window.endSearchTime,
+    platformId,
+  }
 }
 
 export const reportApi = {
