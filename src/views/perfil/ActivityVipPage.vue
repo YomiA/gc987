@@ -27,6 +27,11 @@ function goBack() {
   else void router.push('/main/perfil')
 }
 
+function openHistory() {
+  promo.selectTab('historico')
+  void router.push('/main/promo')
+}
+
 onMounted(() => void promo.loadTab('vip'))
 </script>
 
@@ -48,6 +53,8 @@ onMounted(() => void promo.loadTab('vip'))
       :retention-rules="promo.vipRetentionRules"
       :sub-tab="subTab"
       @select-sub-tab="selectSubTab"
+      @claim="promo.claimVipAll"
+      @history="openHistory"
     />
   </div>
 </template>

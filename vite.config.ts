@@ -72,6 +72,12 @@ export default defineConfig(({ mode }) => {
             ? { rewrite: (path: string) => path.replace(/^\/api/, "") || "/" }
             : {}),
         },
+        // Upload paths are `/uploads/...` on the site origin. Dev has no files
+        // of its own, so the same host that serves the API serves the picture.
+        "/uploads": {
+          target: upstream,
+          changeOrigin: false,
+        },
       },
     },
     preview: {

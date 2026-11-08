@@ -92,6 +92,8 @@ onMounted(() => {
       :retention-rules="promo.vipRetentionRules"
       :sub-tab="promo.vipSubTab"
       @select-sub-tab="promo.selectVipSubTab"
+      @claim="promo.claimVipAll"
+      @history="promo.selectTab('historico')"
     />
 
     <RedeemPanel v-else-if="promo.activeTab === 'resgate'" />

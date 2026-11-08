@@ -45,19 +45,8 @@ onBeforeUnmount(() => {
   window.removeEventListener('push:navigate', onPushNavigate)
   document.removeEventListener('visibilitychange', onVisible)
 })
-const showFab = computed(() => {
-  const path = route.path
-  return (
-    !path.startsWith('/game/action') &&
-    path !== '/transition' &&
-    !path.startsWith('/game/search') &&
-    !path.startsWith('/game/category') &&
-    !path.startsWith('/activity/') &&
-    !path.startsWith('/withdraw/apply') &&
-    !path.startsWith('/withdrawalAccount') &&
-    !path.startsWith('/withdrawalBindAccount')
-  )
-})
+/** Live hides `.xuanfu` only on `/^\/game/`; every other route shows it. */
+const showFab = computed(() => !/^\/game/.test(route.path))
 </script>
 
 <template>

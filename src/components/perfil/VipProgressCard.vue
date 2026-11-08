@@ -64,8 +64,8 @@ function ratio(current: number, required: number) {
         <div class="level">
           <p>
             <span>{{ `${tr('Siga')} ` }}</span><span class="important-text">{{ props.vip.nextLevel }}</span
-            ><span>{{ ` ${tr('Ainda precisa apostar')} ${formatReais(props.vip.upgradeOrderAmt)}` }}</span
-            ><span v-if="props.vip.showRecharge">{{ `, ${tr('Ainda precisa recarga')} ${formatReais(props.vip.upgradeRechargeAmt)}` }}</span>
+            ><span>{{ ` ${tr('Ainda precisa apostar')} ${formatReais(Math.max(props.vip.upgradeOrderAmt - props.vip.orderAmt, 0))}` }}</span
+            ><span v-if="props.vip.showRecharge">{{ `, ${tr('Ainda precisa recarga')} ${formatReais(Math.max(props.vip.upgradeRechargeAmt - props.vip.rechargeAmt, 0))}` }}</span>
           </p>
           <SvgIcon class="chevron-forward" name="chevron-forward" />
         </div>

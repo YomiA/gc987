@@ -74,12 +74,24 @@ export interface RebateRow {
 
 export interface VipLevel {
   level: number
+  /** vipLeves.vipIcon. Empty when that level has none; the row then uses the local crown. */
+  icon?: string
   /** Bônus tab: valid bet required to reach the level, in cents. */
   promotionBet: number
+  /**
+   * Upgrade recharge in cents. Omitted when that level has no upgradeRechargeAmt.
+   * The column is shown when any level includes it.
+   */
+  promotionRecharge?: number
   promotionReward: number
   dailyReward: number
   weeklyReward: number
   monthlyReward: number
+  /** 0 not started, 1 in progress, 2 ready to claim, 3 claimed. */
+  promotionStatus?: number
+  dailyStatus?: number
+  weeklyStatus?: number
+  monthlyStatus?: number
   /** "Instruções para manter o nível" table. */
   retentionBet: number
   retentionRecharge: number
@@ -229,6 +241,14 @@ const vipInfo = {
   /** Progress of the current level row in the Bônus table. */
   progressBet: 0,
   progressTarget: 10000,
+  /** Deposit already counted toward the next level, in cents. */
+  progressRecharge: 0,
+  /** Deposit required by the next level, in cents. */
+  rechargeTarget: 0,
+  /** Current level's vipIcon from /vipList. A 500 still uses this address. */
+  icon: '',
+  /** res.data.rewardStatus. 1 can claim all, 0 stays gray. */
+  rewardStatus: 0,
 }
 
 const vipRules = [
@@ -363,69 +383,157 @@ export async function loadActivityEvents() {
   return activityRows(resp.data).map(eventOf).filter((event): event is PromoEvent => event != null)
 }
 
-function prizeCents(list: unknown, kinds: string[]) {
-  if (!Array.isArray(list)) return 0
-  for (const item of list) {
+/** 12 upgrade, 13 daily, 14 weekly, 15 monthly. Keys stay strings, as JSON object keys do. */
+const PRIZE_KEY = {
+  promotion: '12',
+  daily: '13',
+  weekly: '14',
+  monthly: '15',
+} as const
+
+interface PrizeRow {
+  vipId: number | null
+  cents: number
+  status: number
+}
+
+function rowsOf(value: unknown): unknown[] {
+  return Array.isArray(value) ? value : []
+}
+
+/** Cents when the field is present, including 0. Null when the field is absent. */
+function centsOrNull(value: unknown): number | null {
+  if (value == null || value === '') return null
+  return cents(value)
+}
+
+function prizeRows(value: unknown): PrizeRow[] {
+  return rowsOf(value).map((item) => {
     const row = asRecord(item)
-    if (!row) continue
-    const name = textOf(row.prizeName ?? row.salaryName ?? row.name).toLowerCase()
-    if (!kinds.some((kind) => name.includes(kind))) continue
-    return cents(row.prizeValue ?? row.salaryValue ?? row.salaryAmt ?? row.amount ?? row.value)
-  }
-  return 0
+    if (!row) return { vipId: null, cents: 0, status: 0 }
+    const id = Number(row.vipId)
+    const status = Number(row.rewardStatus)
+    return {
+      vipId: Number.isFinite(id) ? id : null,
+      cents: cents(row.rewardValue),
+      status: Number.isFinite(status) ? status : 0,
+    }
+  })
 }
 
-function levelOf(item: unknown): VipLevel | null {
-  const row = asRecord(item)
-  if (!row) return null
-  const level = Number(row.level)
-  if (!Number.isFinite(level)) return null
-  const prizes = row.vipPrizeList
-  return {
-    level,
-    promotionBet: firstCents(row, ['upgradeOrderAmt', 'promotionBet', 'orderAmt']),
-    promotionReward:
-      firstCents(row, ['promotionReward', 'upgradeReward', 'upgradeBonus', 'upgradePrizeValue']) ||
-      prizeCents(prizes, ['upgrade', 'promo', '晋级', '升级', 'promoç']),
-    dailyReward: firstCents(row, ['dailyReward', 'dayReward', 'dayAmt']) || prizeCents(prizes, ['diár', 'daily', '每日', '日奖']),
-    weeklyReward:
-      firstCents(row, ['weeklyReward', 'weekReward', 'weekAmt']) || prizeCents(prizes, ['seman', 'week', '每周', '周奖']),
-    monthlyReward:
-      firstCents(row, ['monthlyReward', 'monthReward', 'monthAmt']) || prizeCents(prizes, ['mensal', 'month', '每月', '月奖']),
-    retentionRecharge: firstCents(row, ['retentionRecharge', 'keepRechargeAmt', 'keepAmt', 'relegationAmt']),
-    retentionBet: firstCents(row, ['retentionBet', 'keepOrderAmt', 'relegationOrderAmt']),
+/** Built once per response. Ten levels, so this is a handful of writes, not a render-time search. */
+function prizeMap(rows: PrizeRow[]) {
+  const map = new Map<number, PrizeRow>()
+  for (const row of rows) {
+    if (row.vipId == null || map.has(row.vipId)) continue
+    map.set(row.vipId, row)
   }
+  return map
 }
 
-/** POST /vipList. `progressReais` is the signed-in wager from /selfInfo, when that payload is already loaded. */
-export async function loadVipBoard(progressReais: number | null): Promise<VipBoard> {
+/** vipId wins. A row without one still lines up with vipLeves in the same order. */
+function prizeAt(rows: PrizeRow[], map: Map<number, PrizeRow>, vipId: number, index: number) {
+  return map.get(vipId) ?? rows[index] ?? { vipId: null, cents: 0, status: 0 }
+}
+
+function clampProgress(currentReais: number | null, targetCents: number) {
+  const current = currentReais == null ? 0 : Math.round(currentReais * 100)
+  return targetCents > 0 ? Math.min(Math.max(current, 0), targetCents) : 0
+}
+
+function reaisToCents(value: number) {
+  return Math.round(value * 100)
+}
+
+/** Still short of the requirement. A zero already-have leaves the requirement unchanged. */
+function stillNeed(requiredCents: number, haveCents: number) {
+  return Math.max(requiredCents - haveCents, 0)
+}
+
+/**
+ * POST /vipList.
+ * `betReais` / `rechargeReais` are what the account already has (/selfInfo).
+ * `needBetReais` / `needRechargeReais` are that account's required amounts.
+ * The card prints required minus already-have. Null falls back to the next level row.
+ */
+export async function loadVipBoard(
+  betReais: number | null,
+  rechargeReais: number | null = null,
+  needBetReais: number | null = null,
+  needRechargeReais: number | null = null,
+): Promise<VipBoard> {
   const resp = await request<{ data?: unknown }>('/vipList', { method: 'POST', body: {} })
-  const data = resp.data
-  const rows = Array.isArray(data)
-    ? data
-    : Array.isArray(asRecord(data)?.records)
-      ? (asRecord(data)?.records as unknown[])
-      : Array.isArray(asRecord(data)?.list)
-        ? (asRecord(data)?.list as unknown[])
-        : Array.isArray(asRecord(data)?.vipList)
-          ? (asRecord(data)?.vipList as unknown[])
-          : []
-  const raw = rows.map(asRecord).filter((row): row is Record<string, unknown> => row != null)
-  const levels = raw.map(levelOf).filter((level): level is VipLevel => level != null)
-  const currentIndex = raw.findIndex((row) => Number(row.isUserVipLevel) === 1)
+  const data = asRecord(resp.data)
+  const rewards = asRecord(data?.vipRewards)
+  const groups = {
+    promotion: prizeRows(rewards?.[PRIZE_KEY.promotion]),
+    daily: prizeRows(rewards?.[PRIZE_KEY.daily]),
+    weekly: prizeRows(rewards?.[PRIZE_KEY.weekly]),
+    monthly: prizeRows(rewards?.[PRIZE_KEY.monthly]),
+  }
+  const maps = {
+    promotion: prizeMap(groups.promotion),
+    daily: prizeMap(groups.daily),
+    weekly: prizeMap(groups.weekly),
+    monthly: prizeMap(groups.monthly),
+  }
+  const levels: VipLevel[] = []
+  rowsOf(data?.vipLeves ?? data?.vipLevels).forEach((item, index) => {
+    const row = asRecord(item)
+    if (!row) return
+    const level = Number(row.vipLevel ?? row.level ?? row.vipId)
+    if (!Number.isFinite(level)) return
+    const vipId = Number(row.vipId ?? level)
+    const recharge = centsOrNull(row.upgradeRechargeAmt)
+    const promotion = prizeAt(groups.promotion, maps.promotion, vipId, index)
+    const daily = prizeAt(groups.daily, maps.daily, vipId, index)
+    const weekly = prizeAt(groups.weekly, maps.weekly, vipId, index)
+    const monthly = prizeAt(groups.monthly, maps.monthly, vipId, index)
+    levels.push({
+      level,
+      icon: assetUrl(textOf(row.vipIcon ?? row.icon)),
+      promotionBet: firstCents(row, ['upgradeOrderAmt', 'promotionBet', 'orderAmt']),
+      ...(recharge == null ? {} : { promotionRecharge: recharge }),
+      promotionReward: promotion.cents,
+      promotionStatus: promotion.status,
+      dailyReward: daily.cents,
+      dailyStatus: daily.status,
+      weeklyReward: weekly.cents,
+      weeklyStatus: weekly.status,
+      monthlyReward: monthly.cents,
+      monthlyStatus: monthly.status,
+      retentionRecharge: firstCents(row, ['retentionRecharge', 'keepRechargeAmt', 'keepAmt', 'relegationAmt']),
+      retentionBet: firstCents(row, ['retentionBet', 'keepOrderAmt', 'relegationOrderAmt']),
+    })
+  })
+  const currentLevel = Number(data?.vipLevel)
+  const currentIndex = Number.isFinite(currentLevel) ? levels.findIndex((level) => level.level === currentLevel) : -1
   const current = currentIndex >= 0 ? levels[currentIndex] : null
-  const next = currentIndex >= 0 ? levels[currentIndex + 1] : levels.find((level) => level.level > 0) ?? levels[0]
-  const target = next?.promotionBet ?? 0
-  const progress = progressReais == null ? 0 : Math.round(progressReais * 100)
-  const clamped = target > 0 ? Math.min(Math.max(progress, 0), target) : 0
+  const next = currentIndex >= 0 ? levels[currentIndex + 1] : levels[0]
+  const haveBet = betReais == null ? 0 : reaisToCents(betReais)
+  const target = needBetReais == null ? (next?.promotionBet ?? 0) : reaisToCents(needBetReais)
+  const rechargeTarget =
+    needRechargeReais == null ? (next?.promotionRecharge ?? 0) : reaisToCents(needRechargeReais)
+  const progressBet = clampProgress(betReais, target)
+  const progressRecharge = clampProgress(rechargeReais, rechargeTarget)
+  const rewardStatus = Number(data?.rewardStatus) === 1 ? 1 : 0
   return {
     levels,
     info: {
-      level: current?.level ?? 0,
+      level: current?.level ?? (Number.isFinite(currentLevel) ? currentLevel : 0),
       nextLevel: next?.level ?? current?.level ?? 0,
-      remainingBet: Math.max(target - clamped, 0),
-      progressBet: clamped,
+      remainingBet: stillNeed(target, haveBet),
+      progressBet,
       progressTarget: target,
+      progressRecharge,
+      rechargeTarget,
+      icon: assetUrl(textOf(data?.vipIcon)) || current?.icon || '',
+      rewardStatus,
     },
   }
+}
+
+/** Coletar Tudo. Lit only when /vipList rewardStatus is 1. */
+export function claimVipRewards() {
+  return request('/user/receiveVipAll', { method: 'PUT', body: {} })
 }

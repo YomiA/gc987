@@ -68,11 +68,12 @@ const vipView = computed(() => {
   }
   const level = vipLevelNumber(info.level)
   const rechargeNeed = selfInfoAmount(info.upgradeRechargeAmt)
+  const vipName = info.vipName?.trim()
   return {
-    crown: base.crown,
+    crown: assetUrl(info.vipIcon) || base.crown,
     levelBadge: `V${level}`,
     levelBadgeColor: base.levelBadgeColor,
-    nextLevel: `VIP${level + 1}`,
+    nextLevel: vipName || `VIP${level}`,
     orderAmt: selfInfoAmount(info.orderAmt) ?? 0,
     upgradeOrderAmt: selfInfoAmount(info.upgradeOrderAmt) ?? 0,
     rechargeAmt: selfInfoAmount(info.rechargeAmt) ?? 0,

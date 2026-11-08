@@ -5,69 +5,86 @@ import { vipSubTabs } from '../../stores/promo'
 
 const props = defineProps<{
   levels: VipLevel[]
-  info: { level: number; nextLevel: number; remainingBet: number; progressBet: number; progressTarget: number }
+  info: {
+    level: number
+    nextLevel: number
+    remainingBet: number
+    progressBet: number
+    progressTarget: number
+    progressRecharge: number
+    rechargeTarget: number
+    icon?: string
+    rewardStatus: number
+  }
   rules: string[]
   retentionRules: string[]
   subTab: string
 }>()
-const emit = defineEmits<{ selectSubTab: [key: string] }>()
+const emit = defineEmits<{ selectSubTab: [key: string]; claim: []; history: [] }>()
+/** Any level carrying upgradeRechargeAmt turns the deposit column on for the whole table. */
+const showRecharge = computed(() =>
+  props.subTab === 'bonus' && props.levels.some((level) => level.promotionRecharge != null),
+)
+
+/** Any non-zero upgrade bet turns the wager column on. A zero on V0 alone does not. */
+const showBet = computed(() =>
+  props.subTab === 'bonus' && props.levels.some((level) => level.promotionBet !== 0),
+)
+
+/** Retention stays in the data, but the tab is hidden until that list exists. */
+const visibleTabs = computed(() => {
+  const hasRetention = props.levels.some(
+    (level) => level.retentionBet > 0 || level.retentionRecharge > 0,
+  )
+  return hasRetention ? vipSubTabs : vipSubTabs.filter((tab) => tab.key !== 'retention')
+})
 
 /**
- * Ten crowns cover 26 levels: the live table swaps artwork every two levels
- * (V0/V1 -> vip0-10, V2/V3 -> vip11-20 ... V18 and up -> vip91-100) and the
- * badge text takes the tier colour on the same pairing.
+ * Column titles follow the live order: Nível, then Depósito necessária when
+ * any level has a deposit requirement, then Aposta necessária, then Bônus.
  */
-const CROWNS = [
-  'vip0-10',
-  'vip11-20',
-  'vip21-30',
-  'vip31-40',
-  'vip41-50',
-  'vip51-60',
-  'vip61-70',
-  'vip71-80',
-  'vip81-90',
-  'vip91-100',
-]
-
-const BADGE_COLORS = [
-  'rgb(117, 117, 117)',
-  'rgb(206, 126, 54)',
-  'rgb(103, 136, 164)',
-  'rgb(139, 108, 181)',
-  'rgb(255, 143, 1)',
-  'rgb(0, 110, 241)',
-  'rgb(244, 16, 134)',
-  'rgb(245, 59, 20)',
-  'rgb(240, 20, 245)',
-  'rgb(255, 5, 1)',
-]
-
-function tier(level: number) {
-  return Math.min(Math.floor(level / 2), 9)
-}
-
-function crown(level: number) {
-  return `/images/promo-page/vip/${CROWNS[tier(level)]}.png`
-}
-
-function badgeColor(level: number) {
-  return BADGE_COLORS[tier(level)]
-}
-
-/** Column titles of the sticky head; the retention tab has no head at all. */
 const heads = computed(() => {
-  switch (props.subTab) {
-    case 'daily':
-      return ['Nível', 'Bônus Diário']
-    case 'weekly':
-      return ['Nível', 'Bônus Semanal']
-    case 'monthly':
-      return ['Nível', 'Bônus Mensal']
-    default:
-      return ['Nível', 'Aposta necessária', 'Bônus']
-  }
+  if (props.subTab === 'daily') return ['Nível', 'Bônus Diário']
+  if (props.subTab === 'weekly') return ['Nível', 'Bônus Semanal']
+  if (props.subTab === 'monthly') return ['Nível', 'Bônus Mensal']
+  const titles = ['Nível']
+  if (showRecharge.value) titles.push('Depósito necessária')
+  if (showBet.value) titles.push('Aposta necessária')
+  titles.push('Bônus')
+  return titles
 })
+
+/** Live copy on gc987.com/activity/vip. 12 upgrade, 13 daily, 14 weekly, 15 monthly. */
+const CLAIM_LABEL: Record<string, string> = {
+  bonus: 'Reclamar Recompensa de Upgrade',
+  daily: 'Reivindicar Recompensa Diária',
+  weekly: 'Reivindicar Recompensa Semanal',
+  monthly: 'Reivindicar Recompensa Mensal',
+}
+
+const claimLabel = computed(() => CLAIM_LABEL[props.subTab] ?? CLAIM_LABEL.bonus)
+
+/** res.data.rewardStatus: 1 lights Coletar Tudo, 0 leaves it gray. */
+const canCollect = computed(() => props.info.rewardStatus === 1)
+
+function onCollect() {
+  if (!canCollect.value) return
+  emit('claim')
+}
+
+const canClaim = computed(() =>
+  props.levels.some((level) => {
+    const status =
+      props.subTab === 'daily'
+        ? level.dailyStatus
+        : props.subTab === 'weekly'
+          ? level.weeklyStatus
+          : props.subTab === 'monthly'
+            ? level.monthlyStatus
+            : level.promotionStatus
+    return status === 2
+  }),
+)
 
 function reward(level: VipLevel) {
   switch (props.subTab) {
@@ -85,6 +102,18 @@ function reward(level: VipLevel) {
 const progress = computed(() =>
   props.info.progressTarget ? props.info.progressBet / props.info.progressTarget : 0,
 )
+
+const rechargeProgress = computed(() =>
+  props.info.rechargeTarget ? props.info.progressRecharge / props.info.rechargeTarget : 0,
+)
+
+/** Still to deposit before the next level. Hidden when that remainder is 0. */
+const remainingRecharge = computed(() =>
+  Math.max(props.info.rechargeTarget - props.info.progressRecharge, 0),
+)
+
+/** No higher level: the board copies the current level into nextLevel. */
+const atMax = computed(() => props.info.nextLevel === props.info.level)
 
 const subRow = ref<HTMLElement | null>(null)
 
@@ -126,22 +155,18 @@ watch(
             <div class="card-left">
               <div class="crown-slot">
                 <div class="crown">
-                  <img :src="crown(info.level)" alt="" />
-                  <span class="crown-badge card-badge" :style="{ color: badgeColor(info.level) }">
-                    V{{ tr(info.level) }}
-                  </span>
+                  <img v-if="info.icon" :src="info.icon" alt="" />
                 </div>
               </div>
               <div class="card-text">
-                <div>
+                <div class="level-copy">
                   <p class="dim">
-                    {{ tr('Siga') }}
-                    <span class="next-level">VIP{{ tr(info.nextLevel) }}</span>
+                    <span>{{ `${tr('Siga')} ` }}</span><span class="next-level">VIP{{ tr(info.level) }}</span>
                   </p>
-                  <!-- One line: a line break here would drop the space Vue
-                       condenses away, and the live text has one. -->
-                  <p class="need-line">
-                    <span class="dim">{{ tr('Ainda precisa apostar') }}</span> <span class="need">{{ formatAmount(info.remainingBet) }}</span>
+                  <p class="dim">
+                    <span>{{ `${tr('Ainda precisa apostar')} ` }}</span><span class="need">{{ formatAmount(info.remainingBet) }}</span
+                    ><span v-if="info.rechargeTarget > 0">{{ `, ${tr('Ainda precisa recarga')} ` }}</span
+                    ><span v-if="info.rechargeTarget > 0" class="need">{{ formatAmount(remainingRecharge) }}</span>
                   </p>
                 </div>
               </div>
@@ -149,8 +174,12 @@ watch(
 
             <div class="card-right">
               <div>
-                <div class="btn-collect">{{ tr('Coletar Tudo') }}</div>
-                <div class="btn-history"><span>{{ tr('Histórias') }}</span></div>
+                <button type="button" class="btn-collect" :class="{ on: canCollect }" @click="onCollect">
+                  {{ tr('Coletar Tudo') }}
+                </button>
+                <button type="button" class="btn-history" @click="emit('history')">
+                  <span>{{ tr('Histórias') }}</span>
+                </button>
               </div>
             </div>
           </div>
@@ -163,7 +192,7 @@ watch(
       <div class="sub-sticky">
         <div ref="subRow" class="sub-row">
           <button
-            v-for="tab in vipSubTabs"
+            v-for="tab in visibleTabs"
             :key="tab.key"
             type="button"
             class="sub-btn"
@@ -189,17 +218,28 @@ watch(
             >
               <div class="col col-crown">
                 <div class="crown-cell">
-                  <img :src="crown(level.level)" alt="" />
-                  <span class="crown-badge row-badge" :style="{ color: badgeColor(level.level) }">
-                    V{{ tr(level.level) }}
-                  </span>
+                  <img v-if="level.icon" :src="level.icon" alt="" />
                 </div>
               </div>
 
-              <div v-if="subTab === 'bonus'" class="col">
+              <div v-if="showRecharge" class="col">
+                <div class="col-pad">
+                  <div class="dim">{{ level.promotionRecharge == null ? '' : formatAmount(level.promotionRecharge) }}</div>
+                  <div v-if="!atMax && level.level === info.nextLevel && level.promotionRecharge != null">
+                    <div class="row-bar">
+                      <div class="row-bar-fill" :style="{ width: `${rechargeProgress * 100}%` }" />
+                    </div>
+                    <div>
+                      {{ formatAmount(info.progressRecharge) }}/{{ formatAmount(info.rechargeTarget) }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div v-if="showBet" class="col">
                 <div class="col-pad">
                   <div class="dim">{{ formatAmount(level.promotionBet) }}</div>
-                  <div v-if="level.level === info.nextLevel">
+                  <div v-if="!atMax && level.level === info.nextLevel">
                     <div class="row-bar">
                       <div class="row-bar-fill" :style="{ width: `${progress * 100}%` }" />
                     </div>
@@ -250,11 +290,14 @@ watch(
       </div>
     </div>
 
-    <!-- Live page anchors this bar with `fixed left-0 w-full`; inside the
-         centred column that is the same box as an absolute one, and it keeps
-         hugging the column instead of the window on a wide viewport. -->
+    <!-- Live claim bar is `fixed` with z-index auto. Keeping auto here lets
+         the tab-bar deposit hump (z-index 1) paint over this bar. A positive
+         z-index covers that hump. Absolute, not fixed, so a wide window still
+         hugs the centred column. -->
     <div class="vip-footer">
-      <div class="upgrade-btn">{{ tr('Reclamar Recompensa de Upgrade') }}</div>
+      <div class="upgrade-btn" :class="{ on: canClaim }">
+        <span>{{ tr(claimLabel) }}</span>
+      </div>
     </div>
   </div>
 </template>
@@ -316,37 +359,18 @@ watch(
   position: absolute;
   top: 50%;
   left: 0;
-  width: 3.375rem;
+  /* Live ion-img is w-[54px], not rem, so it stays 54px on a wide column. */
+  width: 54px;
   transform: translateY(-50%);
 }
 
 .crown img,
 .crown-cell img {
-  width: 3.375rem;
-  height: 3.375rem;
-}
-
-.crown-badge {
-  display: flex;
-  position: absolute;
-  justify-content: center;
-  align-items: center;
-  width: 1.875rem;
-  height: 0.9375rem;
-  font-size: 0.625rem;
-  font-weight: 700;
-  line-height: 0.9375rem;
-  text-align: center;
-}
-
-.card-badge {
-  top: 1.53125rem;
-  left: 1.75rem;
-}
-
-.row-badge {
-  top: 1.5625rem;
-  left: 1.75rem;
+  width: 54px;
+  height: 54px;
+  max-width: 54px;
+  max-height: 54px;
+  object-fit: contain;
 }
 
 .card-text {
@@ -357,6 +381,10 @@ watch(
   line-height: 1rem;
 }
 
+.level-copy p {
+  margin: 0;
+}
+
 .dim {
   color: rgba(255, 255, 255, 0.4);
 }
@@ -364,10 +392,6 @@ watch(
 .next-level {
   font-weight: 700;
   color: #fba531;
-}
-
-.need-line {
-  padding-right: 0.625rem;
 }
 
 .need {
@@ -388,17 +412,29 @@ watch(
   display: flex;
   width: 5rem;
   height: 1.875rem;
+  padding: 0;
   justify-content: center;
   align-items: center;
+  border: 0;
+  font: inherit;
   color: #fff;
   border-radius: 6px;
+  cursor: pointer;
 }
 
 .btn-collect {
   padding: 2px;
   line-height: 0.8125rem;
-  /* Disabled state of the live button. */
+  /* rewardStatus 0. The live unable claim button is this gray. */
   background-color: rgb(98, 98, 98);
+  cursor: default;
+}
+
+.btn-collect.on {
+  /* rewardStatus 1. Same green as the live claimButtonEnabled gradient. */
+  background-color: transparent;
+  background-image: linear-gradient(rgb(19, 201, 106) 0%, rgb(29, 149, 84) 100%);
+  cursor: pointer;
 }
 
 .btn-history {
@@ -525,6 +561,7 @@ watch(
 
 .col {
   flex: 1 1 0%;
+  min-width: 0;
   text-align: center;
 }
 
@@ -536,7 +573,7 @@ watch(
 
 .crown-cell {
   position: relative;
-  width: 3.375rem;
+  width: 54px;
   margin: 0 auto;
 }
 
@@ -659,12 +696,12 @@ watch(
   position: absolute;
   bottom: 3.5rem;
   left: 0;
-  z-index: 5;
   width: 100%;
   height: 5rem;
   justify-content: center;
   align-items: center;
   background-color: rgb(25, 30, 45);
+  border-top: 0.5px solid #292d36;
 }
 
 .upgrade-btn {
@@ -675,8 +712,13 @@ watch(
   align-items: center;
   font-size: 0.875rem;
   color: #fff;
-  /* Disabled state: the account has no upgrade reward pending. */
+  /* Same box as the live claim bar: 280×40 at a 390-wide phone. */
   background-color: rgb(98, 98, 98);
-  border-radius: 0.375rem;
+  border-radius: 6px;
+}
+
+.upgrade-btn.on {
+  background-color: transparent;
+  background-image: linear-gradient(180deg, #13c96a 0%, #1d9554 100%);
 }
 </style>

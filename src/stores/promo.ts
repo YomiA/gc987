@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import {
+  claimVipRewards,
   loadActivityEvents,
   loadVipBoard,
   promoApi,
@@ -37,7 +38,17 @@ export const usePromoStore = defineStore('promo', () => {
   const rebateCategory = ref('ELECTRONIC')
 
   const vipLevels = ref<VipLevel[]>([])
-  const vipInfo = ref({ level: 0, nextLevel: 1, remainingBet: 0, progressBet: 0, progressTarget: 0 })
+  const vipInfo = ref({
+    level: 0,
+    nextLevel: 1,
+    remainingBet: 0,
+    progressBet: 0,
+    progressTarget: 0,
+    progressRecharge: 0,
+    rechargeTarget: 0,
+    icon: '',
+    rewardStatus: 0,
+  })
   const vipRules = ref<string[]>([])
   const vipRetentionRules = ref<string[]>([])
   const vipSubTab = ref('bonus')
@@ -82,14 +93,37 @@ export const usePromoStore = defineStore('promo', () => {
     const copy = vipStaticCopy()
     vipRules.value = copy.rules
     vipRetentionRules.value = copy.retentionRules
+    const user = useUserStore()
     try {
-      const board = await loadVipBoard(selfInfoAmount(useUserStore().info?.orderAmt))
+      await user.loadUserInfo()
+    } catch {
+      // The list still loads. Already-have stays 0 until /selfInfo succeeds.
+    }
+    if (generation.vip !== token) return
+    try {
+      const info = user.info
+      const board = await loadVipBoard(
+        selfInfoAmount(info?.orderAmt),
+        selfInfoAmount(info?.rechargeAmt),
+        selfInfoAmount(info?.upgradeOrderAmt),
+        selfInfoAmount(info?.upgradeRechargeAmt),
+      )
       if (generation.vip !== token) return
       vipLevels.value = board.levels
       vipInfo.value = board.info
     } catch (error) {
       if (generation.vip !== token) return
       vipLevels.value = []
+      toastError(error)
+    }
+  }
+
+  async function claimVipAll() {
+    if (vipInfo.value.rewardStatus !== 1) return
+    try {
+      await claimVipRewards()
+      await loadTab('vip')
+    } catch (error) {
       toastError(error)
     }
   }
@@ -132,5 +166,6 @@ export const usePromoStore = defineStore('promo', () => {
     selectTab,
     selectRebateCategory,
     selectVipSubTab,
+    claimVipAll,
   }
 })
