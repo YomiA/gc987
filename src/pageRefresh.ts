@@ -25,8 +25,9 @@ export function refreshCurrentPage(name: RouteRecordName | null | undefined) {
     case 'inicio':
       return home.reloadVisit()
     case 'promo':
+      return usePromoStore().load()
     case 'activity-vip':
-      return usePromoStore().load(true)
+      return usePromoStore().loadTab('vip')
     case 'entrar':
       return useEntrarStore().load()
     case 'perfil': {

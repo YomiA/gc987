@@ -55,7 +55,7 @@ onMounted(() => {
   // The bottom bar is the app-level one shared with /main/inicio, so its items
   // come from the same store even when this route is opened directly.
   void home.load()
-  void promo.load(true)
+  void promo.load()
 })
 </script>
 

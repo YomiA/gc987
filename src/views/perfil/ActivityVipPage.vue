@@ -27,7 +27,7 @@ function goBack() {
   else void router.push('/main/perfil')
 }
 
-onMounted(() => void promo.load(true))
+onMounted(() => void promo.loadTab('vip'))
 </script>
 
 <template>
