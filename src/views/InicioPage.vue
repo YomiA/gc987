@@ -7,6 +7,7 @@ import AppHeader from '../components/inicio/AppHeader.vue'
 import AppInstallBar from '../components/inicio/AppInstallBar.vue'
 import GameBlockView from '../components/inicio/GameBlock.vue'
 import GameClassification from '../components/inicio/GameClassification.vue'
+import HomePopupBanner from '../components/inicio/HomePopupBanner.vue'
 import MarqueeView from '../components/inicio/MarqueeView.vue'
 import PosterSwiper from '../components/inicio/PosterSwiper.vue'
 import PromoGrid from '../components/inicio/PromoGrid.vue'
@@ -14,14 +15,17 @@ import ProviderSegment from '../components/inicio/ProviderSegment.vue'
 import IosPwaGuide from '../components/inicio/IosPwaGuide.vue'
 import PwaHeaderBar from '../components/inicio/PwaHeaderBar.vue'
 import PwaModal from '../components/inicio/PwaModal.vue'
+import ShortcutColumn from '../components/inicio/ShortcutColumn.vue'
 import SideMenu from '../components/inicio/SideMenu.vue'
 import SiteFooter from '../components/inicio/SiteFooter.vue'
 import SupportButton from '../components/inicio/SupportButton.vue'
 import TabBar from '../components/inicio/TabBar.vue'
 import ToTopButton from '../components/inicio/ToTopButton.vue'
+import type { LayoutBanner } from '../api/home'
 import type { GameBlock } from '../api/mock'
 import { useHomeStore } from '../stores/home'
 import { usePwaStore } from '../stores/pwa'
+import { pickHomePopups } from '../utils/homePopup'
 
 const router = useRouter()
 const home = useHomeStore()
@@ -162,8 +166,12 @@ const footerTerms = [
   '3. O fato de um jogador jogar ou ganhar em um jogo de apostas sociais não significa que ele ganhará em apostas com dinheiro real e jogos relacionados no futuro.',
 ].join('\n\n')
 
+/** popUpBannerList, signed in or not. Rules in utils/homePopup. */
+const popupItems = ref<LayoutBanner[]>([])
+
 onMounted(() => {
   void home.enterInicio().then(() => {
+    if (!popupItems.value.length) popupItems.value = pickHomePopups(home.layout?.popUpBannerList)
     void nextTick(() => {
       requestAnimationFrame(measureDockY)
       updateToTop()
@@ -210,9 +218,12 @@ onBeforeUnmount(() => {
       </div>
     </div>
 
+    <ShortcutColumn side="left" :items="home.leftShortcuts" />
     <SupportButton />
+    <ShortcutColumn side="right" :items="home.rightShortcuts" />
     <ToTopButton :visible="showToTop && !pwa.modalOpen && !pwa.guideOpen && !auth.dialogOpen" @top="scrollToTop" />
     <TabBar :items="home.tabBarItems" :active="home.activeTab" @select="onTabSelect" />
+    <HomePopupBanner v-if="popupItems.length" :items="popupItems" @close="popupItems = []" />
     <PwaModal v-if="pwa.modalOpen" @close="pwa.closeModal()" />
     <Transition name="ios-guide">
       <IosPwaGuide v-if="pwa.guideOpen" @close="pwa.closeGuide()" />

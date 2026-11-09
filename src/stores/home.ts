@@ -78,6 +78,13 @@ export const useHomeStore = defineStore('home', () => {
   const collectedProducts = computed(() =>
     products.value.filter((item) => collectedIdSet.value.has(String(item.id))),
   )
+  /** /loadLayout floating icons. Entries without an image are dropped. */
+  const leftShortcuts = computed(() =>
+    (layout.value?.leftShortcutIconList ?? []).filter((item) => item.showImg),
+  )
+  const rightShortcuts = computed(() =>
+    (layout.value?.rightShortcutIconList ?? []).filter((item) => item.showImg),
+  )
 
   function applyPictures(data: LayoutData) {
     const nextBanners = (data.bannerList || [])
@@ -359,6 +366,8 @@ export const useHomeStore = defineStore('home', () => {
     balanceCents,
     collectedIds,
     collectedProducts,
+    leftShortcuts,
+    rightShortcuts,
     load,
     loadCatalog,
     loadRemote,

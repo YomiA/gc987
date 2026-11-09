@@ -1,9 +1,23 @@
 import { request } from './http'
 
+/** Same `popUpRule` as abc.com. Every field is optional. */
+export interface PopUpRule {
+  /** 1 can be closed, 2 cannot. */
+  closeRule?: number | string
+  /** 1 once per page load, 2 every time the homepage opens. */
+  popUpTimes?: number | string
+  /** 0 is the homepage. */
+  popUpPosition?: number | string
+  popUpPositionName?: string
+}
+
 export interface LayoutBanner {
+  id?: number | string
+  sort?: number
   picPath: string
   mediaType: number
   routePath: string
+  popUpRule?: PopUpRule | null
 }
 
 export interface LayoutShortcut {
